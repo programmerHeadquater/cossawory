@@ -1,0 +1,294 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    text-decoration: none;
+    /* padding: 2px; */
+    /* border: 1px solid red; */
+}
+body{
+  font-family: 'Lexend', sans-serif;
+ 
+}
+a{
+  color: inherit;
+}
+:root {
+  --yolk-yellow: #ffa830;
+  --turquoise-blue: #5ac3fc;
+  --dark-grey: #9b9690;
+}
+ul li{
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+.header{
+  padding-left: 30px;
+  padding-right: 30px;
+  display: flex;
+  justify-content: space-between;
+  background-color:#5ac3fc48;
+}
+.main{
+  display: flex;
+  flex-direction: column;
+}
+.content{
+  padding-left: 10%;
+  padding-right: 10%;
+  display: flex;
+  align-items: stretch;
+  
+}
+#hamburger{
+  display: none;
+}
+.left{
+  min-width: 15%;
+}
+.left ul{
+  position: relative;
+}
+.left ul li{
+  padding: 10px;
+  margin: 15px;
+  background-color: var(--yolk-yellow);
+  border-radius: 20px;
+  text-align: center;
+
+}
+.left ul li a {
+  width: 100%;
+  display: inline-block;
+  padding: 0px 5px 5px 0px; 
+  text-align: left;
+}
+.left #arrow{
+  position: absolute;
+  color: rgb(0, 0, 0);
+  font-size: 34px;
+  left : -70px;
+  font: bolder;
+}
+.left .active{
+  color: red;
+}
+
+.right{
+  margin-left: 90px;
+  padding: 10px;
+  padding-right: 0px;
+  flex-grow: 1;
+}
+.submission{
+  border: 2px solid black;
+  height: 100%;
+  display: block;
+  padding: 20px;
+}
+.submission label{
+  display: block;
+  margin: 10px 0px;
+}
+.submission textarea{
+  display: block;
+  width: 100%;
+  min-height: 15px;
+  padding: 10px;
+  color: #fb9302;
+  font-size: 18px;
+
+}
+.required{
+  color: red;
+  float: right;
+}
+.ok{
+  color: green;
+  float: right;
+}
+.submission input{
+  display: block;
+  width: 100%;
+  padding: 10px;
+}
+.submission .submit{
+  display: block;
+  background-color: var(--turquoise-blue);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  align-self: start;
+}
+.footer{
+  background-color:#5ac3fc48;
+  color: black;
+  padding-left: 10%;
+  padding-right: 10%;
+  display: flex;
+  gap: 10%;
+}
+hr{
+  color: black;
+}
+.about{
+  line-height: 2em;
+  font-size: 20px;
+  word-spacing: 3px;
+}
+
+.nav{
+  padding: 30px;
+}
+.nav ul {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+.nav ul li{
+  flex-grow: 1;
+  /* padding: 4px 10px; */
+  display: inline-block;
+  border: 1px solid green;
+  
+}
+.nav ul li:hover{
+  background-color: #ecdbc3;
+  
+}
+.nav ul li a{
+  padding: 5px 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  /* border: 1px solid yellow; */
+}
+.nav .active{
+  background-color: #fb9302;
+}
+
+.copyright{text-align: center;
+  padding: 10px 0px;
+  color: white;
+
+  background-color: black;
+}
+#birdLogo{
+  color: var(--turquoise-blue);
+  width: 120px;
+  height: 120px;
+}
+
+.page{
+  padding: 30px;
+  min-height: 300px;
+}
+
+
+.break{
+  asdf: asldf;
+}
+
+/* =========================================================================================================================== */
+
+
+
+@media screen and (max-width: 768px) {
+  .header,
+  .content,
+  .footer {
+    flex-direction: column;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  .header{
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .header h3,
+  .header span {
+    display: none;
+  }
+  #hamburger{
+    font-size: 20px;
+    cursor: pointer;
+    /* border: 1px solid red; */
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #hamburger .burgerBox{
+    min-height: 2px;
+    background-color: black;
+    border-radius: 3px;
+    border: 2px solid black;
+    padding-top: 5px;
+    margin: 5px;
+  }
+  .content .left .active{
+    /* border: 1px solid red; */
+    display: block;
+  }
+ 
+
+  .content {
+    flex-direction: column;
+  }
+
+  .left {
+    width: 100%;
+    margin-bottom: 20px;
+    display: none;
+
+  }
+
+  .left ul li {
+    margin: 10px 0;
+  }
+
+  .right {
+    margin-left: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .submission input,
+  .submission textarea {
+    font-size: 16px;
+  }
+
+  .submission .submit {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .footer {
+    gap: 20px;
+    text-align: center;
+  }
+
+  .footer div {
+    flex: none;
+    width: 100%;
+  }
+
+  .copyright {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  #birdLogo {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+  }
+}

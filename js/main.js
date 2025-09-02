@@ -1,0 +1,1 @@
+console.log("Js is working on main.js")
