@@ -29,7 +29,7 @@
         </div>
         <div class="headerRight">
             <br>
-            <h2><span>Welcome to </span>Cossawary Project</h2>
+            <h2><span>Welcome to </span>Cassowary Project</h2>
             <br>
             <h3>Helpling people solve the problem with anonymous and full privacy</h3>
         </div>
