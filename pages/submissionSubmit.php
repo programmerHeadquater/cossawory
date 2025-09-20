@@ -1,10 +1,13 @@
 <?php
-    require_once("conn/conn.php");
+    require "conn/conn.php";
+    use function conn\closeDatabaseConnection;
+    use function conn\openDatabaseConnection;
+
 
     $tittle = $_POST["title"];
     $concern = $_POST["questions"];
     $why_this_app = $_POST["why_this_app"];
-    $disability = $_POST["disability"];
+   $disability = isset($_POST["disability"]) && $_POST["disability"] !== "" ? $_POST["disability"] : "no value";
     $review = "FALSE";
     $review_id = "0";
 
