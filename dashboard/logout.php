@@ -1,14 +1,29 @@
 <?php
-// Start the session to access session data
+// Change session name before starting session
+session_name("MySecureAppSession");
 session_start();
 
-// Destroy all session variables
-session_unset(); // Unsets all session variables
+// Clear all session variables
+$_SESSION = [];
 
-// Destroy the session itself
+// Delete session cookie (important!)
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(
+        session_name(), 
+        '', 
+        time() - 42000, // time in past to delete
+        $params["path"], 
+        $params["domain"], 
+        $params["secure"], 
+        $params["httponly"]
+    );
+}
+
+// Destroy the session
 session_destroy();
 
-// Redirect to the login page
-header(header: "Location: ../dashboard.php");
-exit(); // Ensure no further code is executed
+// Redirect to login/dashboard
+header("Location: ../dashboard.php");
+exit();
 ?>
