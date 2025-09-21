@@ -81,13 +81,13 @@ function deleteReview($review_id){
     
     return $error;
 }
-function insertReviewIdIntoSubmission($review_id){
+function insertReviewIdIntoSubmission($review_id,$submission_id){
     $error = null;
     $conn = openDatabaseConnection();
-    if(!$stmt = $conn->prepare("UPDATE submission SET review = 1 , review_id = ?")){
+    if(!$stmt = $conn->prepare("UPDATE submission SET review = 1 , review_id = ? where id = ?")){
         $error = "Statment prepare error : ". $stmt->error;
     }
-    if(!$stmt ->bind_param("i",$review_id)){
+    if(!$stmt ->bind_param("ii",$review_id,$submission_id)){
         $error = "Binding error: ". $stmt->error;
     }
     if(!$stmt -> execute()){
@@ -95,4 +95,5 @@ function insertReviewIdIntoSubmission($review_id){
     }
     return $error;
 }
+
 ?>

@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/bird.svg">
+    <link rel="icon" type="image/svg" href="images/bird.svg">
     <link rel="stylesheet" href="css/main.css?v=2">
     <link rel="stylesheet" href="css/mobile.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
-
+    
     <title>Cossawary</title>
 
 </head>

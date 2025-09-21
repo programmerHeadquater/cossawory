@@ -1,8 +1,9 @@
 <?php
+session_name("MySecureAppSession");
 session_start();
 include("dashboard/header.php");
 $page = isset($_GET["page"]) ? $_GET["page"] : "main";
-echo "$page" . " : " . $page;
+
 
 ?>
 <div class="main">
@@ -14,6 +15,7 @@ echo "$page" . " : " . $page;
         include 'dashboard/'.$page.'.php';
     } else {
         // User not logged in, include login page
+        session_destroy();
         include 'dashboard/login.php';
     }
     ?>
