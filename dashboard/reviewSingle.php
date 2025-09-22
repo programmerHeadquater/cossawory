@@ -1,13 +1,12 @@
-<button><a href="dashboard.php?page=main">back</a></button>
+<button class="back"><a href="dashboard.php?page=main">back</a></button>
 
 <?php
-require_once 'conn/conn.php';
+
 require_once 'conn/review.php';
-use function conn\openDatabaseConnection;
-use function conn\closeDatabaseConnection;
-use function review\insertReview;
-use function review\insertReviewIdIntoSubmission;
-use function review\deleteReview;
+require_once 'conn/submission.php';
+use function review\getReviewBySybmissionId;
+use function submission\getSubmissionById;
+
 
 
 
@@ -15,105 +14,98 @@ $id = (int) $_GET['id'];
 $message = "We are working on it";
 //updating if the querry has data in the form 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !=="") {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
     $review = $_POST['review'];
     [$review_id, $error] = insertReview($id, $review);
     if ($error === null) {
-        
-        $error = insertReviewIdIntoSubmission($review_id,$id);
+
+        $error = insertReviewIdIntoSubmission($review_id, $id);
     }
     if ($error != null) {
         $error = deleteReview($review_id);
     }
 }
 
-$conn = openDatabaseConnection();
-$stmt = $conn->prepare(
-    'SELECT submission.* , reviews.review,reviews.created_at as review_created_at
-            FROM submission
-            LEFT JOIN reviews
-            ON submission.id = reviews.submission_id
-            WHERE submission.id = ?
-    '
-);
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$result = $stmt->get_result();
+
+submissionTemplate(getSubmissionById($id));
+reviewTemplate(getReviewBySybmissionId($id), $id);
+formTemplate($id);
 
 
 
-if ($result->num_rows > 0) {
-    $review = [];
-    $submission = null;
-    while ($row = $result->fetch_assoc()) {
-        if (!$submission) {
-            $submission = [
-                'id' => $row['id'],
-                'title' => $row['title'],
-                'concern' => $row['concern'],
-                'submitted_at' => $row['submitted_at']
-            ];
 
-        }
-        $review[] = [
-            'review' => $row['review'],
-            'review_created_at' => $row['review_created_at']
-        ];
-
-
-    }
-    echo submissionTemplate($submission);
-    echo reviewTemplate($review);
-
-    $stmt->close();
-    closeDatabaseConnection($conn);
-}
 
 ?>
-
-
-<br>
-<form method="POST" action="dashboard.php?page=reviewSingle&id=<?= $id ?>">
-    <p>Id: <?= $id ?> </p>
-    <textarea style="width:100%;" name="review" id="" placeholder="Write a reiew here" value="Testing on"></textarea>
-    <br><br>
-    <button type="submit">Submit</button>
-</form>
-
-
-
 
 <?php
 function submissionTemplate($submission)
-{   
+{
     ob_start();
     ?>
-    
 
-    <p>Submission Data:</p>
-    <p>Id:<?= $submission['id'] ?></p>
-    <p><?= $submission['title'] ?></p>
-    <p><?= $submission['concern'] ?></p>
-    <p><?= $submission['submitted_at'] ?></p>
+
+    <div class="submissionTemplate">
+        <p>Submission Data:</p>
+        <p>Id:<?= $submission[0]['id'] ?></p>
+        <p><?= $submission[0]['title'] ?></p>
+        <p><?= $submission[0]['concern'] ?></p>
+        <p><?= $submission[0]['submitted_at'] ?></p>
+    </div>
 
 
     <?php
-    return ob_get_clean();
+    echo ob_get_clean();
+    return;
 }
 
 
-function reviewTemplate($review){
+function reviewTemplate($review, $id)
+{
+
     ob_start();
-    echo "<p>Review: (required a good template):</p><br>";
+    ?>
+    <h2>Reviews:</h2>
+    <?php
     foreach ($review as $key => $value) {
         ?>
-
-        <p><?= $value['review'] ?> </p>
-        <br>
+        <div class="reviewTemplate">
+            
+            <p class="on"><?= $value['review'] ?> </p>
+            <p>
+                <button class="update">Update</button>
+                <button class="delete">Delete</button>
+            </p>
+            <div class="updatReviewId">
+                <form action="dashboard.php?page=deleteReview&id=<?= $id ?>&review_id=<?= $value['id'] ?>">
+                    <textarea class="textfeild" name="review" id=""><?= $value['review'] ?></textarea>
+                </form>
+            </div>
+            <div class="delete">
+                <p>Are you sure</p>
+                <p><a href="">Yes</a></p>
+            </div>
+            <br>
+        </div>
 
         <?php
     }
-    return ob_get_clean();
+    echo ob_get_clean();
+    return;
+}
+function formTemplate($id)
+{
+    ob_start(); ?>
+    <div>
+        <form method="POST" action="dashboard.php?page=reviewSingle&id=<?= $id ?>">
+
+            <textarea style="width:100%;" name="review" id="" placeholder="Write a reiew here"
+                value="Testing on"></textarea>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <?php
+    echo ob_get_clean();
 }
 ?>
