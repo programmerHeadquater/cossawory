@@ -33,7 +33,7 @@
 <div class="copyright">
         Copyright @2025. All rights reserved.
 </div>
-<script src="js/main.js?v2"></script>
+<script src="js/index.js?v2"></script>
 </body>
 
 </html>

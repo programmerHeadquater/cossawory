@@ -68,4 +68,21 @@ function getSubmission($startPoint){
     $data = $result->fetch_all(\MYSQLI_ASSOC);
     return $data;
 }
+function getSubmissionsTotalCount(){
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM submission");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return (int)$row["COUNT(*)"];
+}
+function getSubmissionById(int $id){
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("SELECT * FROM submission WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(\MYSQLI_ASSOC);
+    return $data;
+}
 ?>

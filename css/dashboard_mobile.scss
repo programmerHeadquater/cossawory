@@ -1,0 +1,209 @@
+@media screen and (max-width: 768px) {
+
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+        text-decoration: none;
+        font-family: 'Lexend', sans-serif;
+        /* padding: 2px; */
+        /* border: 1px solid red; */
+    }
+
+    body {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    :root {
+        --yolk-yellow: #ffa830;
+        --turquoise-blue: #5ac3fc;
+        --dark-grey: #9b9690;
+    }
+
+    a {
+        color: inherit;
+        padding: 0px;
+        margin: 0px;
+
+    }
+
+    .header {
+        padding: 10px;
+        background-color: var(--turquoise-blue);
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            display: block;
+            padding: 0px;
+        }
+
+        #birdLogo {
+            height: 30px;
+            padding: 0px !important;
+            margin: 0px !important;
+            vertical-align: middle;
+            color: red !important;
+        }
+
+        .fullPage {
+            display: none;
+        }
+    }
+
+    .nav {
+        background-color: rgb(239, 239, 248);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2em;
+        padding: 10px 20px;
+
+        ul {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+
+            li {
+                list-style: none;
+                line-height: 20px;
+                padding: 0px 4px;
+
+            }
+
+        }
+
+        #logoutIcon {
+            height: 1.4em;
+            width: 1.4em;
+            border-radius: 1.4em;
+            background-color: black;
+            vertical-align: text-top;
+            color: rgb(255, 255, 255);
+            padding: 0px 4px;
+
+        }
+
+        #accountOption {
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            right: 0px;
+            padding: 2px 5px;
+            border: 1px solid red;
+            display: none;
+            background-color: #ffffff;
+            min-width: 150px;
+
+            ul {
+                display: block;
+
+                li {
+                    display: block;
+                    border: 2px solid black;
+                    margin: 4px 0px;
+
+                    a {
+                        display: block;
+                        text-decoration: none;
+                        white-space: nowrap;
+                        color: black;
+                    }
+                }
+            }
+        }
+
+    }
+
+    
+
+    .main {
+        flex: 1;
+        overflow: hidden;
+        padding: 10px 20px;
+        // background-color: #9b9690;
+    }
+
+
+
+
+    .pagination {
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+
+    .footer {
+        padding: 10px;
+        color: white;
+        font-size: 20px;
+        background-color: black;
+        width: 100%;
+        text-align: center;
+    }
+
+    .reviewAll {
+        padding: 20px;
+        border: 2px solid black;
+        margin: 10px;
+
+        .option {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .description {
+            display: -webkit-box;
+            line-clamp: 3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        span {
+            padding: 3px;
+            border: 1px solid black;
+        }
+
+    }
+    .reviewTemplate{
+        
+        border: 1px solid black;
+        padding: 20px 10px;
+        margin: 10px 0px;
+        // background-color: #e7e6e6;
+        p{
+            padding: 10px 0px;
+        }
+        .on{
+            border: 1px solid red;
+        }
+
+    }
+
+
+
+
+
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // individual class here
+
+    .relative {
+        position: relative;
+    }
+    .back{
+        padding: 5px;
+        margin: 10px 0px;
+    }
+}
