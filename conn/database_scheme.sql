@@ -17,6 +17,18 @@ CREATE TABLE IF NOT EXISTS submission  (
 
 
 -- Create a table called submission
+-- CREATE TABLE IF NOT EXISTS submission (
+--   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--   title VARCHAR(255) NOT NULL,   --tittle of problem
+--   concern TEXT NOT NULL,          --description of problem 
+--   why_this_app TEXT,                 -- Optional
+--   review BOOLEAN,             --this check if it is review or not 
+--   review_id Int,              -- this will link to review table 
+--   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- Create a table called submission
 CREATE TABLE IF NOT EXISTS reviews (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- primary key
     submission_id INT UNSIGNED NOT NULL, -- id from submission table to link 
