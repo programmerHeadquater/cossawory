@@ -44,10 +44,7 @@ function updateSubmission()
 }
 function deleteSubmission($id): string
 {
-    echo "<pre>";
-    var_dump("$id");
-    echo $id;
-    echo "</pre>";
+    
     $message = null;
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare("DELETE FROM submission WHERE id = ?");
@@ -55,8 +52,8 @@ function deleteSubmission($id): string
     $stmt->execute();
     $message = ($stmt->affected_rows > 0) ? "yes" : "no";
     $stmt->close();
-    echo "<br>message : $message <br>";
-    return $message;
+    
+    return null;
 }
 
 function getSubmission($startPoint){
@@ -77,12 +74,13 @@ function getSubmissionsTotalCount(){
     return (int)$row["COUNT(*)"];
 }
 function getSubmissionById(int $id){
+   
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare("SELECT * FROM submission WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
-    $data = $result->fetch_all(\MYSQLI_ASSOC);
+    $data = $result->fetch_assoc();
     return $data;
 }
 ?>

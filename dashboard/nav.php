@@ -1,5 +1,5 @@
 <div class="nav">
-    <a href="dashboard.php?page=main">All reviews</a>
+    <a href="dashboard.php?page=main">All Submission</a>
     <ul>
         <li>
             <p>Hi, <?= $_SESSION['username'] ?> </p>

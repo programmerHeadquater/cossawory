@@ -6,13 +6,17 @@
         box-sizing: border-box;
         text-decoration: none;
         font-family: 'Lexend', sans-serif;
-        /* padding: 2px; */
-        /* border: 1px solid red; */
-    }
-    button:hover{
-        background-color: #9b9690;
+        
+        
+        
+        
     }
     
+    textarea{
+        
+        width: 100%;
+        text-wrap: none;
+    }
 
     body {
         min-height: 90vh;
@@ -31,8 +35,12 @@
         color: inherit;
         padding: 0px;
         margin: 0px;
-
+        
+        
+       
     }
+    
+    
 
     .header {
         padding: 10px;
