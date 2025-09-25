@@ -6,12 +6,7 @@
     
 
 
-    echo ''.$id.'';
-
-    $message = null;
-
-    
-    $message = deleteSubmission($id);
+    deleteSubmission($id);
     
     header(header: "Location: ../dashboard.php?page=main&message=$message&startPoint=$startPoint");
 ?>

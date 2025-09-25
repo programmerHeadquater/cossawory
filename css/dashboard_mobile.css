@@ -5,8 +5,10 @@
     box-sizing: border-box;
     text-decoration: none;
     font-family: "Lexend", sans-serif;
-    /* padding: 2px; */
-    /* border: 1px solid red; */
+  }
+  textarea {
+    width: 100%;
+    text-wrap: none;
   }
   body {
     min-height: 90vh;

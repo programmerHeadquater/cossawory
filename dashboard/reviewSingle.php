@@ -6,31 +6,30 @@ require_once 'conn/review.php';
 require_once 'conn/submission.php';
 use function review\getReviewBySybmissionId;
 use function submission\getSubmissionById;
+use function review\getTotalReviewBySubmissionId;
+use function review\insertReview;
 
 
 
 
 $id = (int) $_GET['id'];
-$message = "We are working on it";
+$startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
+
 //updating if the querry has data in the form 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
     $review = $_POST['review'];
-    [$review_id, $error] = insertReview($id, $review);
-    if ($error === null) {
+    insertReview($id, $review);
 
-        $error = insertReviewIdIntoSubmission($review_id, $id);
-    }
-    if ($error != null) {
-        $error = deleteReview($review_id);
-    }
 }
 
 
 submissionTemplate(getSubmissionById($id));
-reviewTemplate(getReviewBySybmissionId($id), $id);
-formTemplate($id);
+reviewTemplate(getReviewBySybmissionId($id,$startPoint), $id);
+addReviewTemplate($id);
+pagination($startPoint, getTotalReviewBySubmissionId($id), $id);
+
 
 
 
@@ -40,17 +39,16 @@ formTemplate($id);
 
 <?php
 function submissionTemplate($submission)
-{
+{   
     ob_start();
     ?>
 
-
     <div class="submissionTemplate">
         <p>Submission Data:</p>
-        <p>Id:<?= $submission[0]['id'] ?></p>
-        <p><?= $submission[0]['title'] ?></p>
-        <p><?= $submission[0]['concern'] ?></p>
-        <p><?= $submission[0]['submitted_at'] ?></p>
+        <p>Id:<?= $submission['id'] ?></p>
+        <p><?= $submission['title'] ?></p>
+        <p><?= $submission['concern'] ?></p>
+        <p><?= $submission['submitted_at'] ?></p>
     </div>
 
 
@@ -70,11 +68,12 @@ function reviewTemplate($review, $id)
     foreach ($review as $key => $value) {
         ?>
         <div class="reviewTemplate">
-            
+
             <p class="on"><?= $value['review'] ?> </p>
             <p>
                 <button class="update">Update</button>
                 <button class="delete">Delete</button>
+
             </p>
             <div class="updatReviewId">
                 <form action="dashboard.php?page=deleteReview&id=<?= $id ?>&review_id=<?= $value['id'] ?>">
@@ -86,6 +85,7 @@ function reviewTemplate($review, $id)
                 <p><a href="">Yes</a></p>
             </div>
             <br>
+            
         </div>
 
         <?php
@@ -93,8 +93,9 @@ function reviewTemplate($review, $id)
     echo ob_get_clean();
     return;
 }
-function formTemplate($id)
+function addReviewTemplate($id)
 {
+   
     ob_start(); ?>
     <div>
         <form method="POST" action="dashboard.php?page=reviewSingle&id=<?= $id ?>">
@@ -104,8 +105,29 @@ function formTemplate($id)
             <br><br>
             <button type="submit">Submit</button>
         </form>
+        <br>
     </div>
     <?php
     echo ob_get_clean();
 }
+
+function pagination($startPoint, $total,$id)
+{
+    
+    $prevStart = max(0, $startPoint - 2);
+    $nextStart = $startPoint + 2;
+    ?>
+    <div class="pagination">
+        <?php if ($startPoint > 0): ?>
+            <button><a href="dashboard.php?page=reviewSingle&id=<?=$id?>&startPoint=<?= $prevStart ?>">Previous</a></button>
+        <?php endif; ?>
+
+        <?php if ($nextStart < $total): ?>
+            <button><a href="dashboard.php?page=reviewSingle&id=<?=$id?>&startPoint=<?= $nextStart ?>">Next</a></button>
+        <?php endif; ?>
+    </div>
+    <?php
+    echo ob_get_clean();
+}
+
 ?>

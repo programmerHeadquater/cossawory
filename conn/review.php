@@ -103,15 +103,25 @@ function insertReviewIdIntoSubmission($review_id, $submission_id)
     }
     return $error;
 }
-function getReviewBySybmissionId($submission_id)
+function getReviewBySybmissionId($submission_id,$startPoint)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM reviews WHERE submission_id = ?");
-    $stmt->bind_param("i", $submission_id);
+    $stmt = $conn->prepare("SELECT * FROM reviews WHERE submission_id = ? LIMIT 2 OFFSET ?");
+    $stmt->bind_param("ii", $submission_id,$startPoint);
     $stmt->execute();
     $result = $stmt->get_result();
     $data = $result->fetch_all(\MYSQLI_ASSOC);
     return $data;
+}
+function getTotalReviewBySubmissionId($submission_id){
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM reviews WHERE submission_id = ?");
+    $stmt->bind_param("i", $submission_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+    
+    return $data["COUNT(*)"];
 }
 
 ?>
