@@ -1,4 +1,6 @@
 
+<div class="page">
+    <h1>Submission </h1>
 
 <?php
 require 'conn/submission.php';
@@ -66,4 +68,4 @@ function pagination($startPoint,$total) {
 
 
 ?>
-
+</div>

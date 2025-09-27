@@ -42,7 +42,7 @@ function updateSubmission()
 {
     return null;
 }
-function deleteSubmission($id): string
+function deleteSubmission($id)  
 {
     
     $message = null;
@@ -52,8 +52,7 @@ function deleteSubmission($id): string
     $stmt->execute();
     $message = ($stmt->affected_rows > 0) ? "yes" : "no";
     $stmt->close();
-    
-    return null;
+    closeDatabaseConnection($conn);
 }
 
 function getSubmission($startPoint){

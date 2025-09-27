@@ -1,0 +1,325 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Lexend', sans-serif;
+
+    // border: 1px solid red;
+    // padding: 2px;
+}
+
+textarea {
+
+    width: 100%;
+    text-wrap: none;
+}
+
+body {
+    min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+}
+
+:root {
+    --yolk-yellow: #ffa830;
+    --turquoise-blue: #5ac3fc;
+    --dark-grey: #9b9690;
+}
+
+a {
+    color: inherit;
+    padding: 0px;
+    margin: 0px;
+
+
+
+}
+
+
+
+.header {
+    padding: 5px 20px;
+    background-color: var(--turquoise-blue);
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // justify-content: space-between;
+
+    .left {
+
+        #hamburger {
+            display: flex;
+            justify-content: space-around;
+            position: relative;
+            width: 40px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .burgerBox {
+            position: absolute;
+            /* always absolute */
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: black;
+            border-radius: 3px;
+            border: 2px solid black;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            left: 0;
+            transform-origin: center center;
+        }
+
+        /* Initial positions */
+        .burgerBox:nth-child(1) {
+            top: 0;
+        }
+
+        .burgerBox:nth-child(2) {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .burgerBox:nth-child(3) {
+            bottom: 0;
+        }
+
+        /* When toggled to X */
+        .closeBar .burgerBox:nth-child(1) {
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            background-color: rgb(21, 180, 53);
+            border-color: rgb(27, 149, 56);
+        }
+
+        .closeBar .burgerBox:nth-child(2) {
+            opacity: 0;
+        }
+
+        .closeBar .burgerBox:nth-child(3) {
+            top: 50%;
+            transform: translateY(-50%) rotate(-45deg);
+            background-color: red;
+            border-color: red;
+        }
+
+
+    }
+
+    .right {
+        display: flex;
+        align-items: baseline;
+
+        #birdLogo {
+            height: 40px;
+            margin-left: 20px;
+            vertical-align: middle;
+            color: red !important;
+        }
+    }
+
+
+
+
+
+}
+
+
+
+
+
+.main {
+    display: flex;
+    flex: 1;
+    // padding: 10px 20px;
+
+    // background-color: #9b9690;
+    .navShow {
+        width: 250px !important;
+        padding: 10px !important;
+    }
+
+    .nav {
+        // position: absolute;
+        background-color: rgb(231, 230, 230);
+        display: flex;
+        font-size: 1.2em;
+        padding: 10px 20px;
+        flex-direction: column;
+        width: 0px;
+        overflow: hidden;
+        margin: 0px;
+        padding: 0px;
+        transition: 0.5s;
+        #accountOption{
+            display: none;
+        }
+        hr {
+            display: block;
+            width: 100%;
+            color: #ffa830;
+            margin: 10px 0px;
+        }
+
+        .one {
+            a {
+                padding: 5px;
+                border-bottom: 1px solid black;
+                display: inline-block;
+                margin-bottom: 10px;
+                display: block;
+            }
+
+
+        }
+
+        .two {
+            display: block;
+            width: 100%;
+            padding: 10px 0px;
+
+            ul {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                li {
+                    list-style: none;
+                    display: block;
+                    display: flex;
+                    justify-content: baseline;
+                    // padding: 4px;
+                    position: relative;
+                    // border: 1px solid red;
+                    #icon {
+                        display: inline;
+                        height: 45px;
+                        width: 45px;
+                        border-radius: 50px;
+                        vertical-align: text-top;
+                        // color: rgb(255, 255, 255);
+                        // background-color: black;
+                        position: relative;
+                    }
+                    #downArrow{
+                        position: absolute;
+                        height: 10px;
+                        width: 10px;
+                        border-radius: 12px;
+                        background-color: rgb(255, 255, 255);
+                        right: 9px;
+                        bottom: 7px;
+                        
+                    }
+                }
+
+            }
+
+
+
+        }
+
+    }
+
+    .page {
+        overflow: scroll;
+        width: 100%;
+        padding: 0px 20px 20px 20px;
+        background: #f9f9f9;
+    }
+}
+
+
+
+
+.pagination {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.footer {
+    padding: 10px;
+    color: white;
+    font-size: 20px;
+    background-color: black;
+    width: 100%;
+    text-align: center;
+}
+
+.reviewAll {
+    padding: 20px;
+    border: 2px solid black;
+    margin: 10px;
+
+    .option {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .description {
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    span {
+        padding: 3px;
+        border: 1px solid black;
+    }
+
+}
+
+.reviewTemplate {
+
+    border: 1px solid black;
+    padding: 20px 10px;
+    margin: 10px 0px;
+
+    // background-color: #e7e6e6;
+    p {
+        padding: 10px 0px;
+    }
+
+    .on {
+        border: 1px solid red;
+    }
+
+}
+
+
+
+
+
+
+
+
+// --------------------------------------------------------------------------------------------------
+// individual class here
+
+.relative {
+    position: relative;
+}
+
+.backButton {
+    padding: 5px;
+    margin: 10px 0px;
+}
+
+.dflex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
