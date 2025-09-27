@@ -1,0 +1,249 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Lexend", sans-serif;
+}
+
+textarea {
+  width: 100%;
+  text-wrap: none;
+}
+
+body {
+  min-height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:root {
+  --yolk-yellow: #ffa830;
+  --turquoise-blue: #5ac3fc;
+  --dark-grey: #9b9690;
+}
+
+a {
+  color: inherit;
+  padding: 0px;
+  margin: 0px;
+}
+
+.header {
+  padding: 5px 20px;
+  background-color: var(--turquoise-blue);
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header .left #hamburger {
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  width: 40px;
+  height: 30px;
+  cursor: pointer;
+}
+.header .left .burgerBox {
+  position: absolute;
+  /* always absolute */
+  display: block;
+  width: 100%;
+  height: 4px;
+  background-color: black;
+  border-radius: 3px;
+  border: 2px solid black;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  left: 0;
+  transform-origin: center center;
+}
+.header .left {
+  /* Initial positions */
+}
+.header .left .burgerBox:nth-child(1) {
+  top: 0;
+}
+.header .left .burgerBox:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.header .left .burgerBox:nth-child(3) {
+  bottom: 0;
+}
+.header .left {
+  /* When toggled to X */
+}
+.header .left .closeBar .burgerBox:nth-child(1) {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  background-color: rgb(21, 180, 53);
+  border-color: rgb(27, 149, 56);
+}
+.header .left .closeBar .burgerBox:nth-child(2) {
+  opacity: 0;
+}
+.header .left .closeBar .burgerBox:nth-child(3) {
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+  background-color: red;
+  border-color: red;
+}
+.header .right {
+  display: flex;
+  align-items: baseline;
+}
+.header .right #birdLogo {
+  height: 40px;
+  margin-left: 20px;
+  vertical-align: middle;
+  color: red !important;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+}
+.main .navShow {
+  width: 250px !important;
+  padding: 10px !important;
+}
+.main .nav {
+  background-color: rgb(231, 230, 230);
+  display: flex;
+  font-size: 1.2em;
+  padding: 10px 20px;
+  flex-direction: column;
+  width: 0px;
+  overflow: hidden;
+  margin: 0px;
+  padding: 0px;
+  transition: 0.5s;
+}
+.main .nav #accountOption {
+  display: none;
+}
+.main .nav hr {
+  display: block;
+  width: 100%;
+  color: #ffa830;
+  margin: 10px 0px;
+}
+.main .nav .one a {
+  padding: 5px;
+  border-bottom: 1px solid black;
+  display: inline-block;
+  margin-bottom: 10px;
+  display: block;
+}
+.main .nav .two {
+  display: block;
+  width: 100%;
+  padding: 10px 0px;
+}
+.main .nav .two ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main .nav .two ul li {
+  list-style: none;
+  display: block;
+  display: flex;
+  justify-content: baseline;
+  position: relative;
+}
+.main .nav .two ul li #icon {
+  display: inline;
+  height: 45px;
+  width: 45px;
+  border-radius: 50px;
+  vertical-align: text-top;
+  position: relative;
+}
+.main .nav .two ul li #downArrow {
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  right: 9px;
+  bottom: 7px;
+}
+.main .page {
+  overflow: scroll;
+  width: 100%;
+  padding: 0px 20px 20px 20px;
+  background: #f9f9f9;
+}
+
+.pagination {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer {
+  padding: 10px;
+  color: white;
+  font-size: 20px;
+  background-color: black;
+  width: 100%;
+  text-align: center;
+}
+
+.reviewAll {
+  padding: 20px;
+  border: 2px solid black;
+  margin: 10px;
+}
+.reviewAll .option {
+  display: flex;
+  justify-content: space-between;
+}
+.reviewAll .description {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.reviewAll span {
+  padding: 3px;
+  border: 1px solid black;
+}
+
+.reviewTemplate {
+  border: 1px solid black;
+  padding: 20px 10px;
+  margin: 10px 0px;
+}
+.reviewTemplate p {
+  padding: 10px 0px;
+}
+.reviewTemplate .on {
+  border: 1px solid red;
+}
+
+.relative {
+  position: relative;
+}
+
+.backButton {
+  padding: 5px;
+  margin: 10px 0px;
+}
+
+.dflex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+/*# sourceMappingURL=dashboard.css.map */

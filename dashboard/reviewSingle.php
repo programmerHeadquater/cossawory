@@ -1,3 +1,7 @@
+<div class="page">
+
+
+
 <button class="back"><a href="dashboard.php?page=main">back</a></button>
 
 <?php
@@ -26,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['
 
 
 submissionTemplate(getSubmissionById($id));
-reviewTemplate(getReviewBySybmissionId($id,$startPoint), $id);
+reviewTemplate(getReviewBySybmissionId($id,$startPoint), $id,$startPoint);
 addReviewTemplate($id);
 pagination($startPoint, getTotalReviewBySubmissionId($id), $id);
 
@@ -58,7 +62,7 @@ function submissionTemplate($submission)
 }
 
 
-function reviewTemplate($review, $id)
+function reviewTemplate($review, $id,$starPoint)
 {
 
     ob_start();
@@ -71,18 +75,21 @@ function reviewTemplate($review, $id)
 
             <p class="on"><?= $value['review'] ?> </p>
             <p>
-                <button class="update">Update</button>
-                <button class="delete">Delete</button>
+                <button class="updateReview">Update</button>
+                <button class="deleteReview">Delete</button>
 
             </p>
-            <div class="updatReviewId">
-                <form action="dashboard.php?page=deleteReview&id=<?= $id ?>&review_id=<?= $value['id'] ?>">
+            <div class="updatReview">
+                <form action="dashboard/updateReview.php">
+                    <input type="" name="review_id" value="<?=$value['id']?>">
                     <textarea class="textfeild" name="review" id=""><?= $value['review'] ?></textarea>
                 </form>
             </div>
             <div class="delete">
                 <p>Are you sure</p>
-                <p><a href="">Yes</a></p>
+                <p><form action="dashboard/deleteReview.php">
+                    <button type="submit">Yes</button>
+                </form></p>
             </div>
             <br>
             
@@ -131,3 +138,7 @@ function pagination($startPoint, $total,$id)
 }
 
 ?>
+
+
+
+</div>

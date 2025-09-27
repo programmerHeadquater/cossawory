@@ -120,7 +120,6 @@ function getTotalReviewBySubmissionId($submission_id){
     $stmt->execute();
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
-    
     return $data["COUNT(*)"];
 }
 

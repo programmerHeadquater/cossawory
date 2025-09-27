@@ -16,12 +16,17 @@
 <body>
 
     <div class="header">
-        <div class="headerLeft">
-            <a href=""><img id="birdLogo" src="images/bird.svg" alt=""></a>
+        <div class="left">
+            <div class="closeBar" id="hamburger">
+                <div class="burgerBox"></div>
+                <div class="burgerBox"></div>
+                <div class="burgerBox"></div>
+            </div>
         </div>
-        <div class="headerRight">
-            <h2><span class="fullPage">Welcome to </span>CASSOWARY PROJECT</h2>
-            <h3 class="fullPage">Helpling people solve the problem with anonymous and full privacy</h3>
+        <div class="right">
+            <img id="birdLogo" src="images/bird.svg" alt="">
+            <h2>CASSOWARY PROJECT</h2>
         </div>
+
 
     </div>
