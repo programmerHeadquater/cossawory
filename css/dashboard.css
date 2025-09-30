@@ -6,9 +6,25 @@
   font-family: "Lexend", sans-serif;
 }
 
+button {
+  all: unset;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 5px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #dbdbdb;
+}
+
 textarea {
   width: 100%;
   text-wrap: none;
+  height: 80px;
+  resize: vertical;
+  padding: 10px 3px;
 }
 
 body {
@@ -124,7 +140,16 @@ a {
   transition: 0.5s;
 }
 .main .nav #accountOption {
-  display: none;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 1s ease;
+  /* optionally, set initial display block if needed */
+}
+.main .nav #accountOption.open {
+  max-height: 200px;
+  /* enough to fit content */
+  opacity: 1;
 }
 .main .nav hr {
   display: block;
@@ -178,12 +203,158 @@ a {
   width: 100%;
   padding: 0px 20px 20px 20px;
   background: #f9f9f9;
+  flex: 1;
 }
-
-.pagination {
+.main .page .pagination {
   padding: 10px 20px;
   display: flex;
   justify-content: space-around;
+}
+.main .page .reviewAll {
+  padding: 20px;
+  border: 2px solid black;
+  margin: 10px;
+}
+.main .page .reviewAll .option {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.main .page .reviewAll .description {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.main .page .reviewAll span {
+  padding: 3px;
+  border: 1px solid black;
+}
+.main .page #addReviewTemplate #addNewReviewBtnWrapper {
+  overflow: hidden;
+  height: auto;
+  padding: 0;
+  transition: height 0.4s ease, padding 0.4s ease;
+  box-sizing: border-box;
+}
+.main .page #addReviewTemplate #addNewReviewBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.main .page #addReviewTemplate {
+  /* Collapsed state for button wrapper */
+}
+.main .page #addReviewTemplate .collapsed {
+  height: 0 !important;
+  padding: 0 !important;
+}
+.main .page #addReviewTemplate {
+  /* Form container */
+}
+.main .page #addReviewTemplate #addNewReview {
+  overflow: hidden;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  transition: height 0.4s ease;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  display: none;
+  /* hidden initially */
+}
+.main .page #addReviewTemplate #addNewReviewContent {
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.main .page #addReviewTemplate textarea {
+  width: 100%;
+  height: 80px;
+  resize: vertical;
+}
+.main .page #addReviewTemplate button {
+  margin-top: 10px;
+}
+.main .page .reviewTemplate .updatReview,
+.main .page .reviewTemplate .deleteReview {
+  overflow: hidden;
+  transition: height 0.5s ease;
+}
+.main .page .reviewTemplate {
+  border: 1px solid black;
+  padding: 20px 10px;
+  margin: 10px 0px;
+}
+.main .page .reviewTemplate p {
+  padding: 10px 0px;
+}
+.main .page .reviewTemplate .on {
+  border: 1px solid red;
+}
+.main .page .userTemplate {
+  width: 100%;
+}
+.main .page .userTemplate .userListHeader {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  gap: 5px;
+  align-items: stretch;
+  font-weight: bold;
+  background: #eee;
+  padding: 10px 5px;
+}
+.main .page .userTemplate .card {
+  padding: 10px 5px;
+  border: 2px solid red;
+}
+.main .page .userTemplate .card .list {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  gap: 5px;
+  align-items: stretch;
+  /* Makes all items same height */
+}
+.main .page .userTemplate .card .list span {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-radius: 4px;
+  min-height: 100%;
+  /* Force full height in the row */
+  box-sizing: border-box;
+}
+.main .page .userTemplate .card .list button {
+  display: inline;
+  border: 1px solid red;
+}
+.main .page .userTemplate .card .editPermision {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 5px;
+  align-items: stretch;
+}
+.main .page .userTemplate .card .editPermision form {
+  width: 100%;
+  display: block;
+}
+.main .page .userTemplate .card .editPermision form input {
+  display: inline-block;
+  width: 100px;
+  margin-bottom: 20px;
+}
+.main .page .userTemplate .card .editPermision form label {
+  display: inline-block;
+  width: 100px;
+}
+.main .page .userTemplate .card .Zero {
+  height: 0px !important;
+  overflow: hidden;
 }
 
 .footer {
@@ -193,40 +364,6 @@ a {
   background-color: black;
   width: 100%;
   text-align: center;
-}
-
-.reviewAll {
-  padding: 20px;
-  border: 2px solid black;
-  margin: 10px;
-}
-.reviewAll .option {
-  display: flex;
-  justify-content: space-between;
-}
-.reviewAll .description {
-  display: -webkit-box;
-  line-clamp: 3;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.reviewAll span {
-  padding: 3px;
-  border: 1px solid black;
-}
-
-.reviewTemplate {
-  border: 1px solid black;
-  padding: 20px 10px;
-  margin: 10px 0px;
-}
-.reviewTemplate p {
-  padding: 10px 0px;
-}
-.reviewTemplate .on {
-  border: 1px solid red;
 }
 
 .relative {

@@ -7,4 +7,7 @@
 
 </body>
 <script src="js/dashboard.js"></script>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'reviewSingle'): ?>
+<script src="js/reviewSingle.js"></script>
+<?php endif; ?>
 </html>

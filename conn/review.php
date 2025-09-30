@@ -8,7 +8,7 @@ use function conn\openDatabaseConnection;
 function updateReview($review_id, $review)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare('insert into ');
+    
     $stmt = $conn->prepare('UPDATE reviews SET review = ? WHERE id = ?');
     if (!$stmt) {
         $message = "Prepare failed: " . $conn->error . "<br>";
@@ -67,11 +67,12 @@ function insertReview($id, $reviewFormData)
 
 
 // this will remove the data of review table full row
-function deleteReview($review_id)
+function deleteReview($review_id):string|null
 {
     $error = null;
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("DELETE * FROM review WHERE id = ?");
+    $stmt = $conn->prepare("DELETE  FROM reviews WHERE id = ?");
+    $stmt->bind_param("i", $review_id);
     if (!$stmt) {
         $error = "Statement fail : " . $stmt->error;
     }

@@ -9,10 +9,26 @@
     // padding: 2px;
 }
 
+button {
+    all: unset;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background-color: #dbdbdb;
+}
+
 textarea {
 
     width: 100%;
     text-wrap: none;
+    height: 80px;
+    resize: vertical;
+    padding: 10px 3px;
 }
 
 body {
@@ -157,9 +173,21 @@ a {
         margin: 0px;
         padding: 0px;
         transition: 0.5s;
-        #accountOption{
-            display: none;
+
+        #accountOption {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 1s ease;
+            /* optionally, set initial display block if needed */
         }
+
+        #accountOption.open {
+            max-height: 200px;
+            /* enough to fit content */
+            opacity: 1;
+        }
+
         hr {
             display: block;
             width: 100%;
@@ -196,6 +224,7 @@ a {
                     justify-content: baseline;
                     // padding: 4px;
                     position: relative;
+
                     // border: 1px solid red;
                     #icon {
                         display: inline;
@@ -207,7 +236,8 @@ a {
                         // background-color: black;
                         position: relative;
                     }
-                    #downArrow{
+
+                    #downArrow {
                         position: absolute;
                         height: 10px;
                         width: 10px;
@@ -215,7 +245,7 @@ a {
                         background-color: rgb(255, 255, 255);
                         right: 9px;
                         bottom: 7px;
-                        
+
                     }
                 }
 
@@ -232,17 +262,221 @@ a {
         width: 100%;
         padding: 0px 20px 20px 20px;
         background: #f9f9f9;
+        flex: 1;
+
+        .pagination {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .reviewAll {
+            padding: 20px;
+            border: 2px solid black;
+            margin: 10px;
+
+
+            .option {
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .description {
+                display: -webkit-box;
+                line-clamp: 3;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            span {
+                padding: 3px;
+                border: 1px solid black;
+            }
+
+        }
+
+        #addReviewTemplate {
+            #addNewReviewBtnWrapper {
+                overflow: hidden;
+                height: auto;
+                padding: 0;
+                transition: height 0.4s ease, padding 0.4s ease;
+                box-sizing: border-box;
+            }
+
+            #addNewReviewBtn {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Collapsed state for button wrapper */
+            .collapsed {
+                height: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Form container */
+            #addNewReview {
+                overflow: hidden;
+                height: 0;
+                padding: 0;
+                margin: 0;
+                border: 0;
+                transition: height 0.4s ease;
+                background-color: #f9f9f9;
+                box-sizing: border-box;
+                display: none;
+                /* hidden initially */
+            }
+
+            #addNewReviewContent {
+                padding: 20px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+            }
+
+            textarea {
+                width: 100%;
+                height: 80px;
+                resize: vertical;
+            }
+
+            button {
+                margin-top: 10px;
+            }
+
+
+
+        }
+
+        .reviewTemplate {
+
+            .updatReview,
+            .deleteReview {
+                overflow: hidden;
+                transition: height 0.5s ease;
+            }
+
+            // .Zero {
+            //     height: 0px !important;
+            //     border: 0px !important;
+            //     transition: all 1s linear;
+            //     padding: 0;
+            //     margin: 0;
+            //     overflow: hidden;
+            // }
+
+            border: 1px solid black;
+            padding: 20px 10px;
+            margin: 10px 0px;
+
+            // background-color: #e7e6e6;
+            p {
+                padding: 10px 0px;
+            }
+
+            .on {
+                border: 1px solid red;
+            }
+
+        }
+
+        .userTemplate {
+
+            width: 100%;
+
+            // margin: auto;
+
+            .userListHeader {
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr 1fr;
+                gap: 5px;
+                
+                align-items: stretch;
+                font-weight: bold;
+                background: #eee;
+                padding: 10px 5px;
+            }
+
+            .card {
+                // background-color: #919191;
+                padding: 10px 5px;
+                border: 2px solid red;
+
+                .list {
+                    display: grid;
+                    grid-template-columns: 1fr 2fr 1fr 1fr;
+                    gap: 5px;
+                    // border-bottom: 1px solid #919191;
+                    align-items: stretch;
+
+
+                    /* Makes all items same height */
+                    span {
+                        display: flex;
+                        align-items: center;
+                        justify-content: start;
+                        border-radius: 4px;
+                        min-height: 100%;
+                        /* Force full height in the row */
+                        box-sizing: border-box;
+                    }
+
+                    button {
+                        display: inline;
+                        border: 1px solid red;
+                    }
+                }
+
+                .editPermision {
+                    // display: grid;
+                    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                    gap: 5px;
+                    
+                    align-items: stretch;
+
+                    form {
+                        width: 100%;
+                        display: block;
+
+                        input {
+                            display: inline-block;
+                            width: 100px;
+                            margin-bottom: 20px;
+                        }
+
+                        label {
+                            display: inline-block;
+                            width: 100px;
+                        }
+                    }
+                }
+
+                .Zero {
+                    height: 0px !important;
+                    overflow: hidden;
+                }
+            }
+
+
+        }
+
     }
+
+
 }
 
 
 
 
-.pagination {
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-around;
-}
+
 
 
 .footer {
@@ -254,48 +488,7 @@ a {
     text-align: center;
 }
 
-.reviewAll {
-    padding: 20px;
-    border: 2px solid black;
-    margin: 10px;
 
-    .option {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .description {
-        display: -webkit-box;
-        line-clamp: 3;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    span {
-        padding: 3px;
-        border: 1px solid black;
-    }
-
-}
-
-.reviewTemplate {
-
-    border: 1px solid black;
-    padding: 20px 10px;
-    margin: 10px 0px;
-
-    // background-color: #e7e6e6;
-    p {
-        padding: 10px 0px;
-    }
-
-    .on {
-        border: 1px solid red;
-    }
-
-}
 
 
 

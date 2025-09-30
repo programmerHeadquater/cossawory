@@ -58,7 +58,7 @@ function user_createNewUser($username, $email, $password, $permissions = []) {
     $can_view = $permissions['can_view'] ?? 0;
     $can_write_review = $permissions['can_write_review'] ?? 0;
     $can_delete_review = $permissions['can_delete_review'] ?? 0;
-    $can_delete_query = $permissions['can_delete_query'] ?? 0;
+    $can_delete_submission = $permissions['can_delete_submission'] ?? 0;
     $can_add_user = $permissions['can_add_user'] ?? 0;
     $can_delete_user = $permissions['can_delete_user'] ?? 0;
 
@@ -66,7 +66,7 @@ function user_createNewUser($username, $email, $password, $permissions = []) {
         INSERT INTO users (
             username, email, password,
             can_view, can_write_review, can_delete_review,
-            can_delete_query, can_add_user, can_delete_user
+            can_delete_submission, can_add_user, can_delete_user
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
@@ -78,7 +78,7 @@ function user_createNewUser($username, $email, $password, $permissions = []) {
         $can_view,
         $can_write_review,
         $can_delete_review,
-        $can_delete_query,
+        $can_delete_submission,
         $can_add_user,
         $can_delete_user
     );
@@ -111,7 +111,7 @@ function user_hasPermission($userId, $permissionName) {
         'can_view',
         'can_write_review',
         'can_delete_review',
-        'can_delete_query',
+        'can_delete_submission',
         'can_add_user',
         'can_delete_user'
     ];
@@ -144,8 +144,8 @@ function user_canDeleteReview($userId) {
     return user_hasPermission($userId, 'can_delete_review');
 }
 
-function user_canDeleteQuery($userId) {
-    return user_hasPermission($userId, 'can_delete_query');
+function user_canDeleteSubmission($userId) {
+    return user_hasPermission($userId, 'can_delete_submission');
 }
 
 function user_canAddUser($userId) {

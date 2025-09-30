@@ -38,10 +38,9 @@
     </div>
     <hr>
     <div class="one">
-        <a href="dashboard.php?page=main">All Submission</a>
-        <a href="dashboard.php?page=main">Add user</a>
-        <a href="dashboard.php?page=main">Change layout</a>
-        <a href="dashboard.php?page=main">All Submission</a>
+        <a href="dashboard.php?page=main">Submission</a>
+        <a href="dashboard.php?page=user&display=all">Users</a>
+        <a href="dashboard.php?page=layout">Layout</a>
     </div>
 
 </div>

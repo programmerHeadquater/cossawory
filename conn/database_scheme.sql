@@ -47,11 +47,13 @@ CREATE TABLE IF NOT EXISTS users (
   view BOOLEAN DEFAULT TRUE, -- check if user allow to see 
   can_write_review BOOLEAN DEFAULT FALSE, -- check if user allow to write a review
   can_delete_review BOOLEAN DEFAULT FALSE, -- check if user allow to delete the review
-  can_delete_querry BOOLEAN DEFAULT FALSE, -- check if user allow to delete the whole querry
+  can_delete_submission BOOLEAN DEFAULT FALSE, -- check if user allow to delete the whole querry
   can_add_user BOOLEAN DEFAULT FALSE, -- check if user allow to add user who can review to dashboard (login creation for other)
   can_delete_user BOOLEAN DEFAULT FALSE, -- check if user can delete the other user in the dashboard 
   can_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 
 

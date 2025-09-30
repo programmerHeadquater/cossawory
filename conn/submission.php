@@ -1,7 +1,7 @@
 <?php
 
 namespace submission;
-require_once("conn/conn.php");
+require_once("conn.php");
 use function conn\closeDatabaseConnection;
 use function conn\openDatabaseConnection;
 
@@ -53,6 +53,7 @@ function deleteSubmission($id)
     $message = ($stmt->affected_rows > 0) ? "yes" : "no";
     $stmt->close();
     closeDatabaseConnection($conn);
+    return $message;
 }
 
 function getSubmission($startPoint){

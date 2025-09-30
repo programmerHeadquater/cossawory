@@ -35,3 +35,19 @@ document.querySelectorAll('[id]').forEach(el => {
     console.log(`✅ ID is unique: #${id}`);
   }
 });
+
+
+//adjust the text area height to auto increase but maintain 200px min
+document.querySelectorAll('textarea').forEach(textarea => {
+  textarea.style.overflow = 'hidden';
+  textarea.style.resize = 'none';
+  textarea.style.minHeight = '100px';
+
+  function autoResize() {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.max(textarea.scrollHeight, 100) + 'px';
+  }
+
+  textarea.addEventListener('input', autoResize);
+  autoResize();
+});
