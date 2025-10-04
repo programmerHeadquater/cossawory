@@ -6,6 +6,9 @@ CREATE DATABASE IF NOT EXISTS Cossawory_db;
 -- Use the new database
 USE Cossawory_db;
 
+
+
+-- this is for new table 
 CREATE TABLE IF NOT EXISTS submission  (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,   -- tittle of problem
@@ -17,6 +20,9 @@ CREATE TABLE IF NOT EXISTS submission  (
 
 
 -- Create a table called submission
+-- this is old table
+
+
 -- CREATE TABLE IF NOT EXISTS submission (
 --   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 --   title VARCHAR(255) NOT NULL,   --tittle of problem

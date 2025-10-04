@@ -87,7 +87,7 @@ a {
             border: 2px solid black;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            transition: all 0.5s linear;
             left: 0;
             transform-origin: center center;
         }
@@ -176,16 +176,16 @@ a {
 
         #accountOption {
             max-height: 0;
-            opacity: 0;
+            // opacity: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease, opacity 1s ease;
+            transition: max-height 0.5s linear;
             /* optionally, set initial display block if needed */
         }
 
         #accountOption.open {
             max-height: 200px;
             /* enough to fit content */
-            opacity: 1;
+            // opacity: 1;
         }
 
         hr {
@@ -264,6 +264,10 @@ a {
         background: #f9f9f9;
         flex: 1;
 
+        .active {
+            background-color: yellow;
+        }
+
         .pagination {
             padding: 10px 20px;
             display: flex;
@@ -299,11 +303,14 @@ a {
         }
 
         #addReviewTemplate {
+            color: inherit;
+            background-color: #fff;
+
             #addNewReviewBtnWrapper {
                 overflow: hidden;
                 height: auto;
                 padding: 0;
-                transition: height 0.4s ease, padding 0.4s ease;
+                transition: height 0.5s linear, padding 0.5s linear;
                 box-sizing: border-box;
             }
 
@@ -329,7 +336,7 @@ a {
                 padding: 0;
                 margin: 0;
                 border: 0;
-                transition: height 0.4s ease;
+                transition: height 0.5s linear;
                 background-color: #f9f9f9;
                 box-sizing: border-box;
                 display: none;
@@ -357,11 +364,13 @@ a {
         }
 
         .reviewTemplate {
+            color: inherit;
+            border: 1px solid red;
 
             .updatReview,
             .deleteReview {
                 overflow: hidden;
-                transition: height 0.5s ease;
+                transition: height 0.5s linear;
             }
 
             // .Zero {
@@ -398,7 +407,7 @@ a {
                 display: grid;
                 grid-template-columns: 1fr 2fr 1fr 1fr;
                 gap: 5px;
-                
+
                 align-items: stretch;
                 font-weight: bold;
                 background: #eee;
@@ -409,6 +418,7 @@ a {
                 // background-color: #919191;
                 padding: 10px 5px;
                 border: 2px solid red;
+                transition: all 1s linear;
 
                 .list {
                     display: grid;
@@ -439,12 +449,18 @@ a {
                     // display: grid;
                     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
                     gap: 5px;
-                    
+
                     align-items: stretch;
 
                     form {
-                        width: 100%;
-                        display: block;
+                        max-height: 0;
+                        overflow: hidden;
+                        transition: max-height 0.5s linear, padding 0.5s linear;
+
+                        /* padding will animate in too */
+                        opacity: 0;
+                        pointer-events: none;
+                        /* prevent focus/clicks when hidden */
 
                         input {
                             display: inline-block;
@@ -454,15 +470,26 @@ a {
 
                         label {
                             display: inline-block;
-                            width: 100px;
+                            width: 200px;
                         }
+                    }
+
+                    .deletedMessage {
+                        color: red;
+                        font-weight: bold;
+                        display: none;
+                    }
+
+                    .Zero {
+                        max-height: 1000px;
+                        /* enough to fit full content */
+                        opacity: 1;
+                        pointer-events: auto;
+                        // padding: 20px;
                     }
                 }
 
-                .Zero {
-                    height: 0px !important;
-                    overflow: hidden;
-                }
+
             }
 
 
@@ -480,9 +507,9 @@ a {
 
 
 .footer {
-    padding: 10px;
+    padding: 5px;
     color: white;
-    font-size: 20px;
+    font-size: 12px;
     background-color: black;
     width: 100%;
     text-align: center;
@@ -512,6 +539,11 @@ a {
 .dflex {
     display: flex;
 }
+
+.dNone {
+    display: none;
+}
+
 
 .space-between {
     justify-content: space-between;

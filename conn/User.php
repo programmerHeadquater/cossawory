@@ -9,7 +9,8 @@ use function conn\closeDatabaseConnection;
 /**
  * Get a user by ID
  */
-function user_getById($id) {
+function user_getById($id)
+{
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->bind_param("i", $id);
@@ -24,7 +25,8 @@ function user_getById($id) {
 /**
  * Get a user by username
  */
-function user_getByUsername($username) {
+function user_getByUsername($username)
+{
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -39,7 +41,8 @@ function user_getByUsername($username) {
 /**
  * Validate user credentials
  */
-function user_checkLogin($username, $password) {
+function user_checkLogin($username, $password)
+{
     $user = user_getByUsername($username);
     if ($user && password_verify($password, $user['password'])) {
         return $user;
@@ -50,22 +53,28 @@ function user_checkLogin($username, $password) {
 /**
  * Create a new user with permissions
  */
-function user_createNewUser($username, $email, $password, $permissions = []) {
-    $conn = openDatabaseConnection();
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+function user_addNewUser($formData)
+{
 
-    // Extract permission values into variables
-    $can_view = $permissions['can_view'] ?? 0;
-    $can_write_review = $permissions['can_write_review'] ?? 0;
-    $can_delete_review = $permissions['can_delete_review'] ?? 0;
-    $can_delete_submission = $permissions['can_delete_submission'] ?? 0;
-    $can_add_user = $permissions['can_add_user'] ?? 0;
-    $can_delete_user = $permissions['can_delete_user'] ?? 0;
+
+    $conn = openDatabaseConnection();
+    $username = $formData['username'];
+    $password = password_hash($formData['password'], PASSWORD_DEFAULT);
+    $email = $formData['email'];
+
+    // Convert Yes/No values to 1/0
+    $can_view = 1;
+    $can_write_review = isset($formData['can_write_review']) && strtolower($formData['can_write_review']) === 'yes' ? 1 : 0;
+    $can_delete_review = isset($formData['can_delete_review']) && strtolower($formData['can_delete_review']) === 'yes' ? 1 : 0;
+    $can_delete_submission = isset($formData['can_delete_submission']) && strtolower($formData['can_delete_submission']) === 'yes' ? 1 : 0;
+    $can_add_user = isset($formData['can_add_user']) && strtolower($formData['can_add_user']) === 'yes' ? 1 : 0;
+    $can_delete_user = isset($formData['can_delete_user']) && strtolower($formData['can_delete_user']) === 'yes' ? 1 : 0;
+
 
     $stmt = $conn->prepare("
         INSERT INTO users (
             username, email, password,
-            can_view, can_write_review, can_delete_review,
+            view, can_write_review, can_delete_review,
             can_delete_submission, can_add_user, can_delete_user
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
@@ -74,7 +83,7 @@ function user_createNewUser($username, $email, $password, $permissions = []) {
         "sssiiiiii",
         $username,
         $email,
-        $hashedPassword,
+        $password,
         $can_view,
         $can_write_review,
         $can_delete_review,
@@ -93,7 +102,8 @@ function user_createNewUser($username, $email, $password, $permissions = []) {
 /**
  * Delete user by ID
  */
-function user_deleteById($id) {
+function user_deleteById($id)
+{
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
     $stmt->bind_param("i", $id);
@@ -106,7 +116,8 @@ function user_deleteById($id) {
 /**
  * Check if user has a specific permission
  */
-function user_hasPermission($userId, $permissionName) {
+function user_hasPermission($userId, $permissionName)
+{
     $allowed = [
         'can_view',
         'can_write_review',
@@ -116,7 +127,8 @@ function user_hasPermission($userId, $permissionName) {
         'can_delete_user'
     ];
     if (!in_array($permissionName, $allowed)) {
-        throw new \InvalidArgumentException("Invalid permission: $permissionName");
+        // throw new \InvalidArgumentException("Invalid permission: $permissionName");
+        return false;
     }
 
     $conn = openDatabaseConnection();
@@ -127,31 +139,89 @@ function user_hasPermission($userId, $permissionName) {
     $row = $result->fetch_assoc();
     $stmt->close();
     closeDatabaseConnection($conn);
-    return isset($row[$permissionName]) && (bool)$row[$permissionName];
+    return isset($row[$permissionName]) && (bool) $row[$permissionName];
+   
 }
 
 // Optional wrappers for common permission checks
 
-function user_canView($userId) {
+function user_canView($userId)
+{
     return user_hasPermission($userId, 'can_view');
 }
 
-function user_canWriteReview($userId) {
+function user_canWriteReview($userId)
+{
     return user_hasPermission($userId, 'can_write_review');
 }
 
-function user_canDeleteReview($userId) {
+function user_canDeleteReview($userId)
+{
     return user_hasPermission($userId, 'can_delete_review');
 }
 
-function user_canDeleteSubmission($userId) {
+function user_canDeleteSubmission($userId)
+{
     return user_hasPermission($userId, 'can_delete_submission');
 }
 
-function user_canAddUser($userId) {
+function user_canAddUser($userId)
+{
     return user_hasPermission($userId, 'can_add_user');
 }
 
-function user_canDeleteUser($userId) {
+function user_canDeleteUser($userId)
+{
     return user_hasPermission($userId, 'can_delete_user');
+}
+
+function user_getUsers($startPoint)
+{
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("SELECT * FROM users LIMIT 20 OFFSET ?");
+    $stmt->bind_param("i", $startPoint);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(\MYSQLI_ASSOC);
+    return $data;
+}
+function user_getTotaluser()
+{
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM users");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return (int) $row["COUNT(*)"];
+}
+
+function user_updatePermision($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user )
+{
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare('    UPDATE users SET 
+            can_write_review = ?,
+            can_delete_review = ?,
+            can_delete_submission = ?,
+            can_add_user = ?,
+            can_delete_user = ?
+        WHERE id = ?
+    ');
+    if (!$stmt) {
+        closeDatabaseConnection($conn);
+        return false;
+    }
+    $stmt->bind_param(
+        "iiiiii",
+        $can_write_review,
+        $can_delete_review,
+        $can_delete_submission,
+        $can_add_user,
+        $can_delete_user,
+        $id
+    );
+    $stmt->execute();
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return true;
 }
