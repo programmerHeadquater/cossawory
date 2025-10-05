@@ -29,38 +29,23 @@
         ?>
         <div class="reviewAll">
             <?php
-            foreach ($form_data as $index => $field) {
-
-
-                foreach ($field as $key => $value) {
-                    if($key === 'label'){
-                        echo "<p>{$key}</p>";
-
-                        echo "<p>{$value}</p>";
-                    }
-                    // Handle file type differently
-                    if ($key === 'value' && is_array($value)) {
-
-                            if (isset($value['path'])) {
-
-                                if (isset($value['type']) && isset($value['path'])) {
-                                    if ($value['type'] == 'image/jpeg' || $value['type'] == 'image/png')
-                                        echo "<img class='uploadImg' src='{$value['path']}' />";
-
-                                }
-                            }
+            foreach ($form_data as $index => $field): ?>
+                <div class="submission">
+                    <p><?= $field['label'] ?> </p>
+                </div>
+                <?php if ($field['type'] == 'file'): ?>
+                    
+                    <?php if (is_array($field['value'])): ?>
                         
+                        <?php foreach ($field['value'] as $subKey => $subValue ):?> 
+                            
+                            <img class="uploadImg" src="<?=$subValue?>" alt="">
 
-                        // Optionally, add a link to download/view the file
-        
-
-                    } 
-                }
-
-                echo "<hr>";
-            }
-
-
+                        <?php
+                        endforeach;
+                    endif;
+                endif;
+            endforeach;
             ?>
 
             <br>
