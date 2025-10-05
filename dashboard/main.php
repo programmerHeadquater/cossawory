@@ -24,29 +24,60 @@
 
     function submissionTemplate($row, $startPoint)
     {
-
+        $form_data = json_decode($row['form_data'], true);
         ob_start();
         ?>
         <div class="reviewAll">
-            <h2><?php echo htmlspecialchars($row['title']) ?> </h2>
-            <br>
-            <hr>
-            <br>
-            <h3 class="description"><?php echo htmlspecialchars($row['concern']) ?> </h3>
+            <?php
+            foreach ($form_data as $index => $field) {
 
+
+                foreach ($field as $key => $value) {
+                    if($key === 'label'){
+                        echo "<p>{$key}</p>";
+
+                        echo "<p>{$value}</p>";
+                    }
+                    // Handle file type differently
+                    if ($key === 'value' && is_array($value)) {
+
+                            if (isset($value['path'])) {
+
+                                if (isset($value['type']) && isset($value['path'])) {
+                                    if ($value['type'] == 'image/jpeg' || $value['type'] == 'image/png')
+                                        echo "<img class='uploadImg' src='{$value['path']}' />";
+
+                                }
+                            }
+                        
+
+                        // Optionally, add a link to download/view the file
+        
+
+                    } 
+                }
+
+                echo "<hr>";
+            }
+
+
+            ?>
+
+            <br>
+            <p>Status: <?= $row['review'] ? "Reviewed  " : "pending" ?> </p>
             <br>
             <div class="option">
 
-                <span>Status: <?= $row['review'] ? "Review <br> At: " . $row['submitted_at'] : "pending" ?> </span>
+
                 <span><a href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
 
-                <span>
-                    <form action="dashboard/deleteSubmission.php" method="POST">
 
-                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                        <button type="submit">Delete</button>
-                    </form>
-                </span>
+                <form action="dashboard/deleteSubmission.php" method="POST">
+
+                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    <button type="submit">Delete</button>
+                </form>
+
 
             </div>
         </div>
@@ -57,11 +88,11 @@
     function pagination($startPoint, $total)
     {
         ob_start();
-        $prevStart = max(0, $startPoint - 2);
-        $nextStart = $startPoint + 2;
+        $prevStart = max(0, $startPoint - 20);
+        $nextStart = $startPoint + 20;
         ?>
         <div class="pagination">
-            <?php if ($startPoint > 0): ?>
+            <?php if ($startPoint > 20): ?>
                 <button><a href="dashboard.php?startPoint=<?= $prevStart ?>">Previous</a></button>
             <?php endif; ?>
 

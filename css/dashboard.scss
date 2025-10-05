@@ -156,6 +156,64 @@ a {
     // padding: 10px 20px;
 
     // background-color: #9b9690;
+
+    .layout {
+        padding: 10px;
+        flex: 1;
+
+        .function {
+            select {
+                padding: 3px;
+                margin-left: 10px;
+            }
+        }
+
+        #previewForm {
+            border: 1px solid black;
+            padding: 20px;
+
+            label {
+                padding: 10px 0px;
+                display: block;
+            }
+
+            input {
+                display: block;
+                width: 100%;
+                min-height: 50px;
+            }
+
+            button {
+                margin-right: 10px;
+            }
+
+            .remove {
+                padding: 0px;
+                margin: 0px !important;
+                height: 0px;
+                border: none;
+                overflow: hidden;
+                transition: 0.3s all linear;
+                font-size: inherit;
+
+            }
+        }
+
+        #previewForm:hover .remove {
+            transition: 0.3s all linear;
+            margin: 5px 0 0 0 !important;
+
+            height: 30px;
+            padding: 5px 5px;
+            border: 1px solid red;
+            display: block !important;
+        }
+
+
+
+
+    }
+
     .navShow {
         width: 250px !important;
         padding: 10px !important;
@@ -263,23 +321,27 @@ a {
         padding: 10px 10px 20px 10px;
         background: #f9f9f9;
         flex: 1;
-        .userNav{
+
+        .userNav {
             background-color: #e6e6e6;
             padding: 10px 0px;
-            a{
-            // border-bottom: 2px solid #9b9690;
-                transition: all ;
+
+            a {
+                // border-bottom: 2px solid #9b9690;
+                transition: all;
             }
-            a:hover{
-            border-bottom: 2px solid red;
-                
+
+            a:hover {
+                border-bottom: 2px solid red;
+
             }
         }
+
         .active {
             border-bottom: 2px solid red !important;
 
         }
-        
+
 
         .pagination {
             padding: 10px 20px;
@@ -292,11 +354,15 @@ a {
             border: 2px solid black;
             margin: 10px;
 
+            .uploadImg {
+                height: 400px;
+            }
 
             .option {
                 display: flex;
                 gap: 20px;
                 flex-wrap: wrap;
+                align-items: center;
             }
 
             .description {
@@ -414,7 +480,7 @@ a {
 
             width: 100%;
 
-            
+
 
             .userListHeader {
                 display: grid;

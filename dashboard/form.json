@@ -1,0 +1,14 @@
+[
+    {
+        "label": "tittle of the problem",
+        "type": "text",
+        "required": "yes",
+        "name": "tittle_of_the_problem"
+    },
+    {
+        "label": "image of the problem",
+        "type": "file",
+        "required": "yes",
+        "name": "image_of_the_problem"
+    }
+]

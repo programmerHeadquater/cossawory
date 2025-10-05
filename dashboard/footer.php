@@ -14,4 +14,7 @@
 <?php if (isset($_GET['page']) && $_GET['page'] === 'user'): ?>
 <script src="js/user.js"></script>
 <?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'layout'): ?>
+<script src="js/layout.js"></script>
+<?php endif; ?>
 </html>

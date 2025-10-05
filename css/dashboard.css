@@ -123,6 +123,47 @@ a {
   display: flex;
   flex: 1;
 }
+.main .layout {
+  padding: 10px;
+  flex: 1;
+}
+.main .layout .function select {
+  padding: 3px;
+  margin-left: 10px;
+}
+.main .layout #previewForm {
+  border: 1px solid black;
+  padding: 20px;
+}
+.main .layout #previewForm label {
+  padding: 10px 0px;
+  display: block;
+}
+.main .layout #previewForm input {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+}
+.main .layout #previewForm button {
+  margin-right: 10px;
+}
+.main .layout #previewForm .remove {
+  padding: 0px;
+  margin: 0px !important;
+  height: 0px;
+  border: none;
+  overflow: hidden;
+  transition: 0.3s all linear;
+  font-size: inherit;
+}
+.main .layout #previewForm:hover .remove {
+  transition: 0.3s all linear;
+  margin: 5px 0 0 0 !important;
+  height: 30px;
+  padding: 5px 5px;
+  border: 1px solid red;
+  display: block !important;
+}
 .main .navShow {
   width: 250px !important;
   padding: 10px !important;
@@ -226,10 +267,14 @@ a {
   border: 2px solid black;
   margin: 10px;
 }
+.main .page .reviewAll .uploadImg {
+  height: 400px;
+}
 .main .page .reviewAll .option {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  align-items: center;
 }
 .main .page .reviewAll .description {
   display: -webkit-box;
