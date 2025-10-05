@@ -12,9 +12,7 @@
     <title>Cossawary</title>
 
 </head>
-<div id="top">
 
-</div>
 
 <body>
 
@@ -28,9 +26,9 @@
             <a href="index.php"><img id="birdLogo" src="images/bird.svg" alt="Logo"></a>
         </div>
         <div class="headerRight">
-            <br>
+            
             <h2><span>Welcome to </span>Cassowary Project</h2>
-            <br>
+            
             <h3>Helpling people solve the problem with anonymous and full privacy</h3>
         </div>
     </div>

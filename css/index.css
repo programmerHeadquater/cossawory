@@ -147,7 +147,7 @@ hr{
 }
 
 .nav{
-  padding: 30px;
+  padding: 20px;
   transition-duration: 2s;
   background-color: rgb(239, 239, 239);
 }
@@ -193,8 +193,8 @@ hr{
 }
 #birdLogo{
   color: var(--turquoise-blue);
-  width: 120px;
-  height: 120px;
+  width: 60px;
+  height: 60px;
 }
 
 .page{

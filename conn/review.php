@@ -4,6 +4,8 @@ namespace review;
 require_once 'conn.php';
 use function conn\closeDatabaseConnection;
 use function conn\openDatabaseConnection;
+require_once 'submission.php';
+use function submission\updateSubmissionReviewStatus;
 
 function updateReview($review_id, $review)
 {
@@ -62,6 +64,9 @@ function insertReview($id, $reviewFormData)
 
     $review_id = $stmt->insert_id;
     $stmt->close();
+
+    $data = updateSubmissionReviewStatus($id);
+
     return [$review_id, $error];
 }
 

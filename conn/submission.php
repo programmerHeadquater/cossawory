@@ -13,7 +13,10 @@ function insertSubmission($title, $concern, $why_this_app, $disability, $review,
     $conn = openDatabaseConnection();
 
     if (!$conn) {
-        $message = "<p>Unable to connect to the database</p>";
+        $message = [
+            "status" =>'fail',
+            'message'=>"no connection"
+        ];
     }
 
     if ($conn) {
@@ -21,17 +24,27 @@ function insertSubmission($title, $concern, $why_this_app, $disability, $review,
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             // log this
-            $message = "<p>Fail to bind the querry </p>";
+            $message = [
+            "status" =>'fail',
+            'message'=>"stmt fail"
+        ];
             die("Preparing Fail. Sql querry did not match the table or something happen");
         }
         $stmt->bind_param("ssssss", $title, $concern, $why_this_app, $disability, $review, $review_id);
         if ($stmt->execute()) {
             $insert_id = $conn->insert_id;
-            $message = "<p>Your reference id is  " . $insert_id . "</p> <br> <p>Add layout to display the reference output</p>";
+            $message = [
+            "status" =>'sucess',
+            'message'=>"updated",
+            'id'=>$insert_id
+        ];
             
         } else {
             //log this
-            $message = "<p>The execution of sql fail<p>";
+            $message = [
+            "status" =>'fail',
+            'message'=>"execution fail"
+        ];
         }
         $stmt->close();
         closeDatabaseConnection($conn);
@@ -82,5 +95,14 @@ function getSubmissionById(int $id){
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
     return $data;
+}
+function updateSubmissionReviewStatus($id){
+    $conn = openDatabaseConnection();
+    $stmt = $conn->prepare("UPDATE submission set review = 1 where id = ?");
+    $stmt->bind_param("i",$id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return null;
+
 }
 ?>

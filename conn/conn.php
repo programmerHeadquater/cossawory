@@ -25,8 +25,7 @@ function openDatabaseConnection(): \mysqli|null
         $conn->connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         return $conn;
     } catch (\mysqli_sql_exception $e) {
-        echo  "<p style='color:red;'>Error: Could not connect to the database.</p>";
-        echo "<p>Return the error message on a layout required</p>";
+         
         return null;
     }
 

@@ -21,7 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $can_delete_submission = isset($_POST['can_delete_submission']) && strtolower($_POST['can_delete_submission']) === 'yes' ? 1 : 0;
         $can_add_user = isset($_POST['can_add_user']) && strtolower($_POST['can_add_user']) === 'yes' ? 1 : 0;
         $can_delete_user = isset($_POST['can_delete_user']) && strtolower($_POST['can_delete_user']) === 'yes' ? 1 : 0;
+
+        
         $sucess = user_updatePermision($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user);
+
+        
         echo json_encode(['success' => $sucess, 'message' => 'All feild are updated sucessfully.']);
         exit;
     } else {

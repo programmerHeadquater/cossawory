@@ -1,3 +1,3 @@
 <div class="layout">
-    <a href="">asdf</a>
+    <h2>This page is under construction</h2>
 </div>

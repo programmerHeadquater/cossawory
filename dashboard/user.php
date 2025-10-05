@@ -8,7 +8,6 @@
     
     ?>
 
-    <br>
     <div class="userNav">
         <a class="active" href="dashboard.php?page=user">All Users</a>
         <a href="dashboard.php?page=addUser">Add User</a>

@@ -51,7 +51,6 @@ use function user\user_addNewUser;
     ?>
 
     <div class="page">
-        <br>
         <div class="userNav">
             <a href="dashboard.php?page=user">All Users</a>
             <a class="active" href="dashboard.php?page=addUser">Add User</a>

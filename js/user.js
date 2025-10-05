@@ -1,89 +1,75 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.openEditPermission');
-    const closeButtons = document.querySelectorAll('.closeEditPermission');
-    const permissionCards = document.querySelectorAll('.editPermision');
+    const container = document.querySelector('.page');
+    // Or use a more specific parent wrapper, e.g. document.querySelector('.userTemplate')
 
-    // Hide all forms initially
-    permissionCards.forEach(card => {
-        card.querySelector('form').classList.remove('Zero');
-        card.querySelector('.sucessMessage').style.display = 'none';
-    });
-
-    editButtons.forEach((button, index) => {
-        button.addEventListener('click', function () {
-            permissionCards.forEach((card, i) => {
-                card.querySelector('form').classList.remove('Zero');
-                card.querySelector('.sucessMessage').style.display = 'none';
-            });
-
-            const currentCard = permissionCards[index];
-            currentCard.querySelector('form').classList.add('Zero');
-            currentCard.querySelector('.sucessMessage').style.display = 'none'; // just in case
-        });
-    });
-
-    closeButtons.forEach((button, index) => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            permissionCards[index].querySelector('form').classList.remove('Zero');
-            permissionCards[index].querySelector('.sucessMessage').style.display = 'none';
-        });
-    });
-
-    // AJAX form submission
-    permissionCards.forEach((card, index) => {
+    // Initialize: hide all success and deleted messages
+    container.querySelectorAll('.editPermision').forEach(card => {
         const form = card.querySelector('form');
-        const successMessage = card.querySelector('.sucessMessage');
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch('dashboard/updatePermission.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Hide form, show success message
-                    form.classList.remove('Zero');
-                    successMessage.textContent = data.message;
-                    successMessage.style.display = 'block';
-                    successMessage.style.color = 'green';
-                } else {
-                    form.classList.remove('Zero');
-                    successMessage.textContent = data.message;
-                    successMessage.style.display = 'block';
-                    successMessage.style.color = 'red';
-                }
-            })
-            .catch(error => {
-                console.error('AJAX Error:', error);
-                alert("Failed to update permissions.");
-            });
-        });
+        const msg = card.querySelector('.sucessMessage');
+        if (form) form.classList.remove('Zero');
+        if (msg) msg.style.display = 'none';
     });
-});
 
+    // Handle clicks (delegated)
+    container.addEventListener('click', function (e) {
+        const target = e.target;
 
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteButtons = document.querySelectorAll('.deleteUserButton');
+        // 1) Edit button clicked
+        if (target.matches('.openEditPermission')) {
+            // Hide all forms / messages
+            container.querySelectorAll('.editPermision').forEach(c => {
+                const f = c.querySelector('form');
+                const m = c.querySelector('.sucessMessage');
+                if (f) f.classList.remove('Zero');
+                if (m) m.style.display = 'none';
+            });
 
-    deleteButtons.forEach(button => {
-        let deleted = false;
+            // Show the correct form in this card
+            const card = target.closest('.card');
+            if (!card) return;
+            const permCard = card.querySelector('.editPermision');
+            if (!permCard) return;
 
-        button.addEventListener('click', function () {
+            const form = permCard.querySelector('form');
+            const msg = permCard.querySelector('.sucessMessage');
+            if (form) form.classList.add('Zero');
+            if (msg) msg.style.display = 'none';
+
+            return;
+        }
+
+        // 2) Close button clicked
+        if (target.matches('.closeEditPermission')) {
+            e.preventDefault();
+            const card = target.closest('.card');
+            if (!card) return;
+            const permCard = card.querySelector('.editPermision');
+            if (!permCard) return;
+
+            const form = permCard.querySelector('form');
+            const msg = permCard.querySelector('.sucessMessage');
+            if (form) form.classList.remove('Zero');
+            if (msg) msg.style.display = 'none';
+
+            return;
+        }
+
+        // 3) Delete user button clicked
+        if (target.matches('.deleteUserButton')) {
+            let button = target;
             const card = button.closest('.card');
+            if (!card) return;
+
             const form = card.querySelector('form');
-            const successMessage = card.querySelector('.deletedMessage');
+            const deletedMsg = card.querySelector('.deletedMessage');
             const userId = button.dataset.id;
 
-            // ✅ First click: confirm + AJAX delete
-            if (!deleted) {
-                const confirmed = confirm("Are you sure you want to delete this user?");
-                if (!confirmed) return; // User canceled
+            // We'll use a custom attribute or closure to track whether deletion was confirmed
+            if (!button.dataset.deleted) {
+                // First click: confirm
+                if (!confirm("Are you sure you want to delete this user?")) {
+                    return;
+                }
 
                 fetch('dashboard/deleteUser.php', {
                     method: 'POST',
@@ -92,26 +78,71 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: 'id=' + encodeURIComponent(userId)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (form) form.remove();
-                        if (successMessage) successMessage.style.display = 'block';
-                        button.textContent = 'Remove';
-                        deleted = true;
-                    } else {
-                        alert("Error deleting user: " + (data.message || "Unknown error."));
-                    }
-                })
-                .catch(error => {
-                    console.error('AJAX error:', error);
-                    alert("Failed to delete user.");
-                });
-            } 
-            // ✅ Second click: remove the entire card
-            else {
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (form) form.remove();
+                            if (deletedMsg) {
+                                deletedMsg.style.display = 'block';
+                                deletedMsg.textContent = data.message || 'User deleted successfully.';
+                                deletedMsg.style.color = 'green';
+                            }
+                            button.textContent = 'Remove';
+                            button.dataset.deleted = 'true';
+                        } else {
+                            alert("Error deleting user: " + (data.message || "Unknown error."));
+                        }
+                    })
+                    .catch(err => {
+                        console.error('AJAX error:', err);
+                        alert("Failed to delete user.");
+                    });
+            } else {
+                // Second click => remove entire card
                 card.remove();
             }
-        });
+
+            return;
+        }
+    });
+
+    // Handle form submissions (delegated)
+    container.addEventListener('submit', function (e) {
+        const target = e.target;
+        if (target.matches('.editPermision form')) {
+            e.preventDefault();
+
+            const form = target;
+            const card = form.closest('.card');
+            if (!card) return;
+            const permCard = card.querySelector('.editPermision');
+            if (!permCard) return;
+            const successMessage = permCard.querySelector('.sucessMessage');
+
+            const formData = new FormData(form);
+
+            fetch('dashboard/updatePermission.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(r => r.json())
+                .then(data => {
+                    // Hide form, show message
+                    form.classList.remove('Zero');
+                    if (successMessage) {
+                        successMessage.textContent = data.message || 'Updated';
+                        successMessage.style.display = 'block';
+                        successMessage.style.color = data.success ? 'green' : 'red';
+                    }
+                })
+                .catch(err => {
+                    console.error('AJAX Error:', err);
+                    if (successMessage) {
+                        successMessage.textContent = "Failed to update permissions.";
+                        successMessage.style.display = 'block';
+                        successMessage.style.color = 'red';
+                    }
+                });
+        }
     });
 });

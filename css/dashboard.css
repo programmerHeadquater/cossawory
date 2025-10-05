@@ -47,7 +47,7 @@ a {
 }
 
 .header {
-  padding: 5px 20px;
+  padding: 5px 10px;
   background-color: var(--turquoise-blue);
   color: black;
   display: flex;
@@ -113,7 +113,7 @@ a {
   align-items: baseline;
 }
 .header .right #birdLogo {
-  height: 40px;
+  height: 30px;
   margin-left: 20px;
   vertical-align: middle;
   color: red !important;
@@ -199,12 +199,22 @@ a {
 .main .page {
   overflow: scroll;
   width: 100%;
-  padding: 0px 20px 20px 20px;
+  padding: 10px 10px 20px 10px;
   background: #f9f9f9;
   flex: 1;
 }
+.main .page .userNav {
+  background-color: #e6e6e6;
+  padding: 10px 0px;
+}
+.main .page .userNav a {
+  transition: all;
+}
+.main .page .userNav a:hover {
+  border-bottom: 2px solid red;
+}
 .main .page .active {
-  background-color: yellow;
+  border-bottom: 2px solid red !important;
 }
 .main .page .pagination {
   padding: 10px 20px;
@@ -316,7 +326,7 @@ a {
   gap: 5px;
   align-items: stretch;
   font-weight: bold;
-  background: #eee;
+  background: #d3d1d1;
   padding: 10px 5px;
 }
 .main .page .userTemplate .card {

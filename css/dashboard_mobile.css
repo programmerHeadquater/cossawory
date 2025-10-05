@@ -30,8 +30,13 @@
     background-color: var(--turquoise-blue);
     color: black;
     display: flex;
+    
     align-items: center;
     justify-content: space-between;
+  }
+  .header .headerLeft{
+    display: flex;
+    align-items: center;
   }
   .header a {
     display: block;

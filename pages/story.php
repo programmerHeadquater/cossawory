@@ -70,7 +70,7 @@ function submissionTemplate($submission)
 function reviewTemplate($review)
 {
     ob_start();
-    echo "<p>Review: (required a good template):</p><br>";
+    
 
     
 
