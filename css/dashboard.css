@@ -15,10 +15,6 @@ button {
   transition: 0.2s;
 }
 
-button:hover {
-  background-color: #dbdbdb;
-}
-
 textarea {
   width: 100%;
   text-wrap: none;
@@ -302,6 +298,11 @@ a {
   flex-wrap: wrap;
   align-items: center;
 }
+.main .page .reviewAll .option a {
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid black;
+}
 .main .page .reviewAll .description {
   display: -webkit-box;
   line-clamp: 3;
@@ -309,10 +310,6 @@ a {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.main .page .reviewAll span {
-  padding: 3px;
-  border: 1px solid black;
 }
 .main .page #addReviewTemplate {
   color: inherit;
@@ -369,24 +366,32 @@ a {
   margin-top: 10px;
 }
 .main .page .reviewTemplate {
+  background-color: #f7e9d6;
   color: inherit;
-  border: 1px solid red;
+  box-shadow: 1px 1px 1px 1px black;
 }
-.main .page .reviewTemplate .updatReview,
+.main .page .reviewTemplate .updatReview {
+  overflow: hidden;
+  transition: height 0.5s linear;
+}
 .main .page .reviewTemplate .deleteReview {
   overflow: hidden;
   transition: height 0.5s linear;
 }
+.main .page .reviewTemplate .updateBtn {
+  background-color: rgba(0, 128, 0, 0.518);
+}
+.main .page .reviewTemplate .deleteBtn {
+  background-color: #f53b4d;
+  color: white;
+}
 .main .page .reviewTemplate {
   border: 1px solid black;
   padding: 20px 10px;
-  margin: 10px 0px;
+  margin: 20px 0px;
 }
 .main .page .reviewTemplate p {
   padding: 10px 0px;
-}
-.main .page .reviewTemplate .on {
-  border: 1px solid red;
 }
 .main .page .userTemplate {
   width: 100%;
@@ -488,6 +493,20 @@ a {
 
 .space-between {
   justify-content: space-between;
+}
+
+.back {
+  background-color: black;
+  color: white;
+}
+
+.deleteBtn {
+  background-color: #f53b4d;
+  color: white;
+}
+
+.greenBtn {
+  background-color: rgba(0, 128, 0, 0.518);
 }
 
 /*# sourceMappingURL=dashboard.css.map */

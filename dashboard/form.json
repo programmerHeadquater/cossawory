@@ -1,20 +1,20 @@
 [
     {
-        "label": "Description",
+        "label": "title",
         "type": "textarea",
         "required": "yes",
+        "name": "title"
+    },
+    {
+        "label": "description",
+        "type": "text",
+        "required": "no",
         "name": "description"
     },
     {
-        "label": "Why this app",
+        "label": "Other information",
         "type": "text",
         "required": "no",
-        "name": "why_this_app"
-    },
-    {
-        "label": "another test",
-        "type": "text",
-        "required": "yes",
-        "name": "another_test"
+        "name": "Other_information"
     }
 ]

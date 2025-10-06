@@ -18,9 +18,7 @@ button {
     transition: 0.2s;
 }
 
-button:hover {
-    background-color: #dbdbdb;
-}
+
 
 textarea {
 
@@ -263,13 +261,14 @@ a {
                 // transition: all 0.2s ease-in;
                 border-radius: 5px;
             }
-            
+
 
             a:hover {
                 border: 2px solid red;
 
             }
-            .active{
+
+            .active {
                 border: 2px solid red;
 
             }
@@ -350,6 +349,7 @@ a {
 
             }
         }
+
         .submissionNav {
             background-color: #e6e6e6;
             padding: 10px 0px;
@@ -365,6 +365,7 @@ a {
 
             }
         }
+
         .active {
             border-bottom: 2px solid red !important;
 
@@ -381,14 +382,17 @@ a {
             padding: 20px;
             border: 2px solid black;
             margin: 10px;
-            .label{
+
+            .label {
                 background-color: #dfdfdf;
-                
+
             }
-            p{
+
+            p {
                 padding: 5px 0px;
                 margin-bottom: 4px;
             }
+
             .uploadImg {
                 height: 400px;
             }
@@ -398,6 +402,12 @@ a {
                 gap: 20px;
                 flex-wrap: wrap;
                 align-items: center;
+                a{
+                    padding: 5px;
+                    border-radius: 3px;
+                    border: 1px solid black;
+                }
+                
             }
 
             .description {
@@ -409,10 +419,7 @@ a {
                 text-overflow: ellipsis;
             }
 
-            span {
-                padding: 3px;
-                border: 1px solid black;
-            }
+            
 
         }
 
@@ -478,36 +485,44 @@ a {
         }
 
         .reviewTemplate {
+            background-color: #f7e9d6;
             color: inherit;
-            border: 1px solid red;
+            // border: 1px solid red;
+            box-shadow: 1px 1px 1px 1px black;
 
-            .updatReview,
+            .updatReview {
+                overflow: hidden;
+                transition: height 0.5s linear;
+
+            }
+
             .deleteReview {
                 overflow: hidden;
                 transition: height 0.5s linear;
+
             }
 
-            // .Zero {
-            //     height: 0px !important;
-            //     border: 0px !important;
-            //     transition: all 1s linear;
-            //     padding: 0;
-            //     margin: 0;
-            //     overflow: hidden;
-            // }
+            .updateBtn {
+                background-color: rgba(0, 128, 0, 0.518);
+            }
+
+            .deleteBtn {
+                background-color: #f53b4d;
+                color: white;
+            }
+
+
 
             border: 1px solid black;
             padding: 20px 10px;
-            margin: 10px 0px;
+            margin: 20px 0px;
 
             // background-color: #e7e6e6;
             p {
                 padding: 10px 0px;
             }
 
-            .on {
-                border: 1px solid red;
-            }
+
 
         }
 
@@ -661,4 +676,19 @@ a {
 
 .space-between {
     justify-content: space-between;
+}
+
+.back {
+    background-color: black;
+    color: white;
+}
+
+.deleteBtn {
+    background-color: #f53b4d;
+    color: white;
+}
+
+.greenBtn {
+
+    background-color: rgba(0, 128, 0, 0.518);
 }

@@ -58,13 +58,13 @@
             <div class="option">
 
 
-                <span><a href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
+                <span><a class="greenBtn" href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
 
 
                 <form action="dashboard/deleteSubmission.php" method="POST">
 
                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                    <button type="submit">Delete</button>
+                    <button class="deleteBtn" type="submit">Delete</button>
                 </form>
 
 

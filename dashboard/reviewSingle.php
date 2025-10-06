@@ -53,12 +53,14 @@
         ob_start();
         ?>
 
-        <div class="submissionTemplate">
+        <div class="reviewAll">
+            <h2>Submited Query</h2>
+            <br>
             <?php
             $form_data = json_decode($submission['form_data'], true);
             foreach ($form_data as $index => $field): ?>
                
-                    <p><?= $field['label'] ?> </p>
+                    <p class="label"><?= $field['label'] ?> </p>
 
                     <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
                         <p><?= $field['value'] ?></p>
@@ -144,8 +146,8 @@
                     <h2>Type new review below:</h2>
                     <textarea name="review" placeholder="Write a reiew here"></textarea>
                     <br><br>
-                    <button type="submit">Submit</button>
-                    <button type="button" id="cancelReviewBtn">Cancel</button>
+                    <button class="greenBtn" type="submit">Submit</button>
+                    <button class="deleteBtn" type="button" id="cancelReviewBtn">Cancel</button>
                 </div>
             </form>
         </div>
