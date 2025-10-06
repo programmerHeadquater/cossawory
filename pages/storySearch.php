@@ -1,3 +1,5 @@
+
+<title>Search story</title>
 <?php
 require_once 'conn/conn.php';
 use function conn\closeDatabaseConnection;
@@ -48,8 +50,9 @@ if ($queryId !== null) {
 <div class="story">
     <form class="search" action="index.php?page=storySearch" method="POST">
         <br>
-        <p>Please enter Query Id:</p>
-        <input name="queryId" type="number"><button>Search</button>
+        <label for="queryId">Search by ID</label>
+        <input name="queryId" type="number">
+        <button aria-label="submit" type="submit">Search</button>
         <br>
     </form>
     <br>

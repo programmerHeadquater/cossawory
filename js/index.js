@@ -1,18 +1,20 @@
 console.log("Js is working on main.js")
+
+
+
+// this is a menu toggle 
 const nav = document.getElementById('nav');
 const hamburger = document.getElementById('hamburger');
-hamburger.addEventListener('click',()=>{
-    nav.classList.toggle('navShow');
-    hamburger.classList.toggle('closeBar');
-    
-})
-const closeMenu = document.getElementById('closeMenu');
-closeMenu.addEventListener('click',()=>{
-    nav.classList.toggle('navShow');
-    hamburger.classList.toggle('closeBar');
 
 
-})
+hamburger.addEventListener('click', () => {
+  nav.classList.toggle('navShow');
+  hamburger.classList.toggle('closeBar');
+
+  const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+  hamburger.setAttribute('aria-expanded', String(!isExpanded));
+});
+
 
 
 // this is collision check for id

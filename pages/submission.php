@@ -1,3 +1,4 @@
+<title>Submision</title>
 <?php
 // Path to your JSON file
 $jsonFile = __DIR__ . '/../dashboard/form.json';

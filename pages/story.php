@@ -1,3 +1,5 @@
+<title>All story</title>
+
 <div class="story">
 
 
@@ -100,7 +102,7 @@
                         <?php endif;
                         if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio class="submissionAudido" controls>
-                                <source src="<?= $field['value']['path'] ?>" type="audio/mpeg">
+                                <source src="<?= $field['value']['path'] ?>" type="audio/mpeg" alt="No audio found">
                                 Your browser does not support the audio element.
                             </audio>
                             <?php
