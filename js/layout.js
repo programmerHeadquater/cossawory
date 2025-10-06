@@ -22,7 +22,7 @@ function renderPreview() {
     wrapper.appendChild(label);
     wrapper.appendChild(document.createElement('br'));
 
-    if (field.type === 'voice') {
+    if (field.type === 'audio') {
       // Voice recording UI
       const recordBtn = document.createElement('button');
       recordBtn.textContent = 'Start Recording';

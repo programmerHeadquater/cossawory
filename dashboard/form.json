@@ -1,14 +1,20 @@
 [
     {
-        "label": "tittle of the problem",
-        "type": "text",
+        "label": "Description",
+        "type": "textarea",
         "required": "yes",
-        "name": "tittle_of_the_problem"
+        "name": "description"
     },
     {
-        "label": "image of the problem",
-        "type": "file",
+        "label": "Why this app",
+        "type": "text",
+        "required": "no",
+        "name": "why_this_app"
+    },
+    {
+        "label": "another test",
+        "type": "text",
         "required": "yes",
-        "name": "image_of_the_problem"
+        "name": "another_test"
     }
 ]

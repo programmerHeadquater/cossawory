@@ -2,23 +2,15 @@
 // Path to your JSON file
 $jsonFile = __DIR__ . '/../dashboard/form.json';
 
-
-// Default fallback fields if JSON file not found or empty
-
-
 // Read JSON file content
 $fields = [];
 if (file_exists($jsonFile)) {
     $jsonContent = file_get_contents($jsonFile);
     $decoded = json_decode($jsonContent, true);
-
     if (is_array($decoded) && count($decoded) > 0) {
-        $fields = $decoded;  // keep the array as it is, no changes
+        $fields = $decoded;
     }
 }
-echo '<pre>';
-var_dump($fields);
-echo '</pre>';
 ?>
 
 <div class="submission">
@@ -29,12 +21,12 @@ echo '</pre>';
 
         <?php foreach ($fields as $field): ?>
             <?php
-            // Make a "name" attribute for form input from label
-            $name = strtolower(str_replace(' ', '_', $field['label']));
+                $name = strtolower(str_replace(' ', '_', $field['label']));
+                $inputId = 'input_' . $name;
             ?>
 
-            <label for="<?php echo htmlspecialchars($name); ?>">
-                <?php echo htmlspecialchars($field['label']); ?>
+            <label for="<?= htmlspecialchars($inputId); ?>">
+                <?= htmlspecialchars($field['label']); ?>
                 <?php if ($field['required'] === 'yes'): ?>
                     <span class="required">Required</span>
                 <?php else: ?>
@@ -42,13 +34,36 @@ echo '</pre>';
                 <?php endif; ?>
             </label>
 
-            <?php if ($field['type'] === 'textarea'): ?>
-                <textarea id="<?php echo htmlspecialchars($name); ?>" name="<?php echo htmlspecialchars($name); ?>" rows="3"
-                    placeholder="Type here" <?=$field['required'] =='yes' ?"required":""?>></textarea>
-            <?php else: ?>
-                <input type="<?php echo htmlspecialchars($field['type']) ?>" id="<?php echo htmlspecialchars($name); ?>"
-                    name="<?php echo htmlspecialchars($name); ?>" <?=$field['required'] =='yes' ?"required":""?> placeholder="Type here" />
+            <?php if ($field['type'] === 'textarea' || $field['type'] === 'text'): ?>
+                <textarea id="<?= htmlspecialchars($inputId); ?>" name="<?= htmlspecialchars($name); ?>" rows="3"
+                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?>></textarea>
+
+            <?php elseif ($field['type'] === 'file'): ?>
+                <input type="file" id="<?= htmlspecialchars($inputId); ?>" name="<?= htmlspecialchars($name); ?>"
+                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?> />
+
+            <?php elseif ($field['type'] === 'audio'): ?>
+                <div class="audio-recorder">
+                    <button type="button"
+                            onclick="startRecording(this)"
+                            data-name="<?= $name ?>">🎙️ Start</button>
+
+                    <button type="button"
+                            onclick="stopRecording(this)"
+                            data-name="<?= $name ?>"
+                            disabled>🛑 Stop</button><br><br>
+
+                    <audio id="audioPlayback_<?= $name ?>" controls style="display: none;"></audio>
+
+                    <input type="file"
+                           id="audioBlob_<?= $name ?>"
+                           name="<?= htmlspecialchars($name); ?>"
+                           accept="audio/*"
+                           style="display: none;"
+                           <?= $field['required'] === 'yes' ? 'required' : '' ?> />
+                </div>
             <?php endif; ?>
+
             <br><br>
         <?php endforeach; ?>
 
@@ -56,3 +71,71 @@ echo '</pre>';
     </form>
     <br>
 </div>
+
+<!-- ✅ JavaScript to handle per-field audio recording -->
+<script>
+const recorders = {};
+
+function startRecording(button) {
+    const name = button.dataset.name;
+    const stopBtn = document.querySelector(`button[data-name="${name}"][onclick="stopRecording(this)"]`);
+    const playback = document.getElementById('audioPlayback_' + name);
+    const input = document.getElementById('audioBlob_' + name);
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            const mediaRecorder = new MediaRecorder(stream);
+            const chunks = [];
+
+            // Store everything per field name
+            recorders[name] = {
+                mediaRecorder,
+                stream,
+                chunks,
+                playback,
+                input
+            };
+
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) {
+                    chunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+
+                playback.src = url;
+                playback.style.display = 'block';
+
+                const file = new File([blob], 'recorded_audio.webm', { type: 'audio/webm' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                input.files = dataTransfer.files;
+
+                // Stop the mic stream to release resources
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorder.start();
+
+            button.disabled = true;
+            stopBtn.disabled = false;
+        })
+        .catch(error => {
+            alert('Microphone access denied or error: ' + error.message);
+        });
+}
+
+function stopRecording(button) {
+    const name = button.dataset.name;
+    const startBtn = document.querySelector(`button[data-name="${name}"][onclick="startRecording(this)"]`);
+
+    if (recorders[name] && recorders[name].mediaRecorder.state !== 'inactive') {
+        recorders[name].mediaRecorder.stop();
+        button.disabled = true;
+        startBtn.disabled = false;
+    }
+}
+</script>

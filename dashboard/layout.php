@@ -9,7 +9,7 @@
             <option value="text">text</option>
             <option value="textarea">textarea</option>
             <option value="file">file</option>
-            <option value="voice">voice (record)</option>
+            <option value="audio">audio (record)</option>
         </select>
         <br>
         <br>

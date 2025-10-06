@@ -30,24 +30,31 @@
         <div class="reviewAll">
             <?php
             foreach ($form_data as $index => $field): ?>
-                <div class="submission">
+                
                     <p><?= $field['label'] ?> </p>
-                </div>
-                <?php if ($field['type'] == 'file'): ?>
-                    asdf
-                    <?php if (is_array($field['value'])): ?>
-                        
-                        <?php foreach ($field['value'] as $subKey => $subValue ):?> 
-                            
-                            <img class="uploadImg" src="<?=$subValue?>" alt="">
 
-                        <?php
-                        endforeach;
+                    <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
+                        <p><?= $field['value'] ?></p>
+                    <?php endif ?>
+                    <?php if ($field['type'] == 'file' || $field['type'] == 'audio' ): ?>
+
+                        <?php if (is_array($field['value'])): ?>
+                            
+                            <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
+                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                            <?php endif;
+                            if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
+                            <audio controls>
+                                <source src="<?=$field['value']['path']?>" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <?php
+                            endif;
+                        endif;
                     endif;
-                endif;
             endforeach;
             ?>
-
+            
             <br>
             <p>Status: <?= $row['review'] ? "Reviewed  " : "pending" ?> </p>
             <br>

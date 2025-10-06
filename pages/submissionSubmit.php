@@ -35,19 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $originalName = basename($_FILES[$name]['name']);
-                $safeName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.\-]/', '_', $originalName);
+                $safeName = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9_\.\-]/', '_', $originalName);
+
                 $destination = $uploadDir . $safeName;
 
                 // Optional: filter by MIME type (you can customize this)
                 $allowedMimeTypes = [
                     'image/jpeg', 'image/png', 'application/pdf',
                     'video/mp4', 'video/mpeg',
-                    'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg'
+                    'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg' ,'audio/webm'
                 ];
 
                 if (!in_array($_FILES[$name]['type'], $allowedMimeTypes)) {
                     echo "<p>❌ Invalid file type for '{$name}': {$_FILES[$name]['type']}</p>";
-                    continue;
+
+                    break;
                 }
 
                 // Optional: size limit (10MB)
@@ -78,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Save the field only if it has a value
         if (isset($fieldData['value'])) {
             $resultData[] = $fieldData;
+            
         }
     }
 

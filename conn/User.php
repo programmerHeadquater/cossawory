@@ -44,6 +44,10 @@ function user_getByUsername($username)
 function user_checkLogin($username, $password)
 {
     $user = user_getByUsername($username);
+    
+    if($user === null) {
+        return null;
+    }
     if ($user && password_verify($password, $user['password'])) {
         return $user;
     }
