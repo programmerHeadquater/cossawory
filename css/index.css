@@ -7,6 +7,9 @@
 
 body {
   font-family: "Lexend", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 a {
@@ -151,7 +154,7 @@ hr {
 }
 
 .nav {
-  padding: 20px;
+  padding: 20px 10px;
   transition-duration: 2s;
   background-color: rgb(239, 239, 239);
 }
@@ -163,7 +166,7 @@ hr {
 .nav ul li {
   flex-grow: 1;
   display: inline-block;
-  padding: 4px;
+  padding: 2px;
   border: 1px solid green;
   border-radius: 4px;
 }
@@ -172,7 +175,7 @@ hr {
   box-shadow: 1px 1px 1px 1px;
 }
 .nav ul li a {
-  padding: 5px 10px;
+  padding: 3px 5px;
   display: block;
   width: 100%;
   text-align: center;
@@ -191,12 +194,30 @@ hr {
   background-color: black;
 }
 
+.link {
+  all: unset;
+  padding: 5px;
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.link:hover {
+  box-shadow: 1px 1px 1px 1px rgb(0, 0, 0);
+}
+
+.colorRed {
+  color: red;
+}
+
 .dNone {
   display: none;
 }
 
 .page {
-  padding: 5%;
+  padding: 20px 20px;
+  flex: 1;
 }
 .page .pagination button {
   all: unset;
@@ -209,6 +230,28 @@ hr {
 }
 .page .story {
   opacity: 1;
+}
+.page .story .search {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.page .story .search input {
+  all: unset;
+  border: 1px solid black;
+  padding: 5px;
+}
+.page .story .search button {
+  all: unset;
+  border: 1px solid black;
+  padding: 5px;
+  background-color: rgb(0, 166, 0);
+  color: white;
+  transition: all 0.4s;
+}
+.page .story .search button:hover {
+  background-color: rgb(0, 106, 0);
 }
 .page .story .list {
   border: 1px solid black;

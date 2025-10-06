@@ -16,11 +16,5 @@
         "type": "text",
         "required": "no",
         "name": "other_information"
-    },
-    {
-        "label": "sdf",
-        "type": "audio",
-        "required": "yes",
-        "name": "sdf"
     }
 ]

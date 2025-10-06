@@ -56,7 +56,7 @@
             ?>
             
             <br>
-            <p>Status: <?= $row['review'] ? "Reviewed  " : "pending" ?> </p>
+            <p class="<?= $row['review'] ? 'reviewed' : 'pending' ?>">Status: <?= $row['review'] ? "Reviewed  " : "pending" ?> </p>
             <br>
             <div class="option">
 

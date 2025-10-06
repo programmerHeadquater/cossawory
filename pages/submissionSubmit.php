@@ -85,16 +85,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // ✅ Display submitted data (for debugging)
-    echo "<h2>✅ Final Submitted Data</h2>";
-    echo "<pre>" . htmlspecialchars(json_encode($resultData, JSON_PRETTY_PRINT)) . "</pre>";
+    // echo "<h2>✅ Final Submitted Data</h2>";
+    // echo "<pre>" . htmlspecialchars(json_encode($resultData, JSON_PRETTY_PRINT)) . "</pre>";
 
     // ✅ Submit the data to your backend function
     $response = insertSubmissionFromJson($resultData);
 
-    echo "<h3>📥 Submission Response</h3>";
-    echo "<pre>";
-    print_r($response);
-    echo "</pre>";
+    // echo "<h3>Submission Response</h3>";
+    sucessUploadTemplate($response);
 } else {
     echo "<p>📭 Please submit the form.</p>";
+}
+
+function sucessUploadTemplate($response){
+    if($response['status'] !== 'success') {
+        echo "<h2>Sorry something went wrong<h2>";
+        return;
+    }
+
+
+    ob_start();
+
+    ?>
+    <div class="sucessUploadTemplate">
+        <h2>We have received Your data sucessfully.</h2>
+        <br>
+        <h3>Your querry id: <span class="colorRed"><?=$response['id']?></span></h3>
+        <br>
+        <p>Please use your querry Id to find you querry on our story page</p>
+        <br>
+        <p>link To page : <a class="link" href="index.php?page=storySearch">Story search</a></p>
+    </div>   
+    <?php
+    echo ob_get_clean();
 }

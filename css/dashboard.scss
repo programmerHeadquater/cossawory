@@ -59,7 +59,7 @@ a {
 
 
 .header {
-    padding: 5px 10px;
+    padding: 5px 5%;
     background-color: var(--turquoise-blue);
     color: black;
     display: flex;
@@ -223,7 +223,7 @@ a {
 
     .nav {
         // position: absolute;
-        background-color: rgb(231, 230, 230);
+        background-color: rgb(0, 0, 0);
         display: flex;
         font-size: 1.2em;
         padding: 10px 20px;
@@ -233,7 +233,7 @@ a {
         margin: 0px;
         padding: 0px;
         transition: 0.5s;
-
+        color: white;
         #accountOption {
             max-height: 0;
             // opacity: 0;
@@ -333,8 +333,8 @@ a {
     .page {
         overflow: scroll;
         width: 100%;
-        padding: 10px 20px 20px 20px;
-        background: #f9f9f9;
+        padding: 10px 5% 20px 5%;
+        // background: #e0dfdf;
         flex: 1;
 
         .userNav {
@@ -386,7 +386,7 @@ a {
         .reviewAll {
             padding: 20px;
             border: 2px solid black;
-            margin: 10px 0px;
+            margin: 40px 0px;
 
             .label {
                 background-color: #dfdfdf;
@@ -394,7 +394,7 @@ a {
             }
 
             p {
-                padding: 5px 0px;
+                padding: 5px 8px;
                 margin-bottom: 4px;
             }
 
@@ -732,4 +732,10 @@ a {
     overflow: hidden !important;
     pointer-events: none !important;
     transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+.reviewed{
+    background-color: #04ff0029;
+}
+.pending{
+    background-color: #ffc26c68;
 }

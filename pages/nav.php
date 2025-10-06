@@ -9,7 +9,9 @@
         <li class= "<?=$page == 'submission'|| $page=='submissionSubmit' ? 'active' : null ?>"><a href="index.php?page=submission">Submission</a></li>
         <li class= "<?=$page == 'about' ? 'active' : null ?>"><a href="index.php?page=about">About Us</a></li>
         <li class= "<?=$page == 'story' ? 'active' : null ?>"><a href="index.php?page=story">Story review</a></li>
+        <li class= "<?=$page == 'storySearch' ? 'active' : null ?>"><a href="index.php?page=storySearch">Story search</a></li>
         <li class= "<?=$page == 'submission' ? 'active' : null ?>" id="closeMenu"><p class="red">Close Menu</p></li>
+        
     </ul>
 </div>
 
