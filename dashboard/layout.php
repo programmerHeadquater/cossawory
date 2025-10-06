@@ -2,6 +2,7 @@
     
     <div id="editForm">
         <h2>Build form</h2>
+        <br>
     <div class="function">
         <label for="inputType">Select input type:</label>
         <select id="inputType" required>
@@ -25,14 +26,14 @@
         <br>
         <br>
         
-        <button id="addInputBtn">Add this input</button>
+        <button class="greenBtn" id="addInputBtn">Add this input</button>
         <br>
         <br>
         <h3>Current Form Preview:</h3>
         <div id="previewForm" class=""></div>
     </div>
     <br>
-    <button id="submitFormLayout">Add this to web page</button>
+    <button class="greenBtn" id="submitFormLayout">Add this to web page</button>
     </div>
 
 </div>

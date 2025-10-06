@@ -102,6 +102,8 @@ function renderPreview() {
     removeBtn.textContent = 'Remove this input';
     removeBtn.type = 'button';
       removeBtn.classList.add('remove');
+      removeBtn.classList.add('deleteBtn');
+
     removeBtn.style.marginLeft = '10px';
     removeBtn.addEventListener('click', () => {
       list.splice(index, 1);

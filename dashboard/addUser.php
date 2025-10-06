@@ -124,7 +124,7 @@ use function user\user_addNewUser;
             </select>
             <br><br>
 
-            <button type="submit">Submit</button>
+            <button class="greenBtn" type="submit">Submit</button>
         </form>
         <!-- FORM END -->
 

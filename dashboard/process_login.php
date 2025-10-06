@@ -27,6 +27,7 @@ if ($user) {
 
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['username'] = $user['username'];
 
     header('Location: /dashboard.php');
     exit();

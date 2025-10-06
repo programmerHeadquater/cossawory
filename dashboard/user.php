@@ -77,13 +77,13 @@ function userTemplate()
                 <div class="list">
                     <span><?= $user['username'] ?> </span>
                     <span><?= $user['email'] ?></span>
-                    <span><button class="openEditPermission">Edit</button></span>
-                     <span><button class="deleteUserButton" data-id="<?= $user['id'] ?>">Delete</button></span>
+                    <span><button class="openEditPermission greenBtn">Edit</button></span>
+                     <span><button class="deleteUserButton deleteBtn" data-id="<?= $user['id'] ?>">Delete</button></span>
                 </div>
                 
                 <div class="editPermision">
-                    <p class="sucessMessage zero" style="display: none;">Here</p>
-                    <h2 class="deletedMessage" style="display: none;">User deleted successfully.</h2>
+                    <p class="sucessMessage ">Here</p>
+                    <h2 class="deletedMessage ">User deleted successfully.</h2>
                     <form class="" action="dashboard.php?page=user" method="POST" autocomplete="off">
                         <br>
                         <hr>
@@ -126,8 +126,8 @@ function userTemplate()
                         </select>
                         <br><br>
 
-                        <button type="submit">Submit</button>
-                        <button type="button" class="closeEditPermission">Close</button>
+                        <button class="greenBtn" type="submit">Submit</button>
+                        <button class="deleteBtn closeEditPermission" type="button" >Close</button>
                     </form>
                 </div>
             </div>

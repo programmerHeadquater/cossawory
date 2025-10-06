@@ -15,7 +15,11 @@ button {
     border: 1px solid black;
     border-radius: 4px;
     padding: 5px;
-    transition: 0.2s;
+    transition: all 0.2s;
+    margin: 2px;
+}
+button:hover{
+    box-shadow: 1px 1px 1px 1px  black;
 }
 
 
@@ -329,13 +333,13 @@ a {
     .page {
         overflow: scroll;
         width: 100%;
-        padding: 10px 40px 20px 40px;
+        padding: 10px 20px 20px 20px;
         background: #f9f9f9;
         flex: 1;
 
         .userNav {
-            background-color: #e6e6e6;
-            padding: 10px 0px;
+            background-color: var(--turquoise-blue);
+            padding: 10px 5px;
 
             a {
                 // border-bottom: 2px solid #9b9690;
@@ -442,7 +446,7 @@ a {
                 font-size: 16px;
                 cursor: pointer;
                 display: block;
-                width: 100%;
+                // width: 100%;
                 box-sizing: border-box;
             }
 
@@ -538,17 +542,18 @@ a {
                 display: grid;
                 grid-template-columns: 1fr 2fr 1fr 1fr;
                 gap: 5px;
-
                 align-items: stretch;
                 font-weight: bold;
-                background: #d3d1d1;
+                background: var(--turquoise-blue);
+                filter: brightness(0.9); 
+                
                 padding: 10px 5px;
             }
 
             .card {
                 // background-color: #919191;
                 padding: 10px 5px;
-                border: 2px solid red;
+                border-bottom: 1px solid black;
                 transition: all 1s linear;
 
                 .list {
@@ -572,26 +577,21 @@ a {
 
                     button {
                         display: inline;
-                        border: 1px solid red;
+                        border: 1px solid rgb(6, 6, 6);
                     }
                 }
 
                 .editPermision {
-                    // display: grid;
                     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
                     gap: 5px;
-
                     align-items: stretch;
 
                     form {
-                        max-height: 0;
+                        max-height: 1000px;
+                        opacity: 1;
+                        pointer-events: auto;
                         overflow: hidden;
-                        transition: max-height 0.5s linear, padding 0.5s linear;
-
-                        /* padding will animate in too */
-                        opacity: 0;
-                        pointer-events: none;
-                        /* prevent focus/clicks when hidden */
+                        transition: max-height 0.4s ease, opacity 0.4s ease;
 
                         input {
                             display: inline-block;
@@ -611,13 +611,7 @@ a {
                         display: none;
                     }
 
-                    .Zero {
-                        max-height: 1000px;
-                        /* enough to fit full content */
-                        opacity: 1;
-                        pointer-events: auto;
-                        // padding: 20px;
-                    }
+
                 }
 
 
@@ -635,12 +629,13 @@ a {
     margin-top: 30px;
     margin-bottom: 30px;
     border: 2px solid rgb(0, 0, 0);
-    padding: 20px ;
+    padding: 20px;
     margin-left: auto;
     margin-right: auto;
     font-size: 16px;
     display: inline-block;
     border-radius: 4%;
+
     form {
         width: 300px;
     }
@@ -690,9 +685,10 @@ a {
 
 // --------------------------------------------------------------------------------------------------
 // individual class here
-.error{
+.error {
     color: red;
 }
+
 .relative {
     position: relative;
 }
@@ -728,4 +724,12 @@ a {
 .greenBtn {
 
     background-color: rgba(0, 128, 0, 0.518);
+}
+
+.Zero {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
 }
