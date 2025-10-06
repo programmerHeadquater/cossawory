@@ -30,9 +30,9 @@
 
     }
 
-
-    submissionTemplate(getSubmissionById($id));
     addReviewTemplate($id);
+    submissionTemplate(getSubmissionById($id));
+    
 
     reviewTemplate(getReviewBySybmissionId($id, $startPoint), $id, $startPoint);
     pagination($startPoint, getTotalReviewBySubmissionId($id), $id);
@@ -138,7 +138,7 @@
         ob_start(); ?>
         <div id="addReviewTemplate">
             <div id="addNewReviewBtnWrapper">
-                <button id="addNewReviewBtn">Add review</button>
+                <button class="greenBtn" id="addNewReviewBtn">Add review</button>
             </div>
 
             <form id="addNewReview" method="POST" action="dashboard.php?page=reviewSingle&id=<?= $id ?>">

@@ -329,7 +329,7 @@ a {
     .page {
         overflow: scroll;
         width: 100%;
-        padding: 10px 10px 20px 10px;
+        padding: 10px 40px 20px 40px;
         background: #f9f9f9;
         flex: 1;
 
@@ -351,7 +351,8 @@ a {
         }
 
         .submissionNav {
-            background-color: #e6e6e6;
+            background-color: var(--turquoise-blue);
+            color: black;
             padding: 10px 0px;
 
             a {
@@ -381,7 +382,7 @@ a {
         .reviewAll {
             padding: 20px;
             border: 2px solid black;
-            margin: 10px;
+            margin: 10px 0px;
 
             .label {
                 background-color: #dfdfdf;
@@ -402,12 +403,13 @@ a {
                 gap: 20px;
                 flex-wrap: wrap;
                 align-items: center;
-                a{
+
+                a {
                     padding: 5px;
                     border-radius: 3px;
                     border: 1px solid black;
                 }
-                
+
             }
 
             .description {
@@ -419,7 +421,7 @@ a {
                 text-overflow: ellipsis;
             }
 
-            
+
 
         }
 
@@ -629,7 +631,40 @@ a {
 
 }
 
+.login-container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border: 2px solid rgb(0, 0, 0);
+    padding: 20px ;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    display: inline-block;
+    border-radius: 4%;
+    form {
+        width: 300px;
+    }
 
+    input {
+        width: 100%;
+        min-height: 34px;
+    }
+}
+
+.blueBtn {
+    all: unset;
+    padding: 5px 10px;
+    color: white;
+    background-color: blue;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.blueBtn:hover {
+    cursor: pointer;
+    background-color: blue;
+    box-shadow: 2px 2px 2px 2px black;
+}
 
 
 
@@ -655,7 +690,9 @@ a {
 
 // --------------------------------------------------------------------------------------------------
 // individual class here
-
+.error{
+    color: red;
+}
 .relative {
     position: relative;
 }

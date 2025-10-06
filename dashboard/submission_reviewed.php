@@ -58,7 +58,7 @@
             <div class="option">
 
 
-                <span><a href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
+                <span><a class="greenBtn" href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
 
 
                 <form action="dashboard/deleteSubmission.php" method="POST">

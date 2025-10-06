@@ -25,11 +25,11 @@ function user_getById($id)
 /**
  * Get a user by username
  */
-function user_getByUsername($username)
+function user_getByEmail($email)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
@@ -41,9 +41,9 @@ function user_getByUsername($username)
 /**
  * Validate user credentials
  */
-function user_checkLogin($username, $password)
+function user_checkLogin($email, $password)
 {
-    $user = user_getByUsername($username);
+    $user = user_getByEmail($email);
     
     if($user === null) {
         return null;

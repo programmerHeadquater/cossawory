@@ -15,6 +15,12 @@
         "label": "Other information",
         "type": "text",
         "required": "no",
-        "name": "Other_information"
+        "name": "other_information"
+    },
+    {
+        "label": "sdf",
+        "type": "audio",
+        "required": "yes",
+        "name": "sdf"
     }
 ]

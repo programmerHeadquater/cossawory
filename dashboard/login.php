@@ -6,22 +6,28 @@ $error = $_GET['error'] ?? '';
 
 <div class="login-container">
     <h2>Login</h2>
-
+    <br>
     <?php if ($error): ?>
-        <div class="error-message"><?= htmlspecialchars($error) ?></div>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+        <br>
     <?php endif; ?>
 
     <form method="post" action="dashboard/process_login.php">
-        <input type="text" name="username" placeholder="Username" required autofocus />
+        <label for="email">Email</label>
+        <br>
+        <br>
+        <input type="text" name="email" placeholder="email" required autofocus />
+        <br>
+        <br>
+        <label for="password">Password</label>
+        <br>
         <br>
         <input type="password" name="password" placeholder="Password" required />
         <br>
-        <button type="submit">Log In</button>
+        <br>
+        <button class="blueBtn" type="submit">Log In</button>
     </form>
-
-    <div class="create-account">
-        No account? <a href="register.php">Create one here</a>
-    </div>
+     
 </div>
 
 </body>

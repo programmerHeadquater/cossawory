@@ -10,23 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Get user input
-$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 
 // Validate input
-if ($username === '' || $password === '') {
+if ($email === '' || $password === '') {
     header('Location: /dashboard.php?error=' . urlencode('Please fill in all fields.'));
     exit();
 }
 
 // Check login using the function
-$user = user_checkLogin($username, $password);
+$user = user_checkLogin($email, $password);
 
 if ($user) {
     session_regenerate_id(true);
 
     $_SESSION['user_id'] = $user['id'];
-    $_SESSION['username'] = $user['username'];
+    $_SESSION['email'] = $user['email'];
 
     header('Location: /dashboard.php');
     exit();

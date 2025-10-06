@@ -11,8 +11,7 @@
             <option value="file">file</option>
             <option value="audio">audio (record)</option>
         </select>
-        <br>
-        <br>
+        
         <br><br>
         <label for="inputLabel">Label (Unique):  </label>
         <input type="text" id="inputLabel" placeholder="Enter label" required />
