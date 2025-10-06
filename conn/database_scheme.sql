@@ -25,17 +25,6 @@ CREATE TABLE IF NOT EXISTS submission (
 --   FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-CREATE TABLE IF NOT EXISTS reviews (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- primary key
-    submission_id INT UNSIGNED NOT NULL, -- id from submission table to link 
-    review TEXT NOT NULL, -- review add for submission_id on table submission 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- created time 
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- this is updated time stamp on update
-    FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE -- if submission table id delete, this delete all data linked on this table too
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
 CREATE TABLE IF NOT EXISTS users (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255), -- username should be unique
@@ -49,6 +38,18 @@ CREATE TABLE IF NOT EXISTS users (
   can_delete_user BOOLEAN DEFAULT FALSE, -- check if user can delete the other user in the dashboard 
   can_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- primary key
+    submission_id INT UNSIGNED NOT NULL, -- id from submission table to link 
+    review TEXT NOT NULL, -- review add for submission_id on table submission 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- created time 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- this is updated time stamp on update
+    FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE -- if submission table id delete, this delete all data linked on this table too
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 
 

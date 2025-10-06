@@ -112,7 +112,7 @@ function insertReviewIdIntoSubmission($review_id, $submission_id)
 function getReviewBySybmissionId($submission_id,$startPoint)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM reviews WHERE submission_id = ? LIMIT 2 OFFSET ?");
+    $stmt = $conn->prepare("SELECT * FROM reviews WHERE submission_id = ? LIMIT 20 OFFSET ?");
     $stmt->bind_param("ii", $submission_id,$startPoint);
     $stmt->execute();
     $result = $stmt->get_result();

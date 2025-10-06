@@ -1,102 +1,16 @@
+
+<?php
+    $pageIn = isset($_GET['pageIn']) ? $_GET['pageIn'] : 'submission_pending';
+?>
 <div class="page">
     <h1>Submission </h1>
-
+        <div class="submissionNav">
+            <a class="<?=$pageIn == 'submission_pending'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_pending">Pending</a>
+            <a class="<?=$pageIn == 'submission_all'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_all">All</a>
+            <a class="<?=$pageIn == 'submission_reviewed'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_reviewed">Reviewed</a>
+        </div> 
     <?php
-    require 'conn/submission.php';
-    use function submission\getSubmission;
-    use function submission\getSubmissionsTotalCount;
-
-
-
-    $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
-
-
-    $data = getSubmission($startPoint);
-
-
-
-    foreach ($data as $submission) {
-        echo submissionTemplate($submission, $startPoint);
-    }
-    $total = getSubmissionsTotalCount();
-    echo pagination($startPoint, $total);
-
-
-    function submissionTemplate($row, $startPoint)
-    {
-        $form_data = json_decode($row['form_data'], true);
-        ob_start();
-        ?>
-        <div class="reviewAll">
-            <?php
-            foreach ($form_data as $index => $field): ?>
-                
-                    <p><?= $field['label'] ?> </p>
-
-                    <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
-                        <p><?= $field['value'] ?></p>
-                    <?php endif ?>
-                    <?php if ($field['type'] == 'file' || $field['type'] == 'audio' ): ?>
-
-                        <?php if (is_array($field['value'])): ?>
-                            
-                            <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="no image found">
-                            <?php endif;
-                            if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
-                            <audio controls>
-                                <source src="<?=$field['value']['path']?>" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                            <?php
-                            endif;
-                        endif;
-                    endif;
-            endforeach;
-            ?>
-            
-            <br>
-            <p>Status: <?= $row['review'] ? "Reviewed  " : "pending" ?> </p>
-            <br>
-            <div class="option">
-
-
-                <span><a href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
-
-
-                <form action="dashboard/deleteSubmission.php" method="POST">
-
-                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                    <button type="submit">Delete</button>
-                </form>
-
-
-            </div>
-        </div>
-        <?php
-
-        return ob_get_clean();
-    }
-    function pagination($startPoint, $total)
-    {
-        ob_start();
-        $prevStart = max(0, $startPoint - 20);
-        $nextStart = $startPoint + 20;
-        ?>
-        <div class="pagination">
-            <?php if ($startPoint > 20): ?>
-                <button><a href="dashboard.php?startPoint=<?= $prevStart ?>">Previous</a></button>
-            <?php endif; ?>
-
-            <?php if ($nextStart < $total): ?>
-                <button><a href="dashboard.php?startPoint=<?= $nextStart ?>">Next</a></button>
-            <?php endif; ?>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
-
-
-
+        include_once 'dashboard/'.$pageIn.'.php';
     ?>
+    
 </div>

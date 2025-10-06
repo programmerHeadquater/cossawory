@@ -160,7 +160,7 @@ a {
   transition: 0.3s all linear;
   margin: 5px 0 0 0 !important;
   height: 30px;
-  padding: 5px 5px;
+  padding: 2px 2px;
   border: 1px solid red;
   display: block !important;
 }
@@ -193,15 +193,22 @@ a {
 .main .nav hr {
   display: block;
   width: 100%;
-  color: #ffa830;
+  color: #cccbca;
   margin: 10px 0px;
 }
 .main .nav .one a {
   padding: 5px;
-  border-bottom: 1px solid black;
+  border: 2px solid black;
   display: inline-block;
   margin-bottom: 10px;
   display: block;
+  border-radius: 5px;
+}
+.main .nav .one a:hover {
+  border: 2px solid red;
+}
+.main .nav .one .active {
+  border: 2px solid red;
 }
 .main .nav .two {
   display: block;
@@ -250,8 +257,20 @@ a {
 }
 .main .page .userNav a {
   transition: all;
+  margin-right: 20px;
 }
 .main .page .userNav a:hover {
+  border-bottom: 2px solid red;
+}
+.main .page .submissionNav {
+  background-color: #e6e6e6;
+  padding: 10px 0px;
+}
+.main .page .submissionNav a {
+  transition: all;
+  margin-right: 20px;
+}
+.main .page .submissionNav a:hover {
   border-bottom: 2px solid red;
 }
 .main .page .active {
@@ -266,6 +285,13 @@ a {
   padding: 20px;
   border: 2px solid black;
   margin: 10px;
+}
+.main .page .reviewAll .label {
+  background-color: #dfdfdf;
+}
+.main .page .reviewAll p {
+  padding: 5px 0px;
+  margin-bottom: 4px;
 }
 .main .page .reviewAll .uploadImg {
   height: 400px;

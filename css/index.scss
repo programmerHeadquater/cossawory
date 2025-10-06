@@ -1,0 +1,271 @@
+// Variables
+$yolk-yellow: #ffa830;
+$turquoise-blue: #5ac3fc;
+$dark-grey: #9b9690;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    // padding: 3px;
+    // border: 1px solid red;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+}
+
+a {
+    color: inherit;
+}
+
+ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba($turquoise-blue, 0.28);
+
+    #birdLogo {
+        color: $turquoise-blue;
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    padding: 0 10%;
+    display: flex;
+    align-items: stretch;
+}
+
+#hamburger {
+    display: none;
+}
+
+.left {
+    min-width: 15%;
+
+    ul {
+        position: relative;
+
+        li {
+            padding: 10px;
+            margin: 15px;
+            background-color: $yolk-yellow;
+            border-radius: 20px;
+            text-align: center;
+
+            a {
+                width: 100%;
+                display: inline-block;
+                padding: 0 5px 5px 0;
+                text-align: left;
+            }
+        }
+    }
+
+    #arrow {
+        position: absolute;
+        color: black;
+        font-size: 34px;
+        left: -70px;
+        font: bolder;
+    }
+
+    .active {
+        color: red;
+    }
+}
+
+.right {
+    margin-left: 90px;
+    padding: 10px 0 10px 10px;
+    flex-grow: 1;
+}
+
+.submission {
+    border: 2px solid black;
+    height: 100%;
+    display: block;
+    padding: 20px;
+
+    label {
+        display: block;
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    textarea {
+        display: block;
+        width: 100%;
+        min-height: 15px;
+        padding: 10px;
+        font-size: 18px;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        min-height: 15px;
+    }
+
+    .submit {
+        display: block;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1rem;
+        align-self: start;
+
+        &:hover {
+            background-color: blue;
+        }
+    }
+}
+
+.required {
+    color: red;
+    float: right;
+}
+
+.ok {
+    color: green;
+    float: right;
+}
+
+.footer {
+    background-color: rgba($turquoise-blue, 0.28);
+    color: black;
+    padding: 0 10%;
+    display: flex;
+    gap: 10%;
+}
+
+hr {
+    color: black;
+}
+
+.about {
+    line-height: 2em;
+    font-size: 20px;
+    word-spacing: 3px;
+}
+
+.nav {
+    padding: 20px;
+    transition-duration: 2s;
+    background-color: rgb(239, 239, 239);
+
+    ul {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+
+        li {
+            flex-grow: 1;
+            display: inline-block;
+            padding: 4px;
+            border: 1px solid green;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: #fb9302;
+                box-shadow: 1px 1px 1px 1px;
+            }
+
+            a {
+                padding: 5px 10px;
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+
+    #closeMenu {
+        display: none;
+    }
+
+    .active {
+        background-color: #fb9302;
+    }
+}
+
+.copyright {
+    text-align: center;
+    padding: 10px 0;
+    color: white;
+    background-color: black;
+}
+
+
+
+
+
+.dNone {
+    display: none;
+}
+
+.page {
+    padding: 5%;
+    .pagination{
+        button{
+            all: unset;
+            text-align: center;
+            width: 90px;
+            padding: 10px;
+            background-color: black;
+            color: white;
+            border-radius: 8px;
+        }
+    }
+    .story {
+        opacity: 1;
+        .list {
+            border: 1px solid black;
+            margin-bottom: 50px;
+            padding: 10px;
+
+            .submissionData {
+                h2{
+                    color: #969696;
+                }
+                .submissionLabel {
+                    background-color: rgb(241, 240, 240);
+                    padding: 10px 10px;
+                    // color: white;
+                }
+
+                .submissionText {
+                    padding: 10px 10px;
+
+                }
+            }
+            .review{
+                .reviewCard{
+                    padding: 10px 10px;
+                    background-color: rgb(206, 206, 206);
+                    
+                }
+            }
+
+        }
+    }
+}

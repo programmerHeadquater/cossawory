@@ -47,15 +47,39 @@
     <?php
     function submissionTemplate($submission)
     {
+        
+                   
+                
         ob_start();
         ?>
 
         <div class="submissionTemplate">
-            <p>Submission Data:</p>
-            <p>Id:<?= $submission['id'] ?></p>
-            <p><?= $submission['title'] ?></p>
-            <p><?= $submission['concern'] ?></p>
-            <p><?= $submission['submitted_at'] ?></p>
+            <?php
+            $form_data = json_decode($submission['form_data'], true);
+            foreach ($form_data as $index => $field): ?>
+               
+                    <p><?= $field['label'] ?> </p>
+
+                    <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
+                        <p><?= $field['value'] ?></p>
+                    <?php endif ?>
+                    <?php if ($field['type'] == 'file' || $field['type'] == 'audio' ): ?>
+
+                        <?php if (is_array($field['value'])): ?>
+                            
+                            <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
+                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                            <?php endif;
+                            if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
+                            <audio controls>
+                                <source src="<?=$field['value']['path']?>" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <?php
+                            endif;
+                        endif;
+                    endif;
+            endforeach;?>
         </div>
 
 
@@ -134,8 +158,8 @@
     function pagination($startPoint, $total, $id)
     {
 
-        $prevStart = max(0, $startPoint - 2);
-        $nextStart = $startPoint + 2;
+        $prevStart = max(0, $startPoint - 20);
+        $nextStart = $startPoint + 20;
         ?>
         <div class="pagination">
             <?php if ($startPoint > 0): ?>

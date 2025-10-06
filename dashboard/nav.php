@@ -38,9 +38,9 @@
     </div>
     <hr>
     <div class="one">
-        <a href="dashboard.php?page=main">Submission</a>
-        <a href="dashboard.php?page=user&display=all">Users</a>
-        <a href="dashboard.php?page=layout">Layout</a>
+        <a class="<?=$page == 'main'? 'active' :'';?>" href="dashboard.php?page=main">Submission</a>
+        <a class="<?=$page == 'user'? 'active' :'';?>"  href="dashboard.php?page=user&display=all">Users</a>
+        <a class="<?=$page == 'layout'? 'active' :'';?>"  href="dashboard.php?page=layout">Layout</a>
     </div>
 
 </div>

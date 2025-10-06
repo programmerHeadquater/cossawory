@@ -126,3 +126,76 @@ function updateSubmissionReviewStatus($id) {
     closeDatabaseConnection($conn);
     return true;
 }
+
+function getSubmissionsReviewedTotalCount() {
+    $conn = openDatabaseConnection();
+    $sql = "SELECT COUNT(*) as count FROM submission WHERE review = 1";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+    closeDatabaseConnection($conn);
+    return $row['count'] ?? 0;
+}
+
+
+function getSubmissionReviewPending($startPoint)
+{
+    $conn = openDatabaseConnection();
+
+    $stmt = $conn->prepare(
+        "SELECT * FROM submission
+         WHERE review = 0
+         ORDER BY submitted_at DESC
+         LIMIT 20 OFFSET ?"
+    );
+    $stmt->bind_param("i", $startPoint);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $submissions = [];
+    while ($row = $result->fetch_assoc()) {
+        $submissions[] = $row;
+    }
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+    return $submissions;
+}
+function getSubmissionsReviewPendingTotalCount()
+{
+    $conn = openDatabaseConnection();
+
+    $sql = "SELECT COUNT(*) as total FROM submission WHERE review = 0";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    closeDatabaseConnection($conn);
+    return (int)$row['total'];
+}
+
+function getSubmissionReviewed($startPoint)
+{
+    $conn = openDatabaseConnection();
+
+    $stmt = $conn->prepare(
+        "SELECT * FROM submission
+         WHERE review = 1
+         ORDER BY submitted_at DESC
+         LIMIT 20 OFFSET ?"
+    );
+    $stmt->bind_param("i", $startPoint);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $submissions = [];
+    while ($row = $result->fetch_assoc()) {
+        $submissions[] = $row;
+    }
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+    return $submissions;
+}
+
+
+
+
