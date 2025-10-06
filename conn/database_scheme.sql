@@ -8,6 +8,7 @@ USE cassowary_db;
 
 
 
+-- 1. Create the parent table first
 CREATE TABLE IF NOT EXISTS submission (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   form_data JSON NOT NULL,
@@ -15,9 +16,24 @@ CREATE TABLE IF NOT EXISTS submission (
   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- 2. Then create the child table
+-- CREATE TABLE IF NOT EXISTS reviews (
+--   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--   submission_id INT UNSIGNED NOT NULL,
+--   review_data JSON NOT NULL,
+--   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- primary key
+    submission_id INT UNSIGNED NOT NULL, -- id from submission table to link 
+    review TEXT NOT NULL, -- review add for submission_id on table submission 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- created time 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- this is updated time stamp on update
+    FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE -- if submission table id delete, this delete all data linked on this table too
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 CREATE TABLE IF NOT EXISTS users (
