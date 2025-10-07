@@ -88,7 +88,11 @@
             $form_data = json_decode($submission['form_data'], true);
             foreach ($form_data as $index => $field): ?>
 
-                <p class="submissionLabel"><?= $field['label'] ?> </p>
+                <!-- <p class="submissionLabel"> -->
+                    <?php
+                     $field['label'] 
+                     ?> 
+                <!-- </p> -->
 
                 <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
                     <p class="submissionText"><?= $field['value'] ?></p>

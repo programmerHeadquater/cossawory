@@ -73,7 +73,7 @@ ul li {
   color: black;
   font-size: 34px;
   left: -70px;
-  font: bolder;
+  font-weight: bolder;
 }
 .left .active {
   color: red;
@@ -212,7 +212,6 @@ hr {
 }
 
 .link {
-  all: unset;
   padding: 5px;
   color: white;
   background-color: green;
@@ -266,9 +265,10 @@ hr {
   all: unset;
   border: 1px solid black;
   padding: 5px;
-  background-color: rgb(0, 166, 0);
+  background-color: rgb(22, 88, 22);
   color: white;
   transition: all 0.4s;
+  border-radius: 4px;
 }
 .page .story .search button:focus {
   outline: 2px solid blue;
@@ -282,7 +282,7 @@ hr {
   padding: 10px;
 }
 .page .story .list .submissionData h2 {
-  color: #969696;
+  color: rgb(45, 42, 42);
 }
 .page .story .list .submissionData .submissionLabel {
   background-color: rgb(241, 240, 240);

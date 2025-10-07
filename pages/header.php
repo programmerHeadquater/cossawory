@@ -17,17 +17,17 @@
 
     <header class="header">
         <div class="headerLeft">
-            <button class="" id="hamburger" aria-controls="nav" aria-expanded="false" tabindex="0">
+            <button class="" id="hamburger"  aria-label="Toggle navigation menu" aria-controls="nav" aria-expanded="false" >
                 <div class="burgerBox"></div>
                 <div class="burgerBox"></div>
                 <div class="burgerBox"></div>
             </button>
-            <a href="index.php"><img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
+            <a href="index.php" aria-label="Home page" alt="Submision Link"><img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
         </div>
         <div class="headerRight">
 
-            <h2><span>Welcome to </span>Cassowary Project</h2>
+            <h1><span>Welcome to </span>Cassowary Project</h1>
 
-            <h3>Helpling people solve the problem with anonymous and full privacy</h3>
+            <h2>Helpling people solve the problem with anonymous and full privacy</h2>
         </div>
     </header>

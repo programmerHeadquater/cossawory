@@ -84,7 +84,7 @@ ul li {
         color: black;
         font-size: 34px;
         left: -70px;
-        font: bolder;
+        font-weight: bolder;
     }
 
     .active {
@@ -247,7 +247,7 @@ hr {
 
 
 .link {
-    all: unset;
+    // all: unset;
     padding: 5px;
     color: white;
     background-color: green;
@@ -311,16 +311,17 @@ hr {
                 all: unset;
                 border: 1px solid black;
                 padding: 5px;
-                background-color: rgb(0, 166, 0);
+                background-color: rgb(22, 88, 22);
                 color: white;
                 transition: all 0.4s;
+                border-radius: 4px;
             }
             button:focus{
                 outline: 2px solid blue;
             }
             button:hover {
                 background-color: rgb(0, 106, 0);
-
+                
             }
         }
 
@@ -331,7 +332,7 @@ hr {
 
             .submissionData {
                 h2 {
-                    color: #969696;
+                    color: rgb(45, 42, 42);
                 }
 
                 .submissionLabel {

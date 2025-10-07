@@ -1,3 +1,5 @@
+<title>Submission Received</title>
+
 <?php
 require_once 'conn/submission.php';
 use function submission\insertSubmissionFromJson;

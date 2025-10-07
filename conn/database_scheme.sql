@@ -53,5 +53,3 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 
 
--- testing tables
-
