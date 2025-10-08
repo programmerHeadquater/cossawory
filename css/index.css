@@ -126,7 +126,7 @@ ul li {
 }
 
 .required {
-  color: red;
+  color: rgb(156, 10, 10);
   float: right;
 }
 
@@ -294,6 +294,10 @@ hr {
 .page .story .list .review .reviewCard {
   padding: 10px 10px;
   background-color: rgb(206, 206, 206);
+}
+
+.colorTesting {
+  color: red;
 }
 
 /*# sourceMappingURL=index.css.map */
