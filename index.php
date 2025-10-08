@@ -14,3 +14,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 </main>
 
 <?php include_once "pages/footer.php" ?>
+
+
+<!-- testing for git history change file -->
