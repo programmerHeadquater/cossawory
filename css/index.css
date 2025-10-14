@@ -23,15 +23,21 @@ ul li {
 }
 
 .header {
-  padding: 0 30px;
+  padding: 10px 10%;
   display: flex;
   justify-content: space-between;
+  align-items: end;
+  text-align: right;
   background-color: rgba(90, 195, 252, 0.28);
+  font-size: 16px;
 }
 .header #birdLogo {
   color: #5ac3fc;
   width: 60px;
   height: 60px;
+}
+.header .headerRight a {
+  display: none;
 }
 
 .main {
@@ -174,7 +180,7 @@ hr {
 }
 
 .nav {
-  padding: 20px 10px;
+  padding: 20px 10%;
   background-color: rgb(239, 239, 239);
   display: block;
   transition: all 1s ease;
@@ -232,7 +238,7 @@ hr {
 }
 
 .page {
-  padding: 20px 20px;
+  padding: 20px 10%;
   flex: 1;
 }
 .page .pagination button {

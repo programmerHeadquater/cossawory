@@ -109,7 +109,7 @@ function sucessUploadTemplate($response){
     ob_start();
 
     ?>
-    <div class="sucessUploadTemplate">
+    <div class="sucessUploadTemplate" aria-live="assertive">
         <h2>We have received Your data sucessfully.</h2>
         <br>
         <h3>Your querry id: <span class="colorRed"><?=$response['id']?></span></h3>

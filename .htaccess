@@ -1,0 +1,7 @@
+# Disable directory listing
+Options -Indexes
+
+# Block access to sensitive files
+<FilesMatch "\.(env|sql|sql\.gz|sql\.bak|ini|conf|log)$">
+    Require all denied
+</FilesMatch>

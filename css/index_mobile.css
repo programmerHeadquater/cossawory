@@ -7,6 +7,8 @@
 @media screen and (max-width: 768px) {
   * {
     box-sizing: border-box;
+    /* border: 1px solid red; */
+    /* padding: 10px; */
   }
 
   #top {
@@ -19,8 +21,8 @@
   .footer,
   .nav ul {
     flex-direction: column;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 8%;
+    padding-right: 8%;
     align-items: center;
   }
 
@@ -67,9 +69,9 @@
 
   .header {
     display: flex;
+    align-items: stretch;
     flex-direction: row;
     justify-content: space-between;
-    font-size: 24px;
     margin-bottom: 10px;
   }
 
@@ -80,41 +82,70 @@
 
   .headerLeft {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     flex-shrink: 1;
+  }
+  .headerLeft a{
+    display: block;
   }
 
   .headerRight {
+    display: flex;
+    align-items: end;
+    justify-content: end;
     flex-grow: 1;
+  }
+  .headerRight p{
+    display: none;
+  }
+  .headerRight a{
+    margin: 0px;
+    display: block;
+  }
+  .headerRight h1{
+    font-size: 1.8em;
+  }
+  .headerRight h2{
+    font-size: 14px;
+    display: none;
   }
 
 
   #hamburger {
+    all: unset;
     display: block !important;
     position: relative;
     width: 5vh;
-    height: 5vh;
+    /* height is as of birdLogo */
+    height: 40px;
+    /* height: 100%; */
     cursor: pointer;
+    background-color: rgba(238, 130, 238, 0);
+    /* outline: none; */
+    box-shadow: none;
   }
 
   .burgerBox {
+    outline: none;
     position: absolute;
     /* always absolute */
     width: 100%;
     height: 4px;
     background-color: black;
-    border-radius: 3px;
-    border: 2px solid black;
+    border-radius: 1px;
+    /* border: 2px solid black; */
     padding: 0;
     box-sizing: border-box;
     transition: all 0.3s ease;
     left: 0;
     transform-origin: center center;
+    display: flex;
+    align-items: stretch;
   }
 
   /* Initial positions */
   .burgerBox:nth-child(1) {
-    top: 0;
+    top: 0%;
   }
 
   .burgerBox:nth-child(2) {
@@ -123,15 +154,15 @@
   }
 
   .burgerBox:nth-child(3) {
-    bottom: 0;
+    bottom: 0%;
   }
 
   /* When toggled to X */
   .closeBar .burgerBox:nth-child(1) {
     top: 50%;
     transform: translateY(-50%) rotate(45deg);
-    background-color: rgb(21, 180, 53);
-    border-color: rgb(27, 149, 56);
+    background-color: rgb(163, 32, 32);
+    border-color: rgb(163, 32, 32);
   }
 
   .closeBar .burgerBox:nth-child(2) {
@@ -141,8 +172,8 @@
   .closeBar .burgerBox:nth-child(3) {
     top: 50%;
     transform: translateY(-50%) rotate(-45deg);
-    background-color: red;
-    border-color: red;
+    background-color: rgb(163, 32, 32);
+    border-color: rgb(163, 32, 32);
   }
 
 
@@ -186,10 +217,12 @@
 
   .footer {
     gap: 20px;
-    text-align: center;
+    text-align: start;
+    align-items: start;
   }
+  
 
-  .footer div {
+  .footer section {
     flex: none;
     width: 100%;
   }
@@ -199,9 +232,9 @@
     padding: 8px 0;
   }
 
-  #birdLogo {
+  .header #birdLogo {
     width: 80px;
-    height: 6vh;
+    height: 40px;
     margin: auto;
   }
 }

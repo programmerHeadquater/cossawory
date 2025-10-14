@@ -7,14 +7,8 @@
     },
     {
         "label": "description",
-        "type": "text",
-        "required": "no",
+        "type": "textarea",
+        "required": "yes",
         "name": "description"
-    },
-    {
-        "label": "Other information",
-        "type": "text",
-        "required": "no",
-        "name": "other_information"
     }
 ]
