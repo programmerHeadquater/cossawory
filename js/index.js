@@ -43,11 +43,11 @@ document.querySelectorAll('[id]').forEach(el => {
 document.querySelectorAll('textarea').forEach(textarea => {
   textarea.style.overflow = 'hidden';
   textarea.style.resize = 'none';
-  textarea.style.minHeight = '100px';
+  textarea.style.minHeight = '50px';
 
   function autoResize() {
     textarea.style.height = 'auto';
-    textarea.style.height = Math.max(textarea.scrollHeight, 100) + 'px';
+    textarea.style.height = Math.max(textarea.scrollHeight, 30) + 'px';
   }
 
   textarea.addEventListener('input', autoResize);

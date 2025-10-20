@@ -237,4 +237,7 @@
     height: 40px;
     margin: auto;
   }
+  .page{
+    padding: 20px 8%;
+  }
 }

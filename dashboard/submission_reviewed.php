@@ -6,6 +6,7 @@
 
 
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
+    
 
 
     $data = getSubmissionReviewed($startPoint);
@@ -64,6 +65,7 @@
                 <form action="dashboard/deleteSubmission.php" method="POST">
 
                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    <input type="hidden" name="pageIn" value="submission_reviewed">
                     <button class="deleteBtn" type="submit">Delete</button>
                 </form>
 

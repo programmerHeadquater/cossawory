@@ -51,7 +51,7 @@ if ($queryId !== null) {
     <form class="search" action="index.php?page=storySearch" method="POST">
         <br>
         <label for="queryId">Search by ID</label>
-        <input id="queryId" name="queryId" type="number">
+        <input id="queryId" name="queryId" type="number" autofocus>
         <button aria-label="submit" type="submit">Search</button>
         <br>
     </form>

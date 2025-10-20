@@ -15,7 +15,6 @@ if (file_exists($jsonFile)) {
 ?>
 
 <div class="submission">
-    <br>
     <h2>Submission Form</h2>
 
     <form class="submission-form" enctype="multipart/form-data" action="index.php?page=submissionSubmit" method="post">
@@ -39,17 +38,18 @@ if (file_exists($jsonFile)) {
 
             <?php if ($field['type'] === 'textarea' || $field['type'] === 'text'): ?>
                 <textarea id="<?= htmlspecialchars($inputId); ?>" name="<?= htmlspecialchars($name); ?>" rows="3"
-                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?> <?= $autofocus ?>></textarea>
-                    <?php $firstFocusableField = false; ?>
+                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?>         <?= $autofocus ?>></textarea>
+                <?php $firstFocusableField = false; ?>
 
             <?php elseif ($field['type'] === 'file'): ?>
                 <input type="file" id="<?= htmlspecialchars($inputId); ?>" name="<?= htmlspecialchars($name); ?>"
-                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?> <?= $autofocus ?> />
-                    <?php $firstFocusableField = false;  ?>
+                    placeholder="Type here" <?= $field['required'] === 'yes' ? 'required' : '' ?>         <?= $autofocus ?> />
+                <?php $firstFocusableField = false; ?>
 
             <?php elseif ($field['type'] === 'audio'): ?>
                 <div class="audio-recorder">
-                    <button class="greenBtn" type="button" onclick="startRecording(this)" data-name="<?= $name ?>">🎙️ Start</button>
+                    <button class="greenBtn" type="button" onclick="startRecording(this)" data-name="<?= $name ?>">🎙️
+                        Start</button>
 
                     <button type="redBtn button" onclick="stopRecording(this)" data-name="<?= $name ?>" disabled>🛑
                         Stop</button><br><br>
@@ -57,12 +57,12 @@ if (file_exists($jsonFile)) {
                     <audio id="audioPlayback_<?= $name ?>" controls style="display: none;"></audio>
 
                     <input type="file" id="audioBlob_<?= $name ?>" name="<?= htmlspecialchars($name); ?>" accept="audio/*"
-                        style="display: none;" <?= $field['required'] === 'yes' ? 'required' : '' ?> <?= $autofocus ?> />
-                        <?php $firstFocusableField = false;  ?>
+                        style="display: none;" <?= $field['required'] === 'yes' ? 'required' : '' ?>         <?= $autofocus ?> />
+                    <?php $firstFocusableField = false; ?>
                 </div>
             <?php endif; ?>
 
-            <br><br>
+            <!-- <br><br> -->
         <?php endforeach; ?>
 
         <button class="submit" type="submit">Submit</button>

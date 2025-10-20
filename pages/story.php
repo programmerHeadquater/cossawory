@@ -81,8 +81,9 @@
         ob_start();
         ?>
         <div class="submissionData">
-            <h2>Submited Query</h2>
-            <br>
+            <!-- <h2>Submited Query</h2> -->
+             <h2>Issue</h2>
+            <!-- <br> -->
             <?php
 
             $form_data = json_decode($submission['form_data'], true);

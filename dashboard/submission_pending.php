@@ -62,6 +62,7 @@
 
 
                 <form action="dashboard/deleteSubmission.php" method="POST">
+                    <input type="hidden" name="pageIn" value="<?=$_GET['pageIn']?>">
 
                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
                     <button class="deleteBtn" type="submit">Delete</button>

@@ -23,12 +23,12 @@ ul li {
 }
 
 .header {
-  padding: 10px 10%;
+  padding: 5px 10%;
   display: flex;
   justify-content: space-between;
   align-items: end;
   text-align: right;
-  background-color: rgba(90, 195, 252, 0.28);
+  background-color: var(--turquoise-blue);
   font-size: 16px;
 }
 .header #birdLogo {
@@ -142,7 +142,7 @@ ul li {
 }
 
 .footer {
-  background-color: rgba(90, 195, 252, 0.28);
+  background-color: var(--turquoise-blue);
   color: black;
   padding: 20px 10%;
   display: flex;

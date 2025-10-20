@@ -14,6 +14,7 @@ if (isset($_SESSION['user_id']) && isset($_POST['id'])) {
 
     $sessionId = (int) $_SESSION['user_id'];
     $id = (int) $_POST['id'];
+    $pageIn = isset($_POST['pageIn']) ? $_POST['pageIn'] : "submission_pending";
     
 
     if (user_canDeleteSubmission($sessionId) && filter_var($id, FILTER_VALIDATE_INT) !== false) {
@@ -27,5 +28,5 @@ if (isset($_SESSION['user_id']) && isset($_POST['id'])) {
 }
 echo $message;
 
-header(header: "Location: ../dashboard.php?page=main&message=$message&startPoint=$startPoint");
+header(header: "Location: ../dashboard.php?page=main&message=$message&startPoint=$startPoint&pageIn=$pageIn");
 ?>
