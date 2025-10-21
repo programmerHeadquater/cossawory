@@ -25,8 +25,8 @@
             <a href="index.php" aria-label="Home page" alt="Submision Link"><img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
         </div>
         <div class="headerRight"><a href="index.php" aria-label="Home page" alt="Submision Link">bnm<img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
-            <h1><span>Welcome to </span>Cassowary Project</h1>
+            <h1><span>Welcome to </span>Project Cassowary</h1>
 
-            <p>Helpling people solve the problem with anonymous and full privacy</p>
+            <p>Helping you with your privacy and safety concerns</p>
         </div>
     </header>

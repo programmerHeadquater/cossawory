@@ -15,8 +15,9 @@ if (file_exists($jsonFile)) {
 ?>
 
 <div class="submission">
-    <h2>Submission Form</h2>
-
+    <h1>Submit your request</h1>
+    <hr>
+    <br>
     <form class="submission-form" enctype="multipart/form-data" action="index.php?page=submissionSubmit" method="post">
         <?php $firstFocusableField = true; ?>
         <?php foreach ($fields as $field): ?>

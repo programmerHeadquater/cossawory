@@ -25,7 +25,7 @@
         </div>
         <div class="right">
             <img id="birdLogo" src="images/bird.svg" alt="">
-            <h2>CASSOWARY PROJECT</h2>
+            <h2>Project Cassowary</h2>
         </div>
 
 

@@ -1,6 +1,6 @@
 // Variables
-$yolk-yellow: #ffa830;
-$turquoise-blue: #5ac3fc;
+$yolk-yellow: #d9a41a;
+$turquoise-blue: #73B0E8;
 $dark-grey: #9b9690;
 
 * {
@@ -107,7 +107,6 @@ ul li {
 }
 
 .submission {
-    border: 2px solid black;
     height: 100%;
     display: block;
     padding: 20px;
@@ -152,7 +151,7 @@ ul li {
 }
 
 .required {
-    color: rgb(156, 10, 10);
+    color: #bf2c23;
     float: right;
 }
 
@@ -177,7 +176,7 @@ ul li {
     }
 
     a {
-        color: #2c2d2d;
+        color: #000000;
         text-decoration: none;
         padding: 10px 0px;
         display: inline-block;
@@ -268,7 +267,7 @@ hr {
 }
 
 .colorRed {
-    color: red;
+    color: #bf2c23;
 }
 
 
@@ -278,7 +277,7 @@ hr {
 }
 
 .page {
-    padding: 20px 10%;
+    padding: 20px 20%;
     flex: 1;
 
     .pagination {
@@ -312,24 +311,27 @@ hr {
 
             }
             input:focus{
-                outline: 2px solid blue;
+                outline: 2px solid rgb(0, 0, 0);
             }
 
             button {
                 all: unset;
                 border: 1px solid black;
                 padding: 5px;
-                background-color: rgb(22, 88, 22);
-                color: white;
-                transition: all 0.4s;
+                background-color: white;
+                color: black;
                 border-radius: 4px;
+                border: 1.2px solid black;
+
             }
             button:focus{
-                outline: 2px solid blue;
+                outline: 2px solid rgb(0, 0, 0);
             }
             button:hover {
-                background-color: rgb(0, 106, 0);
-                
+                background-color: #fb9302;
+                color: black;
+                border: 1.2px solid black;
+                box-shadow: 0.5px 0.5px 0.5px 0.5px;
             }
         }
 
@@ -373,5 +375,5 @@ hr {
 // testing
 
 .colorTesting{
-    color: red;
+    color: #bf2c23;
 }

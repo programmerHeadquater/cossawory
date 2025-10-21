@@ -1,7 +1,7 @@
 <title>About Us</title>
 
 <div class="about">
-    <h1>About</h1>
+    <h1>About Project Cassowary</h1>
     <hr>
     <br>
     <div class="list">

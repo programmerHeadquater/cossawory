@@ -1,14 +1,14 @@
 [
     {
-        "label": "title",
-        "type": "textarea",
+        "label": "Name of what you want to learn about:",
+        "type": "text",
         "required": "yes",
-        "name": "title"
+        "name": "name_of_what_you_want_to_learn_about"
     },
     {
-        "label": "description",
+        "label": "What would you like to know?",
         "type": "textarea",
         "required": "yes",
-        "name": "description"
+        "name": "what_would_you_like_to_know"
     }
 ]

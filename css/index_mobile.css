@@ -1,6 +1,6 @@
 :root {
   --yolk-yellow: #ffa830;
-  --turquoise-blue: #5ac3fc;
+  --turquoise-blue: #73B0E8;
   --dark-grey: #9b9690;
 }
 
@@ -240,4 +240,23 @@
   .page{
     padding: 20px 8%;
   }
+}
+
+
+@media screen and (max-width: 768px) {
+    /* Styles for screens up to 768px width */
+    .CaseStudies-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .CaseStudies-list div{
+      width: 90%;
+      margin: 2.5%;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1.5px solid black;
+      text-align: center;
+
+    }
 }
