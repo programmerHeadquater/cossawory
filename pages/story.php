@@ -10,7 +10,7 @@
     require_once 'conn/submission.php';
     use function submission\getSubmissionsReviewedTotalCount;
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
-   
+
     $conn = openDatabaseConnection();
     $stmt = $conn->prepare(
         'SELECT s.*, r.review, r.created_at as review_created_at
@@ -21,7 +21,7 @@
          LIMIT 5 OFFSET ?
      ) AS s
      LEFT JOIN reviews r ON s.id = r.submission_id'
-    
+
     );
     $stmt->bind_param('i', $startPoint);
     $stmt->execute();
@@ -50,18 +50,22 @@
 
     }
 
-    foreach ($submissions as $submission) {
-        ?>
-        <div class="list">
+    if ($submissions == null) {
+        echo "<p>Sorry, No story yet<p>";
+    } else {
+        foreach ($submissions as $submission) {
+            ?>
+            <div class="list">
+
+                <?php
+                echo submissionTemplate($submission);
+                echo reviewTemplate($submission['reviews']);
+                ?>
+            </div>
 
             <?php
-            echo submissionTemplate($submission);
-            echo reviewTemplate($submission['reviews']);
-            ?>
-        </div>
 
-        <?php
-
+        }
     }
 
 
@@ -82,7 +86,7 @@
         ?>
         <div class="submissionData">
             <!-- <h2>Submited Query</h2> -->
-             <h2>Issue</h2>
+            <h2>Issue</h2>
             <!-- <br> -->
             <?php
 
@@ -90,9 +94,9 @@
             foreach ($form_data as $index => $field): ?>
 
                 <!-- <p class="submissionLabel"> -->
-                    <?php
-                     $field['label'] 
-                     ?> 
+                <?php
+                $field['label']
+                    ?>
                 <!-- </p> -->
 
                 <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>

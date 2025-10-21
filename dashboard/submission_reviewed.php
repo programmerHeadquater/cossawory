@@ -63,7 +63,6 @@
 
 
                 <form action="dashboard/deleteSubmission.php" method="POST">
-
                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
                     <input type="hidden" name="pageIn" value="submission_reviewed">
                     <button class="deleteBtn" type="submit">Delete</button>

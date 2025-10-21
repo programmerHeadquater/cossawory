@@ -65,11 +65,18 @@ use function user\user_addNewUser;
             </div>
         <?php elseif ($successMessage): ?>
             <div style="color: green; font-weight: bold;">
-                <?= htmlspecialchars($successMessage) ?>
+                <p><?= htmlspecialchars($successMessage) ?></p>
             </div>
-            <pre><?php print_r($formData); ?></pre>
+            <br>
+            <div class="userInfo">
+                <p>Username: <?= $formData['username'] ?> </p>
+                <br>
+                <p>Email : <?= $formData['email'] ?> 
+                </p>
+            </div>
+            <br>
         <?php endif; ?>
-        <a href="dashboard.php?page=addUser" class="<?= $successMessage !== null ? '' : 'dNone' ?>">Add another user</a href="#">
+        <a href="dashboard.php?page=addUser" class="<?= $successMessage !== null ? '' : 'dNone' ?> greenBtn" >Add another user</a href="#">
         <!-- FORM START -->
         <form class="<?= $successMessage !== null ? 'dNone' : '' ?>" action="dashboard.php?page=addUser" method="POST"
             autocomplete="off">

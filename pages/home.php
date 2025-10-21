@@ -1,7 +1,6 @@
 <title>Home</title>
 
 <div class="home">
-    <h2 class="colorTesting">Color Testing fail</h2>
     <div class="list">
         <h2>Our Purpose:</h2>
         <br>

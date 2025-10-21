@@ -6,9 +6,7 @@ require_once "../conn/user.php";
 use function submission\deleteSubmission;
 use function user\user_canDeleteSubmission;
 
-$getId = (int) $_POST['id'];
-echo $getId;
-echo $_SESSION['user_id'];
+
 
 if (isset($_SESSION['user_id']) && isset($_POST['id'])) {
 

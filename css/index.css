@@ -257,7 +257,6 @@ hr {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 30px;
 }
 .page .story .search input {
   all: unset;

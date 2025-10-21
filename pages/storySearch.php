@@ -50,9 +50,9 @@ if ($queryId !== null) {
 <div class="story">
     <form class="search" action="index.php?page=storySearch" method="POST">
         <br>
-        <label for="queryId">Search by ID</label>
-        <input id="queryId" name="queryId" type="number" autofocus>
-        <button aria-label="submit" type="submit">Search</button>
+        <label style="margin-right:10px;" for="queryId">Search by ID: </label>
+        <input style="margin-right:10px;" id="queryId" name="queryId" type="number" autofocus>
+        <button  aria-label="submit" type="submit">Search</button>
         <br>
     </form>
     <br>
