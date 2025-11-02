@@ -14,7 +14,7 @@
         </select>
         
         <br><br>
-        <label for="inputLabel">Title:  </label>
+        <label for="inputLabel">Label:  </label>
         <input type="text" id="inputLabel" placeholder="Enter Title" required />
         <br>
         <br>

@@ -116,7 +116,7 @@ function sucessUploadTemplate($response){
         <br>
         <p>Please use your query Id to find your query on the submission search page</p>
         <br>
-        <p>link To page : <a class="ReadMoreBtn" href="index.php?page=storySearch">Search Submissions</a></p>
+        <p>link To page : <a class="link" href="index.php?page=storySearch">Search Submissions</a></p>
     </div>   
     <?php
     echo ob_get_clean();

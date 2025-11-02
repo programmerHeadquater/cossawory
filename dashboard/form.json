@@ -4,17 +4,5 @@
         "type": "textarea",
         "required": "yes",
         "name": "title"
-    },
-    {
-        "label": "description",
-        "type": "textarea",
-        "required": "yes",
-        "name": "description"
-    },
-    {
-        "label": "cvbnm",
-        "type": "text",
-        "required": "yes",
-        "name": "cvbnm"
     }
 ]

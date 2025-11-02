@@ -23,7 +23,7 @@ ul li {
 }
 
 .header {
-  padding: 5px 10%;  
+  padding: 5px 10%;
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -83,7 +83,7 @@ ul li {
 }
 .left .active {
   color: red;
-} 
+}
 
 .right {
   margin-left: 90px;
@@ -116,8 +116,8 @@ ul li {
 }
 .submission .submit {
   display: block;
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -125,13 +125,9 @@ ul li {
   cursor: pointer;
   margin-top: 1rem;
   align-self: start;
-  border: 1.2px solid black;
 }
 .submission .submit:hover {
-  background-color: #fb9302;
-  color: black;
-  border: 1.2px solid black;
-  box-shadow: 0.5px 0.5px 0.5px 0.5px;
+  background-color: blue;
 }
 
 .required {
@@ -200,13 +196,12 @@ hr {
   flex-grow: 1;
   display: inline-block;
   padding: 2px;
-  border: 1.2px solid rgb(0, 0, 0);
+  border: 1px solid green;
   border-radius: 4px;
-  background-color: white;
 }
 .nav ul li:hover {
   background-color: #fb9302;
-  box-shadow: 0.5px 0.5px 0.5px 0.5px;
+  box-shadow: 1px 1px 1px 1px;
 }
 .nav ul li a {
   padding: 3px 5px;
@@ -313,40 +308,3 @@ hr {
 }
 
 /*# sourceMappingURL=index.css.map */
-
-.CaseStudies-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.CaseStudies-list div{
-  width: 45%;
-  margin: 2.5%;
-  border-radius: 10px;
-  padding: 10px;
-  border: 1.5px solid black;
-  text-align: center;
-
-}
-
-.ReadMoreBtn {
-  all: unset;
-  border: 1px solid black;
-  padding: 5px;
-  background-color: white;
-  color: black;
-  border-radius: 4px;
-  border: 1.2px solid black;
-}
-
-.ReadMoreBtn:hover {
-  background-color: #fb9302;
-  color: black;
-  border: 1.2px solid black;
-  box-shadow: 0.5px 0.5px 0.5px 0.5px;
-}
-
-.Tips-List {
-  list-style-type: disc;
-  padding-bottom: 20px;
-}
