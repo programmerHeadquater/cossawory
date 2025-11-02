@@ -3,7 +3,7 @@
     $pageIn = isset($_GET['pageIn']) ? $_GET['pageIn'] : 'submission_pending';
 ?>
 <div class="page">
-    <h1>Submission </h1>
+    <h1>Submissions</h1>
         <div class="submissionNav">
             <a class="<?=$pageIn == 'submission_pending'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_pending">Pending</a>
             <a class="<?=$pageIn == 'submission_all'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_all">All</a>

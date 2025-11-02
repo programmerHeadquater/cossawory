@@ -14,26 +14,26 @@
         </select>
         
         <br><br>
-        <label for="inputLabel">Label (Unique):  </label>
-        <input type="text" id="inputLabel" placeholder="Enter label" required />
+        <label for="inputLabel">Title:  </label>
+        <input type="text" id="inputLabel" placeholder="Enter Title" required />
         <br>
         <br>
-        <label for="inputRequired">Does this feild required / optional</label>
+        <label for="inputRequired">Is this feild required or optional?</label>
         <select id="inputRequired" required>
-            <option value="yes" selected="selected" >Yes</option>
-            <option value="no">No</option>
+            <option value="yes" selected="selected" >Required</option>
+            <option value="no">Optional</option>
         </select>
         <br>
         <br>
         
-        <button class="greenBtn" id="addInputBtn">Add this input</button>
+        <button class="greenBtn" id="addInputBtn">Add to the form</button>
         <br>
         <br>
         <h3>Current Form Preview:</h3>
         <div id="previewForm" class=""></div>
     </div>
     <br>
-    <button class="greenBtn" id="submitFormLayout">Add this to web page</button>
+    <button class="greenBtn" id="submitFormLayout">Add to the web page</button>
     </div>
 
 </div>

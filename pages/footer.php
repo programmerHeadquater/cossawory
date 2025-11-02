@@ -4,24 +4,23 @@
             <h3>Contact</h3>
             <hr>
             <p>
-                <a href="tel:0987654321">Phone: 0987654321</a>
+                <a href="tel:0000000000">Phone: +xx (xxx) xxx-xxxxx</a>
             </p>
             <p>
-                <a href="mailto:Testingemail@cassowary.com">Email: Testingemail@cassowary.com</a>
+                <a href="mailto:example@domain.com">Email: example@askcassowary.com.au</a>
             </p>
         </section>
 
         <section>
             <h3>Help Us Improve</h3>
             <hr>
-            <p><a href="#">About layout</a></p>
-            <p><a href="#">Request new disability feature</a></p>
+            <p><a href="#">Request new features</a></p>
             <p><a href="#">Join our team</a></p>
         </section>
     </div>
 
     <div class="copyright">
-        <p>&copy; 2025 Cassowary Project. All rights reserved.</p>
+        <p>&copy; 2025 Project Cassowary. All rights reserved.</p>
     </div>
 </footer>
 

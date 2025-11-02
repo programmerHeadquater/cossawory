@@ -37,7 +37,7 @@ body {
 
 :root {
   --yolk-yellow: #ffa830;
-  --turquoise-blue: #5ac3fc;
+  --turquoise-blue: #73B0E8;
   --dark-grey: #9b9690;
 }
 
@@ -149,15 +149,6 @@ a {
   margin-right: 10px;
 }
 .main .layout #previewForm .remove {
-  padding: 0px;
-  margin: 0px !important;
-  height: 0px;
-  border: none;
-  overflow: hidden;
-  transition: 0.3s all linear;
-  font-size: inherit;
-}
-.main .layout #previewForm:hover .remove {
   transition: 0.3s all linear;
   margin: 5px 0 0 0 !important;
   height: 30px;
@@ -165,6 +156,14 @@ a {
   border: 1px solid red;
   display: block !important;
 }
+/* .main .layout #previewForm:hover .remove {
+  transition: 0.3s all linear;
+  margin: 5px 0 0 0 !important;
+  height: 30px;
+  padding: 2px 2px;
+  border: 1px solid red;
+  display: block !important;
+} */
 .main .navShow {
   width: 250px !important;
   padding: 10px !important;
@@ -207,10 +206,10 @@ a {
   border-radius: 5px;
 }
 .main .nav .one a:hover {
-  border: 2px solid red;
+  border: 2px solid rgb(255, 255, 255);
 }
 .main .nav .one .active {
-  border: 2px solid red;
+  border: 2px solid rgb(255, 255, 255);
 }
 .main .nav .two {
   display: block;
@@ -261,7 +260,7 @@ a {
   margin-right: 20px;
 }
 .main .page .userNav a:hover {
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid rgb(0, 0, 0);
 }
 .main .page .submissionNav {
   background-color: var(--turquoise-blue);
@@ -273,10 +272,10 @@ a {
   margin-right: 20px;
 }
 .main .page .submissionNav a:hover {
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid rgb(0, 0, 0);
 }
 .main .page .active {
-  border-bottom: 2px solid red !important;
+  border-bottom: 2px solid rgb(0, 0, 0) !important;
 }
 .main .page .pagination {
   padding: 10px 20px;

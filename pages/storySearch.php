@@ -48,6 +48,9 @@ if ($queryId !== null) {
 
 
 <div class="story">
+    <h1>Search Submissions</h1>
+    <hr>
+    <br>
     <form class="search" action="index.php?page=storySearch" method="POST">
         <br>
         <label style="margin-right:10px;" for="queryId">Search by ID: </label>

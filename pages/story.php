@@ -1,7 +1,9 @@
 <title>All story</title>
 
 <div class="story">
-
+    <h1>View Submissions</h1>
+    <hr>
+    <br>
 
     <?php
     require_once "conn/conn.php";

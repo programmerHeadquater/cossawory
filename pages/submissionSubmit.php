@@ -110,13 +110,13 @@ function sucessUploadTemplate($response){
 
     ?>
     <div class="sucessUploadTemplate" aria-live="assertive">
-        <h2>We have received Your data sucessfully.</h2>
+        <h2>We have received Your data successfully.</h2>
         <br>
-        <h3>Your querry id: <span class="colorRed"><?=$response['id']?></span></h3>
+        <h3>Your query id: <span class="colorRed"><?=$response['id']?></span></h3>
         <br>
-        <p>Please use your querry Id to find you querry on our story page</p>
+        <p>Please use your query Id to find your query on the submission search page</p>
         <br>
-        <p>link To page : <a class="link" href="index.php?page=storySearch">Story search</a></p>
+        <p>link To page : <a class="ReadMoreBtn" href="index.php?page=storySearch">Search Submissions</a></p>
     </div>   
     <?php
     echo ob_get_clean();
