@@ -1,4 +1,5 @@
 <?php
+
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 ?>
 <?php include_once "pages/header.php" ?>
