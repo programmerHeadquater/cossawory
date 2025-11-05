@@ -18,12 +18,11 @@ CREATE TABLE IF NOT EXISTS submission (
 
 
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS user (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255), -- username should be unique
   email VARCHAR(255) UNIQUE, -- email address of the user 
   password VARCHAR(255), -- password will be hashed by php hash function
-  view BOOLEAN DEFAULT TRUE, -- check if user allow to see 
   can_write_review BOOLEAN DEFAULT FALSE, -- check if user allow to write a review
   can_delete_review BOOLEAN DEFAULT FALSE, -- check if user allow to delete the review
   can_delete_submission BOOLEAN DEFAULT FALSE, -- check if user allow to delete the whole querry
@@ -35,7 +34,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE IF NOT EXISTS review (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,                 -- primary key
     submission_id INT UNSIGNED NOT NULL,                        -- linked submission
     user_id INT UNSIGNED NOT NULL,                              -- linked user (reviewer)
@@ -43,7 +42,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,             -- created timestamp
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- updated timestamp
     FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE CASCADE,     -- delete reviews when submission deleted
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE                  -- delete reviews when user deleted
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE                  -- delete reviews when user deleted
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 

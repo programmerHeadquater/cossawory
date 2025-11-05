@@ -7,135 +7,111 @@ use function conn\openDatabaseConnection;
 use function conn\closeDatabaseConnection;
 
 /**
- * Log error messages to file
+ * Helper: Standard response array
  */
-function logError(string $message): void
+function makeResponse($status, $data = null, $error = null)
 {
-    $logFile = __DIR__ . '/error.log';
-    $timestamp = date('Y-m-d H:i:s');
-    error_log("[$timestamp] $message\n", 3, $logFile);
-}
-
-/**
- * Create a unified response structure
- */
-function makeResponse(bool $status, $data = null, ?string $error = null): array
-{
-    return [
-        'status' => $status,
-        'data' => $data,
-        'error' => $error
-    ];
+    return ['status' => $status, 'data' => $data, 'error' => $error];
 }
 
 /**
  * Get a user by ID
  */
-function user_getById(int $id): array
+function user_getById($id)
 {
     $conn = openDatabaseConnection();
-    $error = null;
-    $data = null;
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
 
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
+    $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
         return makeResponse(false, null, $error);
     }
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-    if (!$stmt) {
-        $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->bind_param("i", $id)) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $result = $stmt->get_result();
-        $data = $result->fetch_assoc() ?: null;
-    }
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse(!$error, $data, $error);
+    return makeResponse(true, $user ?: null);
 }
 
 /**
  * Get a user by email
  */
-function user_getByEmail(string $email): array
+function user_getByEmail($email)
 {
     $conn = openDatabaseConnection();
-    $error = null;
-    $data = null;
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
 
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
+    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
         return makeResponse(false, null, $error);
     }
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    if (!$stmt) {
-        $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->bind_param("s", $email)) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $result = $stmt->get_result();
-        $data = $result->fetch_assoc() ?: null;
-    }
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse(!$error, $data, $error);
+    return makeResponse(true, $user ?: null);
 }
 
 /**
  * Validate user credentials
  */
-function user_checkLogin(string $email, string $password): array
+function user_checkLogin($email, $password)
 {
-    $userResponse = user_getByEmail($email);
-
-    if (!$userResponse['status']) {
-        return $userResponse; // Already includes error info
+    $emailResp = user_getByEmail($email);
+    if (!$emailResp['status']) {
+        return $emailResp;
     }
 
-    $user = $userResponse['data'];
-    if (!$user || !password_verify($password, $user['password'])) {
-        return makeResponse(true, null, null); // Valid query, but credentials fail
+    $user = $emailResp['data'];
+    if (!$user) {
+        return makeResponse(true, null, 'User not found');
     }
 
-    return makeResponse(true, $user, null);
+    if (password_verify($password, $user['password'])) {
+        return makeResponse(true, $user);
+    }
+
+    return makeResponse(false, null, 'Invalid credentials');
 }
 
 /**
  * Create a new user with permissions
  */
-function user_addNewUser(array $formData): array
+function user_addNewUser($formData)
 {
     $conn = openDatabaseConnection();
-    $error = null;
-
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
-        return makeResponse(false, null, $error);
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
     }
 
     $username = $formData['username'] ?? null;
-    $password = password_hash($formData['password'] ?? '', PASSWORD_DEFAULT);
     $email = $formData['email'] ?? null;
+    $password = isset($formData['password']) ? password_hash($formData['password'], PASSWORD_DEFAULT) : null;
 
-    $can_view = 1;
+    if (!$username || !$email || !$password) {
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, 'Missing required fields');
+    }
+
+
     $can_write_review = isset($formData['can_write_review']) && strtolower($formData['can_write_review']) === 'yes' ? 1 : 0;
     $can_delete_review = isset($formData['can_delete_review']) && strtolower($formData['can_delete_review']) === 'yes' ? 1 : 0;
     $can_delete_submission = isset($formData['can_delete_submission']) && strtolower($formData['can_delete_submission']) === 'yes' ? 1 : 0;
@@ -143,254 +119,226 @@ function user_addNewUser(array $formData): array
     $can_delete_user = isset($formData['can_delete_user']) && strtolower($formData['can_delete_user']) === 'yes' ? 1 : 0;
 
     $stmt = $conn->prepare("
-        INSERT INTO users (
+        INSERT INTO user (
             username, email, password,
-            view, can_write_review, can_delete_review,
+            can_write_review, can_delete_review,
             can_delete_submission, can_add_user, can_delete_user
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
     ");
-
     if (!$stmt) {
         $error = "Prepare failed: " . $conn->error;
-    } elseif (
-        !$stmt->bind_param(
-            "sssiiiiii",
-            $username,
-            $email,
-            $password,
-            $can_view,
-            $can_write_review,
-            $can_delete_review,
-            $can_delete_submission,
-            $can_add_user,
-            $can_delete_user
-        )
-    ) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    }
-
-    if ($error)
-        logError($error);
-
-    $stmt?->close();
-    closeDatabaseConnection($conn);
-
-    return makeResponse(!$error, $error ? null : "User created successfully", $error);
-}
-
-/**
- * Delete a user by ID
- */
-function user_deleteById(int $id): array
-{
-    $conn = openDatabaseConnection();
-    $error = null;
-    $deleted = false;
-
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
+        closeDatabaseConnection($conn);
         return makeResponse(false, null, $error);
     }
 
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    if (!$stmt) {
-        $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->bind_param("i", $id)) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $deleted = $stmt->affected_rows > 0;
-    }
+    $stmt->bind_param(
+        "sssiiiii",
+        $username,
+        $email,
+        $password,
+        $can_write_review,
+        $can_delete_review,
+        $can_delete_submission,
+        $can_add_user,
+        $can_delete_user
+    );
 
-    if ($error)
-        logError($error);
+    $result = $stmt->execute();
+    $insertId = $stmt->insert_id ?? null;
 
-    $stmt?->close();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse($deleted, $deleted ? "User deleted" : "User not found", $error);
+    return makeResponse($result, ['id' => $insertId], $result ? null : 'Insert failed');
+}
+
+/**
+ * Delete user by ID
+ */
+function user_deleteById($id)
+{
+    $conn = openDatabaseConnection();
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("DELETE FROM user WHERE id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
+    $stmt->bind_param("i", $id);
+    $result = $stmt->execute();
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse($result, $result, $result ? null : 'Delete failed');
 }
 
 /**
  * Check if user has a specific permission
  */
-function user_hasPermission(int $userId, string $permissionName): array
+function user_hasPermission($userId, $permissionName)
 {
     $allowed = [
-        'can_view',
+
         'can_write_review',
         'can_delete_review',
         'can_delete_submission',
         'can_add_user',
         'can_delete_user'
     ];
-
     if (!in_array($permissionName, $allowed)) {
-        $error = "Invalid permission name: $permissionName";
-        logError($error);
-        return makeResponse(false, false, $error);
+        return makeResponse(false, null, "Invalid permission: $permissionName");
     }
 
     $conn = openDatabaseConnection();
-    $error = null;
-    $hasPermission = false;
-
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
-        return makeResponse(false, false, $error);
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
     }
 
-    $stmt = $conn->prepare("SELECT $permissionName FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT $permissionName FROM user WHERE id = ?");
     if (!$stmt) {
         $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->bind_param("i", $userId)) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
+    $stmt->bind_param("i", $userId);
+    if ($stmt->execute()) {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $hasPermission = isset($row[$permissionName]) && (bool) $row[$permissionName];
+        return makeResponse(true, $hasPermission); // success = query worked, data = permission
+    } else {
+        return makeResponse(false, null, 'Failed to fetch permission');
     }
+}
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
-    closeDatabaseConnection($conn);
 
-    return makeResponse(!$error, $hasPermission, $error);
+function user_canWriteReview($userId): array
+{
+    return user_hasPermission($userId, 'can_write_review');
+}
+
+function user_canDeleteReview($userId): array
+{
+    return user_hasPermission($userId, 'can_delete_review');
+}
+
+function user_canDeleteSubmission($userId): array
+{
+    return user_hasPermission($userId, 'can_delete_submission');
+}
+
+function user_canAddUser($userId): array
+{
+    return user_hasPermission($userId, 'can_add_user');
+}
+
+function user_canDeleteUser($userId): array
+{
+    return user_hasPermission($userId, 'can_delete_user');
 }
 
 /**
- * Get all users (paginated)
+ * Get list of users (pagination)
  */
-function user_getUsers(int $startPoint): array
+function user_getUsers($startPoint)
 {
     $conn = openDatabaseConnection();
-    $error = null;
-    $data = [];
+    if ($conn === null) {
+        return makeResponse(false, [], 'Database connection failed');
+    }
 
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
+    $stmt = $conn->prepare("SELECT * FROM user LIMIT 20 OFFSET ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
         return makeResponse(false, [], $error);
     }
 
-    $stmt = $conn->prepare("SELECT * FROM users LIMIT 20 OFFSET ?");
-    if (!$stmt) {
-        $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->bind_param("i", $startPoint)) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $result = $stmt->get_result();
-        $data = $result->fetch_all(\MYSQLI_ASSOC);
-    }
+    $stmt->bind_param("i", $startPoint);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(\MYSQLI_ASSOC);
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse(!$error, $data, $error);
+    return makeResponse(true, $data);
 }
 
 /**
  * Get total user count
  */
-function user_getTotalUser(): array
+function user_getTotalUser()
 {
     $conn = openDatabaseConnection();
-    $error = null;
-    $count = 0;
+    if ($conn === null) {
+        return makeResponse(false, 0, 'Database connection failed');
+    }
 
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM user");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
         return makeResponse(false, 0, $error);
     }
 
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM users");
-    if (!$stmt) {
-        $error = "Prepare failed: " . $conn->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $count = (int) ($row['total'] ?? 0);
-    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $count = $row['total'] ?? 0;
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse(!$error, $count, $error);
+    return makeResponse(true, $count);
 }
 
 /**
  * Update user permissions
  */
-function user_updatePermission(
-    int $id,
-    int $can_write_review,
-    int $can_delete_review,
-    int $can_delete_submission,
-    int $can_add_user,
-    int $can_delete_user
-): array {
+function user_updatePermission($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user)
+{
     $conn = openDatabaseConnection();
-    $error = null;
-    $updated = false;
-
-    if (!$conn) {
-        $error = "Database connection failed.";
-        logError($error);
-        return makeResponse(false, null, $error);
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
     }
 
-    $stmt = $conn->prepare('
-        UPDATE users SET 
-            can_write_review = ?,
-            can_delete_review = ?,
-            can_delete_submission = ?,
-            can_add_user = ?,
-            can_delete_user = ?
-        WHERE id = ?
-    ');
+    $stmt = $conn->prepare('UPDATE user SET 
+        can_write_review = ?,
+        can_delete_review = ?,
+        can_delete_submission = ?,
+        can_add_user = ?,
+        can_delete_user = ?
+        WHERE id = ?'
+    );
 
     if (!$stmt) {
         $error = "Prepare failed: " . $conn->error;
-    } elseif (
-        !$stmt->bind_param(
-            "iiiiii",
-            $can_write_review,
-            $can_delete_review,
-            $can_delete_submission,
-            $can_add_user,
-            $can_delete_user,
-            $id
-        )
-    ) {
-        $error = "Bind failed: " . $stmt->error;
-    } elseif (!$stmt->execute()) {
-        $error = "Execute failed: " . $stmt->error;
-    } else {
-        $updated = $stmt->affected_rows > 0;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
 
-    if ($error)
-        logError($error);
-    $stmt?->close();
+    $stmt->bind_param(
+        "iiiiii",
+        $can_write_review,
+        $can_delete_review,
+        $can_delete_submission,
+        $can_add_user,
+        $can_delete_user,
+        $id
+    );
+
+    $result = $stmt->execute();
+    $stmt->close();
     closeDatabaseConnection($conn);
 
-    return makeResponse($updated, $updated ? "Permissions updated" : "No changes", $error);
+    return makeResponse($result, $result, $result ? null : 'Update failed');
 }
 ?>

@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!isset($_SESSION['user_id']) || !user_canDeleteUser($_SESSION['user_id'])) {
+    if (!isset($_SESSION['user_id']) || !user_canDeleteUser($_SESSION['user_id'])['status'] ?? false ) {
         echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
         exit;
     }
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
         exit;
     }
-    $success = user_deleteById((int)$id);
+    $responce = user_deleteById((int)$id);
     if ($success) {
         echo json_encode(['success' => true]);
     } else {
