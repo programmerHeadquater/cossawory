@@ -18,18 +18,24 @@ function seedDatabase(): bool
     }
 
     // Disable FK checks to reset tables safely
-    $conn->query("SET FOREIGN_KEY_CHECKS = 0");
+    // $conn->query("SET FOREIGN_KEY_CHECKS = 0");
     $conn->query("TRUNCATE TABLE review");
     $conn->query("TRUNCATE TABLE submission");
     $conn->query("TRUNCATE TABLE user");
-    $conn->query("SET FOREIGN_KEY_CHECKS = 1");
+    // $conn->query("ALTER TABLE user AUTO_INCREMENT = 1");
+    // $conn->query("SET FOREIGN_KEY_CHECKS = 1");
 
     // --- 1. Seed users ---
+    // $users = [
+    //     ['admin', 'admin@example.com', 'hashed_admin_pass', 1, 1, 1, 1, 1],
+    //     ['reviewer', 'reviewer@example.com', 'hashed_reviewer_pass', 1, 0, 0, 0, 0],
+    //     ['guest', 'guest@example.com', 'hashed_guest_pass', 0, 0, 0, 0, 0],
+    // ];
     $users = [
-        ['admin', 'admin@example.com', 'hashed_admin_pass', 1, 1, 1, 1, 1],
-        ['reviewer', 'reviewer@example.com', 'hashed_reviewer_pass', 1, 0, 0, 0, 0],
-        ['guest', 'guest@example.com', 'hashed_guest_pass', 0, 0, 0, 0, 0],
-    ];
+    ['admin', 'admin@example.com', password_hash('admin123', PASSWORD_DEFAULT), 1, 1, 1, 1, 1],
+    ['reviewer', 'reviewer@example.com', password_hash('reviewer123', PASSWORD_DEFAULT), 1, 0, 0, 0, 0],
+    ['guest', 'guest@example.com', password_hash('guest123', PASSWORD_DEFAULT), 0, 0, 0, 0, 0],
+];
 
     $stmt = $conn->prepare("
         INSERT INTO user 
@@ -45,11 +51,12 @@ function seedDatabase(): bool
 
     // --- 2. Seed submissions ---
     $submissions = [
-        ['{"field1":"value1","field2":"value2"}', 0],
-        ['{"field1":"value3","field2":"value4"}', 1],
-        ['{"field1":"value5","field2":"value6"}', 0],
-    ];
+        ['[{"label":"title","type":"textarea","required":"yes","name":"title","value":"asdf"}]', 0],
+        ['[{"label":"title","type":"textarea","required":"yes","name":"title","value":"asdf"}]', 1],
+        ['[{"label":"title","type":"textarea","required":"yes","name":"title","value":"asdf"}]', 0],
 
+        // [{"label":"title","type":"textarea","required":"yes","name":"title","value":"test"}]
+    ];
     $stmt = $conn->prepare("INSERT INTO submission (form_data, review) VALUES (?, ?)");
     foreach ($submissions as $sub) {
         $stmt->bind_param('si', $sub[0], $sub[1]);

@@ -1,93 +1,92 @@
 <?php
-
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/seedingDb.php';
 require_once __DIR__ . '/../review.php';
 require_once __DIR__ . '/../submission.php';
 
-use function review\insertReview;
-use function review\getReviewBySubmissionId;
-use function review\updateReview;
-use function review\deleteReview;
-use function review\getTotalReviewBySubmissionId;
 use function seed\seedDatabase;
 use function seed\clearDatabase;
+use function review\insertReview;
+use function review\updateReview;
+use function review\deleteReview;
+use function review\getReviewBySubmissionId;
+use function review\getTotalReviewBySubmissionId;
 
 final class ReviewTest extends TestCase
 {
-    private int $submissionId;
-    private int $userId;
-    private static int $reviewId;
+    private static $reviewId;
+    private static $submissionId;
+    private static $userId;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        clearDatabase();
+        // Seed database first (users, submissions, reviews)
         seedDatabase();
 
-        $this->submissionId = 1; // Assuming seeded submission ID exists
-        $this->userId = 1;       // Assuming seeded user ID exists
+        // Pick first submission and user
+        self::$submissionId = 1;
+        self::$userId = 1;
     }
 
-    protected function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
+        // Clean database after all tests
         clearDatabase();
     }
 
     public function test_it_should_insert_a_review(): void
     {
-        $response = insertReview($this->submissionId, $this->userId, 'Initial test review');
-        $this->assertTrue($response['status'], 'Insert review failed');
+        $reviewText = "Unit test review";
+        $response = insertReview(self::$submissionId, self::$userId, $reviewText);
+
+        $this->assertTrue($response['status'], "Insert review failed: " . ($response['error'] ?? ''));
         $this->assertArrayHasKey('review_id', $response['data']);
+
         self::$reviewId = $response['data']['review_id'];
-        $this->assertIsInt(self::$reviewId);
     }
 
-    /**
-     * @depends test_it_should_insert_a_review
-     */
+    public function test_it_should_update_review(): void
+    {
+        $newText = "Updated review text";
+        $response = updateReview(self::$reviewId, $newText);
+
+        $this->assertTrue($response['status']);
+        $this->assertStringContainsString("Review updated successfully", $response['data']);
+    }
+
     public function test_it_should_get_review_by_submission_id(): void
     {
-        $response = getReviewBySubmissionId($this->submissionId, 0);
+        $response = getReviewBySubmissionId(self::$submissionId, 0);
+
         $this->assertTrue($response['status']);
-        $this->assertIsArray($response['data']);
         $this->assertNotEmpty($response['data']);
-        $review = $response['data'][0];
-        $this->assertArrayHasKey('id', $review);
-        $this->assertArrayHasKey('review', $review);
-        $this->assertArrayHasKey('username', $review);
-        $this->assertArrayHasKey('email', $review);
+
+        $found = false;
+        foreach ($response['data'] as $review) {
+            if ($review['id'] === self::$reviewId) {
+                $found = true;
+                $this->assertEquals(self::$userId, $review['user_id']);
+                break;
+            }
+        }
+
+        $this->assertTrue($found, "Inserted review not found for submission");
     }
 
-    /**
-     * @depends test_it_should_insert_a_review
-     */
-    public function test_it_should_update_a_review(): void
+    public function test_it_should_get_total_review_by_submission_id(): void
     {
-        $newContent = 'Updated review content';
-        $response = updateReview(self::$reviewId, $newContent);
-        $this->assertTrue($response['status']);
-        $this->assertStringContainsString('Review updated', $response['data']);
-    }
+        $response = getTotalReviewBySubmissionId(self::$submissionId);
 
-    /**
-     * @depends test_it_should_insert_a_review
-     */
-    public function test_it_should_get_total_reviews_for_submission(): void
-    {
-        $response = getTotalReviewBySubmissionId($this->submissionId);
         $this->assertTrue($response['status']);
-        $this->assertIsInt($response['data']);
         $this->assertGreaterThanOrEqual(1, $response['data']);
     }
 
-    /**
-     * @depends test_it_should_insert_a_review
-     */
-    public function test_it_should_delete_a_review(): void
+    public function test_it_should_delete_review(): void
     {
         $response = deleteReview(self::$reviewId);
+
         $this->assertTrue($response['status']);
-        $this->assertStringContainsString('Review deleted', $response['data']);
+        $this->assertStringContainsString('Review deleted successfully', $response['data']);
     }
 }

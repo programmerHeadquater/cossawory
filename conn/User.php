@@ -82,9 +82,9 @@ function user_checkLogin($email, $password)
 
     $user = $emailResp['data'];
     if (!$user) {
-        return makeResponse(true, null, 'User not found');
+        return makeResponse(false, null, 'User not found');
     }
-
+    
     if (password_verify($password, $user['password'])) {
         return makeResponse(true, $user);
     }
@@ -152,9 +152,7 @@ function user_addNewUser($formData)
     return makeResponse($result, ['id' => $insertId], $result ? null : 'Insert failed');
 }
 
-/**
- * Delete user by ID
- */
+/**  * Delete user by ID  */
 function user_deleteById($id)
 {
     $conn = openDatabaseConnection();
@@ -178,9 +176,7 @@ function user_deleteById($id)
     return makeResponse($result, $result, $result ? null : 'Delete failed');
 }
 
-/**
- * Check if user has a specific permission
- */
+/**  * Check if user has a specific permission  */
 function user_hasPermission($userId, $permissionName)
 {
     $allowed = [
@@ -244,9 +240,7 @@ function user_canDeleteUser($userId): array
     return user_hasPermission($userId, 'can_delete_user');
 }
 
-/**
- * Get list of users (pagination)
- */
+/**  * Get list of users (pagination)  */
 function user_getUsers($startPoint)
 {
     $conn = openDatabaseConnection();
@@ -272,9 +266,7 @@ function user_getUsers($startPoint)
     return makeResponse(true, $data);
 }
 
-/**
- * Get total user count
- */
+/**  * Get total user count  */
 function user_getTotalUser()
 {
     $conn = openDatabaseConnection();
@@ -300,9 +292,7 @@ function user_getTotalUser()
     return makeResponse(true, $count);
 }
 
-/**
- * Update user permissions
- */
+/**  * Update user permissions  */
 function user_updatePermission($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user)
 {
     $conn = openDatabaseConnection();
