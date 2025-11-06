@@ -4,5 +4,11 @@
         "type": "textarea",
         "required": "yes",
         "name": "title"
+    },
+    {
+        "label": "test",
+        "type": "text",
+        "required": "yes",
+        "name": "test"
     }
 ]

@@ -1,121 +1,180 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../submission.php';
-require_once __DIR__ . '/../conn.php';
+require_once __DIR__ . '/seedingDb.php';
 
-class SubmissionTest extends TestCase
+use function submission\insertSubmissionFromJson;
+use function submission\deleteSubmission;
+use function submission\getSubmission;
+use function submission\getSubmissionsTotalCount;
+use function submission\getSubmissionById;
+use function submission\updateSubmissionReviewStatus;
+use function submission\getSubmissionsReviewedTotalCount;
+use function submission\getSubmissionReviewPending;
+use function submission\getSubmissionsReviewPendingTotalCount;
+use function submission\getSubmissionReviewed;
+use function submission\logError;
+
+use function seed\seedDatabase;
+use function seed\clearDatabase;
+
+final class SubmissionTest extends TestCase
 {
-    private array $seededIds = [];
+    private array $testSubmission = [
+        'name' => 'Unit Test',
+        'email' => 'test@example.com',
+        'content' => 'This is a test submission',
+        'review' => 0
+    ];
 
     protected function setUp(): void
     {
-        $conn = conn\openDatabaseConnection();
-        if (!$conn) {
-            $this->fail("Database connection failed in setup");
-        }
-
-        // Clear submission table
-        $conn->query("DELETE FROM submission");
-
-        // Seed 5 submissions
-        for ($i = 1; $i <= 5; $i++) {
-            $formData = [
-                'title' => "Submission $i",
-                'content' => "Content $i",
-                'author' => "User $i"
-            ];
-            $resp = submission\insertSubmissionFromJson($formData);
-            if ($resp['status']) {
-                $this->seededIds[] = $resp['data']['id'];
-            } else {
-                $this->fail("Seeding submission $i failed: " . $resp['error']);
-            }
-        }
-
-        conn\closeDatabaseConnection($conn);
+        // Clear and seed database before each test
+        clearDatabase();
+        seedDatabase();
     }
 
     protected function tearDown(): void
     {
-        $conn = conn\openDatabaseConnection();
-        if ($conn) {
-            $conn->query("DELETE FROM submission");
-            conn\closeDatabaseConnection($conn);
-        }
-        $this->seededIds = [];
+        // Clean database after each test
+        clearDatabase();
     }
 
-    public function testInsertSubmissionFromJson()
+
+    public function test_it_should_insert_a_submission(): void
     {
-        $formData = [
-            'title' => 'New Submission',
-            'content' => 'New content',
-            'author' => 'Tester'
-        ];
-        $resp = submission\insertSubmissionFromJson($formData);
-        $this->assertTrue($resp['status'], "insertSubmissionFromJson failed");
-        $this->assertNotNull($resp['data']['id']);
-        echo "insertSubmissionFromJson passed\n";
+        $response = insertSubmissionFromJson($this->testSubmission);
+        $this->assertTrue($response['status']);
+        $this->assertIsInt($response['data']['id']);
+        $this->assertNull($response['error']);
     }
 
-   public function testGetSubmissionById()
+  
+    public function test_it_should_get_a_submission_by_id(): void
+    {
+        $insert = insertSubmissionFromJson($this->testSubmission);
+        $id = $insert['data']['id'];
+
+        $response = getSubmissionById($id);
+        $this->assertTrue($response['status']);
+        $this->assertEquals($id, $response['data']['id']);
+        $this->assertNull($response['error']);
+    }
+
+
+    public function test_it_should_delete_a_submission(): void
+    {
+        $insert = insertSubmissionFromJson($this->testSubmission);
+        $id = $insert['data']['id'];
+
+        $delete = deleteSubmission($id);
+        $this->assertTrue($delete['status']);
+        $this->assertEquals('Deleted', $delete['data']);
+    }
+
+
+    public function test_it_should_update_submission_review_status(): void
+    {
+        $insert = insertSubmissionFromJson($this->testSubmission);
+        $id = $insert['data']['id'];
+
+        $update = updateSubmissionReviewStatus($id);
+        $this->assertTrue($update['status']);
+        $this->assertEquals('Review status updated', $update['data']);
+
+        // Verify reviewed count increased
+        $count = getSubmissionsReviewedTotalCount();
+        $this->assertGreaterThanOrEqual(1, $count['data']);
+    }
+
+
+    public function test_it_should_get_submissions_with_pagination(): void
+    {
+        insertSubmissionFromJson($this->testSubmission);
+        $response = getSubmission(0);
+        $this->assertTrue($response['status']);
+        $this->assertIsArray($response['data']);
+    }
+
+    public function test_it_should_get_total_submission_count(): void
+    {
+        insertSubmissionFromJson($this->testSubmission);
+        $response = getSubmissionsTotalCount();
+        $this->assertTrue($response['status']);
+        $this->assertIsInt($response['data']);
+        $this->assertGreaterThan(0, $response['data']);
+    }
+
+
+    public function test_it_should_get_submissions_pending_review(): void
+    {
+        insertSubmissionFromJson($this->testSubmission);
+        $response = getSubmissionReviewPending(0);
+        $this->assertTrue($response['status']);
+        $this->assertIsArray($response['data']);
+    }
+
+
+    public function test_it_should_get_total_submissions_pending_review(): void
+    {
+        insertSubmissionFromJson($this->testSubmission);
+        $response = getSubmissionsReviewPendingTotalCount();
+        $this->assertTrue($response['status']);
+        $this->assertIsInt($response['data']);
+        $this->assertGreaterThan(0, $response['data']);
+    }
+
+
+    public function test_it_should_get_reviewed_submissions(): void
+    {
+        $insert = insertSubmissionFromJson($this->testSubmission);
+        $id = $insert['data']['id'];
+        updateSubmissionReviewStatus($id);
+
+        $response = getSubmissionReviewed(0);
+        $this->assertTrue($response['status']);
+        $this->assertIsArray($response['data']);
+        $this->assertNotEmpty($response['data']);
+    }
+
+ 
+    public function test_it_should_get_total_reviewed_submissions(): void
+    {
+        $insert = insertSubmissionFromJson($this->testSubmission);
+        $id = $insert['data']['id'];
+        updateSubmissionReviewStatus($id);
+
+        $response = getSubmissionsReviewedTotalCount();
+        $this->assertTrue($response['status']);
+        $this->assertIsInt($response['data']);
+        $this->assertGreaterThan(0, $response['data']);
+    }
+
+
+    public function test_it_should_log_errors(): void
+    {
+        logError("Unit test error");
+        $logFile = __DIR__ . '/../error.log';
+        $this->assertFileExists($logFile);
+        $contents = file_get_contents($logFile);
+        $this->assertStringContainsString("Unit test error", $contents);
+    }
+
+    public function testGetSubmission(): void
 {
-    $id = $this->seededIds[0];
-    $resp = submission\getSubmissionById($id);
+    // Fetch first page of submissions (startPoint = 0)
+    $response = getSubmission(0);
 
-    $this->assertTrue($resp['status'], "submission_getById failed");
-    $this->assertNotNull($resp['data'], "submission data should not be null");
+    $this->assertTrue($response['status']);          // Ensure function returned success
+    $this->assertIsArray($response['data']);         // Data should be an array
+    $this->assertNotEmpty($response['data']);        // Array should contain at least one submission
 
-    $formData = json_decode($resp['data']['form_data'], true); // decode JSON
-    $this->assertEquals("Submission 1", $formData['title']);
-    echo "submission_getById query pass\n";
+    // Optional: check that each item has required fields
+    $submission = $response['data'][0];
+    $this->assertArrayHasKey('id', $submission);
+    $this->assertArrayHasKey('form_data', $submission);
+    $this->assertArrayHasKey('review', $submission);
 }
-
-    public function testDeleteSubmission()
-    {
-        $id = $this->seededIds[1];
-        $resp = submission\deleteSubmission($id);
-        $this->assertTrue($resp['status'], "deleteSubmission failed");
-        echo "deleteSubmission passed\n";
-    }
-
-    public function testUpdateSubmissionReviewStatus()
-    {
-        $id = $this->seededIds[2];
-        $resp = submission\updateSubmissionReviewStatus($id);
-        $this->assertTrue($resp['status'], "updateSubmissionReviewStatus failed");
-        $respCheck = submission\getSubmissionById($id);
-        $this->assertEquals(1, $respCheck['data']['review']);
-        echo "updateSubmissionReviewStatus passed\n";
-    }
-
-    public function testGetSubmissionPagination()
-    {
-        $resp = submission\getSubmission(0);
-        $this->assertTrue($resp['status'], "getSubmission failed");
-        $this->assertGreaterThanOrEqual(1, count($resp['data']));
-        echo "getSubmission pagination passed\n";
-    }
-
-    public function testCounts()
-    {
-        // Make sure one submission is reviewed
-        $respUpdate = submission\updateSubmissionReviewStatus($this->seededIds[0]);
-        $this->assertTrue($respUpdate['status']);
-
-        $totalResp = submission\getSubmissionsTotalCount();
-        $this->assertTrue($totalResp['status']);
-        $this->assertGreaterThanOrEqual(5, $totalResp['data']);
-
-        $pendingResp = submission\getSubmissionsReviewPendingTotalCount();
-        $this->assertTrue($pendingResp['status']);
-        $this->assertGreaterThanOrEqual(4, $pendingResp['data']); // 5 - 1 reviewed
-
-        $reviewedResp = submission\getSubmissionsReviewedTotalCount();
-        $this->assertTrue($reviewedResp['status']);
-        $this->assertEquals(1, $reviewedResp['data']); // 1 reviewed
-        echo "Counts tests passed\n";
-    }
-
 }

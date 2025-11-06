@@ -8,13 +8,16 @@
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
 
 
-    $data = getSubmissionReviewPending($startPoint);
+    $dataResponse = getSubmissionReviewPending($startPoint);
 
 
 
+    if ($dataResponse['status'] && $dataResponse['data']) {
+    $data = $dataResponse['data'];
     foreach ($data as $submission) {
         echo submissionTemplate($submission, $startPoint);
     }
+}
     $total = getSubmissionsReviewPendingTotalCount();
     echo pagination($startPoint, $total);
 
