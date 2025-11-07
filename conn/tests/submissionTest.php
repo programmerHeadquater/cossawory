@@ -22,12 +22,22 @@ use function seed\clearDatabase;
 
 final class SubmissionTest extends TestCase
 {
-    private array $testSubmission = [
-        'name' => 'Unit Test',
-        'email' => 'test@example.com',
-        'content' => 'This is a test submission',
-        'review' => 0
-    ];
+    private array $testSubmission =  [
+    [
+        "label" => "Tittle",
+        "type" => "text",
+        "required" => "yes",
+        "name" => "tittle",
+        "value" => "test"
+    ],
+    [
+        "label" => "Description",
+        "type" => "text",
+        "required" => "yes",
+        "name" => "description",
+        "value" => "test"
+    ]
+];
 
     protected function setUp(): void
     {
@@ -39,7 +49,7 @@ final class SubmissionTest extends TestCase
     protected function tearDown(): void
     {
         // Clean database after each test
-        clearDatabase();
+        // clearDatabase();
     }
 
 
@@ -68,7 +78,6 @@ final class SubmissionTest extends TestCase
     {
         $insert = insertSubmissionFromJson($this->testSubmission);
         $id = $insert['data']['id'];
-
         $delete = deleteSubmission($id);
         $this->assertTrue($delete['status']);
         $this->assertEquals('Deleted', $delete['data']);

@@ -93,7 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
+    echo '<pre>';
+    var_dump($resultData);
+    echo '</pre>';
+    echo $resultData;
     $response = insertSubmissionFromJson($resultData);
 
     // echo "<h3>Submission Response</h3>";
