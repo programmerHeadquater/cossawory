@@ -10,11 +10,5 @@
         "type": "text",
         "required": "yes",
         "name": "description"
-    },
-    {
-        "label": "image",
-        "type": "file",
-        "required": "yes",
-        "name": "image"
     }
 ]

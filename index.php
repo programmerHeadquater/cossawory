@@ -1,5 +1,5 @@
 <?php
-
+//using PHP 8.2.12 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 ?>
 <?php include_once "pages/header.php" ?>

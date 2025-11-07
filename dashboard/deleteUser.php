@@ -8,10 +8,12 @@ require_once '../conn/user.php';
 use function user\user_deleteById;
 use function user\user_canDeleteUser;
 
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null;
 
-    if (!$id ) {
+    if (!$id) {
         echo json_encode(['success' => false, 'message' => 'Missing user ID']);
         exit;
     }
@@ -20,16 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!isset($_SESSION['user_id']) || !user_canDeleteUser($_SESSION['user_id'])['status'] ?? false ) {
-        echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
-        exit;
-    }
-    // if (!isset($_SESSION['user_id'])  || !user_canDeleteUser($_SESSION['user_id'])) {
-    //     echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
-    //     exit;
-    // }
-    $response = user_deleteById((int)$id);
+   
+    $result = user_canDeleteUser($_SESSION['user_id']);
+
+    if (!isset($_SESSION['user_id']) || !($result['status'] ?? false) || !($result['data'] ?? false)) {
+    echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
+    exit;
+}
+   
+
+    $response = user_deleteById((int) $id);
+
     if ($response['status']) {
+       
         echo json_encode(['success' => true]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to delete user']);

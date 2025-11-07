@@ -35,7 +35,9 @@ function user_getById($id)
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
-
+    if(!$user){
+        return makeResponse(false, $user ?: null,"No data found");
+    }
     $stmt->close();
     closeDatabaseConnection($conn);
 
@@ -63,7 +65,9 @@ function user_getByEmail($email)
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
-
+if(!$user){
+        return makeResponse(false, $user ?: null,"No data found");
+    }
     $stmt->close();
     closeDatabaseConnection($conn);
 
@@ -207,7 +211,8 @@ function user_hasPermission($userId, $permissionName)
     if ($stmt->execute()) {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $hasPermission = isset($row[$permissionName]) && (bool) $row[$permissionName];
+        $hasPermission = isset($row[$permissionName]) && (bool) $row[$permissionName] ;
+        
         return makeResponse(true, $hasPermission); // success = query worked, data = permission
     } else {
         return makeResponse(false, null, 'Failed to fetch permission');
