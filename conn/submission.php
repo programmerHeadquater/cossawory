@@ -73,7 +73,18 @@ function deleteSubmission(int $id): array
     $conn = openDatabaseConnection();
     $error = null;
     $success = false;
-
+    $submission = getSubmissionById($id);
+    if($submission['status']){
+       $form_data = json_decode($submission['data']['form_data'], true);
+        foreach ($form_data as $index => $field){
+            if($field['type' == 'file'] ){
+                $path = $field['value']['path'] ;
+                if (file_exists($path)){
+                    unlink($path);
+                }
+            }
+        }
+    }
     if (!$conn) {
         $error = "Database connection failed.";
         logError($error);
