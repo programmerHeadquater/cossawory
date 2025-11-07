@@ -46,7 +46,7 @@ function pagination()
             <button><a href="dashboard.php?page=user&startPoint=<?= $prevStart ?>">Previous</a></button>
         <?php endif; ?>
 
-        <?php if ($nextStart < $total): ?>
+        <?php if ($nextStart < $total['data']): ?>
             <button><a href="dashboard.php?page=user&startPoint=<?= $nextStart ?>">Next</a></button>
         <?php endif; ?>
     </div>

@@ -11,8 +11,12 @@ use function user\user_canDeleteUser;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null;
 
-    if (!$id) {
+    if (!$id ) {
         echo json_encode(['success' => false, 'message' => 'Missing user ID']);
+        exit;
+    }
+    if ($id == $_SESSION['user_id']) {
+        echo json_encode(['success' => false, 'message' => 'Cannot delete yourself']);
         exit;
     }
 

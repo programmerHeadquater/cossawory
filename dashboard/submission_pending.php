@@ -19,7 +19,7 @@
     }
 }
     $total = getSubmissionsReviewPendingTotalCount();
-    echo pagination($startPoint, $total);
+    echo pagination($startPoint, $total['data']);
 
 
     function submissionTemplate($row, $startPoint)

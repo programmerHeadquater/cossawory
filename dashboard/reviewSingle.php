@@ -22,7 +22,7 @@
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
 
     //updating if the querry has data in the form 
-    echo 'testing';
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
         $review = $_POST['review'];

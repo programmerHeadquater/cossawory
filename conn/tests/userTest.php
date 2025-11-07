@@ -52,7 +52,7 @@ class UserTest extends TestCase
 
     public function testUserCheckLogin()
     {
-        $resp = user_checkLogin('admin@example.com', password_hash('hashed_admin_pass',PASSWORD_DEFAULT));
+        $resp = user_checkLogin('admin@example.com', 'admin123');
         $this->assertTrue($resp['status']);
         $this->assertEquals('admin', $resp['data']['username']);
     }

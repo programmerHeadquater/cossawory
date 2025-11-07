@@ -19,7 +19,7 @@ if ($dataResponse['status'] && $dataResponse['data']) {
     }
 }
 $total = getSubmissionsTotalCount();
-echo pagination($startPoint, $total);
+echo pagination($startPoint, $total['data']);
 
 
 function submissionTemplate($row, $startPoint)
@@ -68,7 +68,7 @@ function submissionTemplate($row, $startPoint)
             <span><a class="greenBtn" href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
 
 
-            <form action="dashboard/deleteSubmission.php" method="POST">
+            <form action="dashboard/deleteSubmission.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this submission?');">
                 <input type="hidden" name="pageIn" value="submission_all">
 
                 <input type="hidden" name="id" value="<?= $row['id'] ?>">
