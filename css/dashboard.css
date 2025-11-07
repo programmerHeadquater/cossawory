@@ -20,9 +20,12 @@ button:hover {
   box-shadow: 1px 1px 1px 1px black;
 }
 
+button:focus {
+  box-shadow: 1px 1px 1px 1px black;
+}
+
 textarea {
   width: 100%;
-  text-wrap: none;
   height: 80px;
   resize: vertical;
   padding: 10px 3px;
@@ -149,6 +152,15 @@ a {
   margin-right: 10px;
 }
 .main .layout #previewForm .remove {
+  padding: 0px;
+  margin: 0px !important;
+  height: 0px;
+  border: none;
+  overflow: hidden;
+  transition: 0.3s all linear;
+  font-size: inherit;
+}
+.main .layout #previewForm:hover .remove {
   transition: 0.3s all linear;
   margin: 5px 0 0 0 !important;
   height: 30px;
@@ -156,14 +168,6 @@ a {
   border: 1px solid red;
   display: block !important;
 }
-/* .main .layout #previewForm:hover .remove {
-  transition: 0.3s all linear;
-  margin: 5px 0 0 0 !important;
-  height: 30px;
-  padding: 2px 2px;
-  border: 1px solid red;
-  display: block !important;
-} */
 .main .navShow {
   width: 250px !important;
   padding: 10px !important;
@@ -296,6 +300,7 @@ a {
 }
 .main .page .reviewAll .uploadImg {
   height: 400px;
+  width: 100%;
 }
 .main .page .reviewAll .option {
   display: flex;

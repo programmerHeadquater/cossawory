@@ -109,7 +109,7 @@
                     <?php if (is_array($field['value'])): ?>
 
                         <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="User send image">
                         <?php endif;
                         if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio class="submissionAudido" controls>

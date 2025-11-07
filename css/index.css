@@ -295,6 +295,9 @@ hr {
   background-color: rgb(241, 240, 240);
   padding: 10px 10px;
 }
+.page .story .list .submissionData .submissionImg {
+  width: 100%;
+}
 .page .story .list .submissionData .submissionText {
   padding: 10px 10px;
 }
