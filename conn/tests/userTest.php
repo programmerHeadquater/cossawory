@@ -33,7 +33,7 @@ class UserTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        // clearDatabase();
+        clearDatabase();
     }
 
     public function testUserGetById()
