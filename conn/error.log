@@ -1,1 +1,5 @@
-[2025-10-05 22:15:08] DB connection failed during insert
+[2025-11-07 06:55:52] Unit test log message
+[2025-11-07 06:56:04] Unit test error
+[2025-11-07 08:50:26] Execute failed: Cannot add or update a child row: a foreign key constraint fails (`cassowary_db`.`review`, CONSTRAINT `review_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)
+[2025-11-07 08:50:31] Execute failed: Cannot add or update a child row: a foreign key constraint fails (`cassowary_db`.`review`, CONSTRAINT `review_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)
+[2025-11-07 08:59:57] Execute failed: Cannot add or update a child row: a foreign key constraint fails (`cassowary_db`.`review`, CONSTRAINT `review_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)

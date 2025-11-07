@@ -38,12 +38,22 @@ use function user\user_addNewUser;
         if (!empty($missingFields)) {
             $errorMessage = "Please fill in the following fields: " . implode(', ', $missingFields);
         } else {
-            if (user_canAddUser($_SESSION['user_id'])) {
-                user_addNewUser($formData);
-                $successMessage = "User added successfully!";
 
+            $canAddResp = user_canAddUser($_SESSION['user_id']);
+
+            if ($canAddResp['status']) {
+                // Try adding user
+                $addResp = user_addNewUser($formData);
+
+                if ($addResp['status']) {
+                    $successMessage = "User added successfully!";
+                    $errorMessage = null;
+                } else {
+                    $errorMessage = $addResp['error'] ?? "Failed to add user.";
+                    $successMessage = null;
+                }
             } else {
-                $errorMessage = "Operation fail: No permission to add user for this account.";
+                $errorMessage = $canAddResp['error'] ?? "Operation failed: No permission to add user.";
                 $successMessage = null;
             }
         }
@@ -71,12 +81,13 @@ use function user\user_addNewUser;
             <div class="userInfo">
                 <p>Username: <?= $formData['username'] ?> </p>
                 <br>
-                <p>Email : <?= $formData['email'] ?> 
+                <p>Email : <?= $formData['email'] ?>
                 </p>
             </div>
             <br>
         <?php endif; ?>
-        <a href="dashboard.php?page=addUser" class="<?= $successMessage !== null ? '' : 'dNone' ?> greenBtn" >Add another user</a href="#">
+        <a href="dashboard.php?page=addUser" class="<?= $successMessage !== null ? '' : 'dNone' ?> greenBtn">Add another
+            user</a href="#">
         <!-- FORM START -->
         <form class="<?= $successMessage !== null ? 'dNone' : '' ?>" action="dashboard.php?page=addUser" method="POST"
             autocomplete="off">

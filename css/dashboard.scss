@@ -221,6 +221,7 @@ a {
     .navShow {
         width: 250px !important;
         padding: 10px !important;
+        
     }
 
     .nav {
@@ -270,12 +271,12 @@ a {
 
 
             a:hover {
-                border: 2px solid red;
+                border: 2px solid rgb(255, 255, 255);
 
             }
 
             .active {
-                border: 2px solid red;
+                border: 2px solid rgb(255, 255, 255);
 
             }
 
@@ -338,7 +339,7 @@ a {
         padding: 10px 5% 20px 5%;
         // background: #e0dfdf;
         flex: 1;
-
+        
         .userNav {
             background-color: var(--turquoise-blue);
             padding: 10px 5px;
@@ -351,7 +352,7 @@ a {
             }
 
             a:hover {
-                border-bottom: 2px solid red;
+                border-bottom: 2px solid rgb(0, 0, 0);
 
             }
         }
@@ -368,13 +369,13 @@ a {
             }
 
             a:hover {
-                border-bottom: 2px solid red;
+                border-bottom: 2px solid rgb(0, 0, 0);
 
             }
         }
 
         .active {
-            border-bottom: 2px solid red !important;
+            border-bottom: 2px solid rgb(0, 0, 0) !important;
 
         }
 
@@ -402,6 +403,7 @@ a {
 
             .uploadImg {
                 height: 400px;
+                width: 100%;
             }
 
             .option {
@@ -581,6 +583,7 @@ a {
                         display: inline;
                         border: 1px solid rgb(6, 6, 6);
                     }
+
                 }
 
                 .editPermision {

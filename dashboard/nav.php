@@ -1,4 +1,4 @@
-<div class="nav navShow" id="nav">
+<div class="nav " id="nav">
     <div class="two">
         <ul class="">
             <li>

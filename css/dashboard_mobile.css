@@ -30,13 +30,8 @@
     background-color: var(--turquoise-blue);
     color: black;
     display: flex;
-    
     align-items: center;
     justify-content: space-between;
-  }
-  .header .headerLeft{
-    display: flex;
-    align-items: center;
   }
   .header a {
     display: block;
@@ -56,8 +51,6 @@
     background-color: rgb(239, 239, 248);
     margin-bottom: 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     font-size: 1.2em;
     padding: 10px 20px;
   }

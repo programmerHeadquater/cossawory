@@ -17,7 +17,7 @@
 
     <div class="header">
         <div class="left">
-            <div class="closeBar" id="hamburger">
+            <div class="" id="hamburger">
                 <div class="burgerBox"></div>
                 <div class="burgerBox"></div>
                 <div class="burgerBox"></div>

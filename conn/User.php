@@ -7,35 +7,67 @@ use function conn\openDatabaseConnection;
 use function conn\closeDatabaseConnection;
 
 /**
+ * Helper: Standard response array
+ */
+function makeResponse($status, $data = null, $error = null)
+{
+    return ['status' => $status, 'data' => $data, 'error' => $error];
+}
+
+/**
  * Get a user by ID
  */
 function user_getById($id)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
+
     $stmt->close();
     closeDatabaseConnection($conn);
-    return $user ?: null;
+
+    return makeResponse(true, $user ?: null);
 }
 
 /**
- * Get a user by username
+ * Get a user by email
  */
 function user_getByEmail($email)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
+
     $stmt->close();
     closeDatabaseConnection($conn);
-    return $user ?: null;
+
+    return makeResponse(true, $user ?: null);
 }
 
 /**
@@ -43,15 +75,21 @@ function user_getByEmail($email)
  */
 function user_checkLogin($email, $password)
 {
-    $user = user_getByEmail($email);
+    $emailResp = user_getByEmail($email);
+    if (!$emailResp['status']) {
+        return $emailResp;
+    }
+
+    $user = $emailResp['data'];
+    if (!$user) {
+        return makeResponse(false, null, 'User not found');
+    }
     
-    if($user === null) {
-        return null;
+    if (password_verify($password, $user['password'])) {
+        return makeResponse(true, $user);
     }
-    if ($user && password_verify($password, $user['password'])) {
-        return $user;
-    }
-    return null;
+
+    return makeResponse(false, null, 'Invalid credentials');
 }
 
 /**
@@ -59,36 +97,45 @@ function user_checkLogin($email, $password)
  */
 function user_addNewUser($formData)
 {
-
-
     $conn = openDatabaseConnection();
-    $username = $formData['username'];
-    $password = password_hash($formData['password'], PASSWORD_DEFAULT);
-    $email = $formData['email'];
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
 
-    // Convert Yes/No values to 1/0
-    $can_view = 1;
+    $username = $formData['username'] ?? null;
+    $email = $formData['email'] ?? null;
+    $password = isset($formData['password']) ? password_hash($formData['password'], PASSWORD_DEFAULT) : null;
+
+    if (!$username || !$email || !$password) {
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, 'Missing required fields');
+    }
+
+
     $can_write_review = isset($formData['can_write_review']) && strtolower($formData['can_write_review']) === 'yes' ? 1 : 0;
     $can_delete_review = isset($formData['can_delete_review']) && strtolower($formData['can_delete_review']) === 'yes' ? 1 : 0;
     $can_delete_submission = isset($formData['can_delete_submission']) && strtolower($formData['can_delete_submission']) === 'yes' ? 1 : 0;
     $can_add_user = isset($formData['can_add_user']) && strtolower($formData['can_add_user']) === 'yes' ? 1 : 0;
     $can_delete_user = isset($formData['can_delete_user']) && strtolower($formData['can_delete_user']) === 'yes' ? 1 : 0;
 
-
     $stmt = $conn->prepare("
-        INSERT INTO users (
+        INSERT INTO user (
             username, email, password,
-            view, can_write_review, can_delete_review,
+            can_write_review, can_delete_review,
             can_delete_submission, can_add_user, can_delete_user
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
     ");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
 
     $stmt->bind_param(
-        "sssiiiiii",
+        "sssiiiii",
         $username,
         $email,
         $password,
-        $can_view,
         $can_write_review,
         $can_delete_review,
         $can_delete_submission,
@@ -97,33 +144,43 @@ function user_addNewUser($formData)
     );
 
     $result = $stmt->execute();
+    $insertId = $stmt->insert_id ?? null;
+
     $stmt->close();
     closeDatabaseConnection($conn);
 
-    return $result;
+    return makeResponse($result, ['id' => $insertId], $result ? null : 'Insert failed');
 }
 
-/**
- * Delete user by ID
- */
+/**  * Delete user by ID  */
 function user_deleteById($id)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("DELETE FROM user WHERE id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt->bind_param("i", $id);
     $result = $stmt->execute();
+
     $stmt->close();
     closeDatabaseConnection($conn);
-    return $result;
+
+    return makeResponse($result, $result, $result ? null : 'Delete failed');
 }
 
-/**
- * Check if user has a specific permission
- */
+/**  * Check if user has a specific permission  */
 function user_hasPermission($userId, $permissionName)
 {
     $allowed = [
-        'can_view',
+
         'can_write_review',
         'can_delete_review',
         'can_delete_submission',
@@ -131,89 +188,133 @@ function user_hasPermission($userId, $permissionName)
         'can_delete_user'
     ];
     if (!in_array($permissionName, $allowed)) {
-        // throw new \InvalidArgumentException("Invalid permission: $permissionName");
-        return false;
+        return makeResponse(false, null, "Invalid permission: $permissionName");
     }
 
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT $permissionName FROM users WHERE id = ?");
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("SELECT $permissionName FROM user WHERE id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
-    closeDatabaseConnection($conn);
-    return isset($row[$permissionName]) && (bool) $row[$permissionName];
-   
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $hasPermission = isset($row[$permissionName]) && (bool) $row[$permissionName];
+        return makeResponse(true, $hasPermission); // success = query worked, data = permission
+    } else {
+        return makeResponse(false, null, 'Failed to fetch permission');
+    }
 }
 
-// Optional wrappers for common permission checks
 
-function user_canView($userId)
-{
-    return user_hasPermission($userId, 'can_view');
-}
-
-function user_canWriteReview($userId)
+function user_canWriteReview($userId): array
 {
     return user_hasPermission($userId, 'can_write_review');
 }
 
-function user_canDeleteReview($userId)
+function user_canDeleteReview($userId): array
 {
     return user_hasPermission($userId, 'can_delete_review');
 }
 
-function user_canDeleteSubmission($userId)
+function user_canDeleteSubmission($userId): array
 {
     return user_hasPermission($userId, 'can_delete_submission');
 }
 
-function user_canAddUser($userId)
+function user_canAddUser($userId): array
 {
     return user_hasPermission($userId, 'can_add_user');
 }
 
-function user_canDeleteUser($userId)
+function user_canDeleteUser($userId): array
 {
     return user_hasPermission($userId, 'can_delete_user');
 }
 
+/**  * Get list of users (pagination)  */
 function user_getUsers($startPoint)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM users LIMIT 20 OFFSET ?");
+    if ($conn === null) {
+        return makeResponse(false, [], 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM user LIMIT 20 OFFSET ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, [], $error);
+    }
+
     $stmt->bind_param("i", $startPoint);
     $stmt->execute();
     $result = $stmt->get_result();
     $data = $result->fetch_all(\MYSQLI_ASSOC);
-    return $data;
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(true, $data);
 }
-function user_getTotaluser()
+
+/**  * Get total user count  */
+function user_getTotalUser()
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM users");
+    if ($conn === null) {
+        return makeResponse(false, 0, 'Database connection failed');
+    }
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM user");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, 0, $error);
+    }
+
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    return (int) $row["COUNT(*)"];
+    $count = $row['total'] ?? 0;
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(true, $count);
 }
 
-function user_updatePermision($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user )
+/**  * Update user permissions  */
+function user_updatePermission($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user)
 {
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare('    UPDATE users SET 
-            can_write_review = ?,
-            can_delete_review = ?,
-            can_delete_submission = ?,
-            can_add_user = ?,
-            can_delete_user = ?
-        WHERE id = ?
-    ');
-    if (!$stmt) {
-        closeDatabaseConnection($conn);
-        return false;
+    if ($conn === null) {
+        return makeResponse(false, null, 'Database connection failed');
     }
+
+    $stmt = $conn->prepare('UPDATE user SET 
+        can_write_review = ?,
+        can_delete_review = ?,
+        can_delete_submission = ?,
+        can_add_user = ?,
+        can_delete_user = ?
+        WHERE id = ?'
+    );
+
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt->bind_param(
         "iiiiii",
         $can_write_review,
@@ -223,334 +324,11 @@ function user_updatePermision($id, $can_write_review, $can_delete_review, $can_d
         $can_delete_user,
         $id
     );
-    $stmt->execute();
+
+    $result = $stmt->execute();
     $stmt->close();
     closeDatabaseConnection($conn);
 
-    return true;
+    return makeResponse($result, $result, $result ? null : 'Update failed');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// <?php
-// namespace User;
-
-// require_once "conn.php";
-
-// use function conn\openDatabaseConnection;
-// use function conn\closeDatabaseConnection;
-
-// /**
-//  * Get a user by ID
-//  */
-// function user_getById($id)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param("i", $id);
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-//         $user = $result->fetch_assoc();
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-//         return ['status' => true, 'data' => $user ?: null];
-//     } catch (\Exception $e) {
-//         error_log("user_getById error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// /**
-//  * Get a user by email
-//  */
-// function user_getByEmail($email)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param("s", $email);
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-//         $user = $result->fetch_assoc();
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-//         return ['status' => true, 'data' => $user ?: null];
-//     } catch (\Exception $e) {
-//         error_log("user_getByEmail error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// /**
-//  * Validate user credentials
-//  */
-// function user_checkLogin($email, $password)
-// {
-//     try {
-//         $userResponse = user_getByEmail($email);
-//         if (!$userResponse['status']) {
-//             return ['status' => false, 'error' => $userResponse['error']];
-//         }
-//         $user = $userResponse['data'];
-//         if ($user === null) {
-//             return ['status' => true, 'data' => null];
-//         }
-//         if (password_verify($password, $user['password'])) {
-//             return ['status' => true, 'data' => $user];
-//         }
-//         return ['status' => true, 'data' => null];
-//     } catch (\Exception $e) {
-//         error_log("user_checkLogin error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// /**
-//  * Create a new user with permissions
-//  */
-// function user_addNewUser($formData)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $username = $formData['username'];
-//         $password = password_hash($formData['password'], PASSWORD_DEFAULT);
-//         $email = $formData['email'];
-
-//         // Convert Yes/No values to 1/0
-//         $can_view = 1;
-//         $can_write_review = isset($formData['can_write_review']) && strtolower($formData['can_write_review']) === 'yes' ? 1 : 0;
-//         $can_delete_review = isset($formData['can_delete_review']) && strtolower($formData['can_delete_review']) === 'yes' ? 1 : 0;
-//         $can_delete_submission = isset($formData['can_delete_submission']) && strtolower($formData['can_delete_submission']) === 'yes' ? 1 : 0;
-//         $can_add_user = isset($formData['can_add_user']) && strtolower($formData['can_add_user']) === 'yes' ? 1 : 0;
-//         $can_delete_user = isset($formData['can_delete_user']) && strtolower($formData['can_delete_user']) === 'yes' ? 1 : 0;
-
-//         $stmt = $conn->prepare("
-//             INSERT INTO users (
-//                 username, email, password,
-//                 view, can_write_review, can_delete_review,
-//                 can_delete_submission, can_add_user, can_delete_user
-//             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-//         ");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param(
-//             "sssiiiiii",
-//             $username,
-//             $email,
-//             $password,
-//             $can_view,
-//             $can_write_review,
-//             $can_delete_review,
-//             $can_delete_submission,
-//             $can_add_user,
-//             $can_delete_user
-//         );
-
-//         $result = $stmt->execute();
-//         if (!$result) {
-//             throw new \Exception("Execute failed: " . $stmt->error);
-//         }
-
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-
-//         return ['status' => true, 'data' => true];
-//     } catch (\Exception $e) {
-//         error_log("user_addNewUser error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// /**
-//  * Delete user by ID
-//  */
-// function user_deleteById($id)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param("i", $id);
-//         $result = $stmt->execute();
-//         if (!$result) {
-//             throw new \Exception("Execute failed: " . $stmt->error);
-//         }
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-//         return ['status' => true, 'data' => true];
-//     } catch (\Exception $e) {
-//         error_log("user_deleteById error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// /**
-//  * Check if user has a specific permission
-//  */
-// function user_hasPermission($userId, $permissionName)
-// {
-//     try {
-//         $allowed = [
-//             'can_view',
-//             'can_write_review',
-//             'can_delete_review',
-//             'can_delete_submission',
-//             'can_add_user',
-//             'can_delete_user'
-//         ];
-//         if (!in_array($permissionName, $allowed)) {
-//             return ['status' => false, 'error' => "Invalid permission: $permissionName"];
-//         }
-
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("SELECT $permissionName FROM users WHERE id = ?");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param("i", $userId);
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-//         $row = $result->fetch_assoc();
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-
-//         $hasPermission = isset($row[$permissionName]) && (bool)$row[$permissionName];
-//         return ['status' => true, 'data' => $hasPermission];
-//     } catch (\Exception $e) {
-//         error_log("user_hasPermission error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// // Optional wrappers for common permission checks
-
-// function user_canView($userId)
-// {
-//     return user_hasPermission($userId, 'can_view');
-// }
-
-// function user_canWriteReview($userId)
-// {
-//     return user_hasPermission($userId, 'can_write_review');
-// }
-
-// function user_canDeleteReview($userId)
-// {
-//     return user_hasPermission($userId, 'can_delete_review');
-// }
-
-// function user_canDeleteSubmission($userId)
-// {
-//     return user_hasPermission($userId, 'can_delete_submission');
-// }
-
-// function user_canAddUser($userId)
-// {
-//     return user_hasPermission($userId, 'can_add_user');
-// }
-
-// function user_canDeleteUser($userId)
-// {
-//     return user_hasPermission($userId, 'can_delete_user');
-// }
-
-// function user_getUsers($startPoint)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("SELECT * FROM users LIMIT 20 OFFSET ?");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param("i", $startPoint);
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-//         $data = $result->fetch_all(\MYSQLI_ASSOC);
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-//         return ['status' => true, 'data' => $data];
-//     } catch (\Exception $e) {
-//         error_log("user_getUsers error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// function user_getTotaluser()
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM users");
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-//         $row = $result->fetch_assoc();
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-//         return ['status' => true, 'data' => (int)$row["count"]];
-//     } catch (\Exception $e) {
-//         error_log("user_getTotaluser error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
-
-// function user_updatePermision($id, $can_write_review, $can_delete_review, $can_delete_submission, $can_add_user, $can_delete_user)
-// {
-//     try {
-//         $conn = openDatabaseConnection();
-//         $stmt = $conn->prepare('UPDATE users SET 
-//                 can_write_review = ?,
-//                 can_delete_review = ?,
-//                 can_delete_submission = ?,
-//                 can_add_user = ?,
-//                 can_delete_user = ?
-//             WHERE id = ?
-//         ');
-//         if (!$stmt) {
-//             throw new \Exception("Prepare failed: " . $conn->error);
-//         }
-//         $stmt->bind_param(
-//             "iiiiii",
-//             $can_write_review,
-//             $can_delete_review,
-//             $can_delete_submission,
-//             $can_add_user,
-//             $can_delete_user,
-//             $id
-//         );
-//         $stmt->execute();
-//         $stmt->close();
-//         closeDatabaseConnection($conn);
-
-//         return ['status' => true, 'data' => true];
-//     } catch (\Exception $e) {
-//         error_log("user_updatePermision error: " . $e->getMessage());
-//         return ['status' => false, 'error' => $e->getMessage()];
-//     }
-// }
+?>

@@ -65,7 +65,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: 'id=' + encodeURIComponent(userId)
                 })
-                    .then(r => r.json())
+                    .then(async r => {
+                        const text = await r.text(); // read raw text
+                        console.log('Raw response:', text); // log what PHP really sends
+                        try {
+                            return JSON.parse(text); // attempt to parse manually
+                        } catch (e) {
+                            console.error('JSON parse error:', e);
+                            throw e;
+                        }
+                    })
                     .then(data => {
                         if (data.success) {
                             if (form) form.classList.add('Zero');
@@ -108,7 +117,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 body: formData
             })
-                .then(r => r.json())
+                .then(async r => {
+                    const text = await r.text(); // read raw text
+                    console.log('Raw response:', text); // log what PHP really sends
+                    try {
+                        return JSON.parse(text); // attempt to parse manually
+                    } catch (e) {
+                        console.error('JSON parse error:', e);
+                        throw e;
+                    }
+                })
                 .then(data => {
                     form.classList.add('Zero');
                     if (successMessage) {

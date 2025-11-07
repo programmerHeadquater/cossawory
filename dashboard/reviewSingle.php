@@ -10,7 +10,7 @@
 
     require_once 'conn/review.php';
     require_once 'conn/submission.php';
-    use function review\getReviewBySybmissionId;
+    use function review\getReviewBySubmissionId;
     use function submission\getSubmissionById;
     use function review\getTotalReviewBySubmissionId;
     use function review\insertReview;
@@ -26,16 +26,15 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
         $review = $_POST['review'];
-        insertReview($id, $review);
-
+        $user_id = $_SESSION['user_id'];
+        $data = insertReview($id,$user_id, $review);
+        
     }
 
     addReviewTemplate($id);
-    submissionTemplate(getSubmissionById($id));
-    
-
-    reviewTemplate(getReviewBySybmissionId($id, $startPoint), $id, $startPoint);
-    pagination($startPoint, getTotalReviewBySubmissionId($id), $id);
+    submissionTemplate(getSubmissionById($id)['data']??null);
+    reviewTemplate(getReviewBySubmissionId($id, $startPoint)['data']??null, $id, $startPoint);
+    pagination($startPoint, getTotalReviewBySubmissionId($id)['data']??null, $id);
 
 
 
@@ -70,7 +69,7 @@
                         <?php if (is_array($field['value'])): ?>
                             
                             <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="User send image">
                             <?php endif;
                             if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio controls>

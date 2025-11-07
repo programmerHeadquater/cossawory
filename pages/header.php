@@ -22,7 +22,7 @@
                 <div class="burgerBox"></div>
                 <div class="burgerBox"></div>
             </button>
-            <a href="index.php" aria-label="Home page" alt="Submision Link"><img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
+            <a href="index.php?" aria-label="Home page" alt="Submision Link"><img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
         </div>
         <div class="headerRight"><a href="index.php" aria-label="Home page" alt="Submision Link">bnm<img id="birdLogo" src="images/bird.svg" alt="Trade mark logo of Cassowary bird"></a>
             <h1><span>Welcome to </span>Project Cassowary</h1>

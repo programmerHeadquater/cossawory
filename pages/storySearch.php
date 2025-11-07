@@ -23,7 +23,7 @@ if ($queryId !== null) {
         if ($submission == null) {
             $error = "Submission no found";
         } elseif ($submission['review'] == 1 || $submission['review'] == "1") {
-            $query = "SELECT *  FROM reviews
+            $query = "SELECT *  FROM review
             WHERE submission_id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("i", $queryId);
@@ -113,7 +113,7 @@ if ($queryId !== null) {
                     <?php if (is_array($field['value'])): ?>
 
                         <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="User send image">
                         <?php endif;
                         if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio class="submissionAudido" controls>

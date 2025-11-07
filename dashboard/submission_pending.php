@@ -8,15 +8,18 @@
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
 
 
-    $data = getSubmissionReviewPending($startPoint);
+    $dataResponse = getSubmissionReviewPending($startPoint);
 
 
 
+    if ($dataResponse['status'] && $dataResponse['data']) {
+    $data = $dataResponse['data'];
     foreach ($data as $submission) {
         echo submissionTemplate($submission, $startPoint);
     }
+}
     $total = getSubmissionsReviewPendingTotalCount();
-    echo pagination($startPoint, $total);
+    echo pagination($startPoint, $total['data']);
 
 
     function submissionTemplate($row, $startPoint)
@@ -38,7 +41,7 @@
                         <?php if (is_array($field['value'])): ?>
                             
                             <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="User send image">
                             <?php endif;
                             if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio controls>

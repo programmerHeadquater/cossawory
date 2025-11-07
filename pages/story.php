@@ -22,7 +22,7 @@
          ORDER BY submitted_at DESC
          LIMIT 5 OFFSET ?
      ) AS s
-     LEFT JOIN reviews r ON s.id = r.submission_id'
+     LEFT JOIN review r ON s.id = r.submission_id'
 
     );
     $stmt->bind_param('i', $startPoint);
@@ -109,7 +109,7 @@
                     <?php if (is_array($field['value'])): ?>
 
                         <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="no image found">
+                            <img class="submissionImg" src="<?= $field['value']['path'] ?>" alt="User send image">
                         <?php endif;
                         if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio class="submissionAudido" controls>

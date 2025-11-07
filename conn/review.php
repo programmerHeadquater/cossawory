@@ -1,132 +1,271 @@
 <?php
-
 namespace review;
+
 require_once 'conn.php';
+require_once 'submission.php';
+
 use function conn\closeDatabaseConnection;
 use function conn\openDatabaseConnection;
-require_once 'submission.php';
 use function submission\updateSubmissionReviewStatus;
 
+/**
+ * Logs an error message to a local file
+ */
+function logError($message)
+{
+    $logFile = __DIR__ . '/error.log';
+    $timestamp = date('Y-m-d H:i:s');
+    error_log("[$timestamp] $message\n", 3, $logFile);
+}
+
+/**
+ * Helper to create a consistent response structure
+ */
+function makeResponse($status, $data = null, $error = null)
+{
+    return [
+        'status' => $status,
+        'data' => $data,
+        'error' => $error
+    ];
+}
+
+/**
+ * Update review content by ID
+ */
 function updateReview($review_id, $review)
 {
     $conn = openDatabaseConnection();
-    
-    $stmt = $conn->prepare('UPDATE reviews SET review = ? WHERE id = ?');
+    if ($conn === null) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
+    }
+
+    $stmt = $conn->prepare('UPDATE review SET review = ? WHERE id = ?');
     if (!$stmt) {
-        $message = "Prepare failed: " . $conn->error . "<br>";
+        $error = "Prepare failed: " . $conn->error;
+        logError($error);
         closeDatabaseConnection($conn);
-        return $message;
+        return makeResponse(false, null, $error);
     }
+
     if (!$stmt->bind_param('si', $review, $review_id)) {
-        $message = "Bind failed: " . $stmt->error . "<br>";
+        $error = "Bind failed: " . $stmt->error;
+        logError($error);
         $stmt->close();
         closeDatabaseConnection($conn);
-        return $message;
+        return makeResponse(false, null, $error);
     }
+
     if (!$stmt->execute()) {
-        $message = "Execute failed: " . $stmt->error . "<br>";
+        $error = "Execute failed: " . $stmt->error;
+        logError($error);
         $stmt->close();
         closeDatabaseConnection($conn);
-        return $message;
+        return makeResponse(false, null, $error);
     }
+
     $affectedRows = $stmt->affected_rows;
-    $message = "Query executed. Affected rows: $affectedRows<br>";
+    $data = ($affectedRows > 0)
+        ? "Review updated successfully."
+        : "No rows were updated (ID not found or no changes).";
+
     $stmt->close();
     closeDatabaseConnection($conn);
 
-    if ($affectedRows === 0) {
-        $message = "No rows were updated. Either the ID does not exist, or the review value is the same.<br>";
-    } else {
-        $message = "The review was updated successfully.<br>";
-    }
-
-    return $message;
+    return makeResponse(true, $data);
 }
 
-function insertReview($id, $reviewFormData)
+/**
+ * Insert a new review with user_id
+ */
+function insertReview($submission_id, $user_id, $reviewText)
 {
-    $review_id = null;
-    $error = null;
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("INSERT INTO  reviews (submission_id , review ) VALUES ( ?,?)");
-
-    if (!$stmt) {
-        $error = "Fail to log the data :" . $stmt->error;
+    if ($conn === null) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
     }
 
-    if (!$stmt->bind_param("is", $id, $reviewFormData)) {
-        $error = "Binding fail:" . $stmt->error;
+    $stmt = $conn->prepare("INSERT INTO review (submission_id, user_id, review) VALUES (?, ?, ?)");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        logError($error);
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
+    }
+
+    if (!$stmt->bind_param("iis", $submission_id, $user_id, $reviewText)) {
+        $error = "Bind failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
 
     if (!$stmt->execute()) {
-        $error = "Execution Fail:" . $stmt->error;
+        $error = "Execute failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
 
     $review_id = $stmt->insert_id;
     $stmt->close();
+    closeDatabaseConnection($conn);
 
-    $data = updateSubmissionReviewStatus($id);
+    // Update submission review status
+    updateSubmissionReviewStatus($submission_id);
 
-    return [$review_id, $error];
+    return makeResponse(true, ['review_id' => $review_id]);
 }
 
-
-// this will remove the data of review table full row
-function deleteReview($review_id):string|null
+/**
+ * Delete a review by ID
+ */
+function deleteReview($review_id)
 {
-    $error = null;
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("DELETE  FROM reviews WHERE id = ?");
-    $stmt->bind_param("i", $review_id);
+    if ($conn === null) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
+    }
+
+    $stmt = $conn->prepare("DELETE FROM review WHERE id = ?");
     if (!$stmt) {
-        $error = "Statement fail : " . $stmt->error;
+        $error = "Prepare failed: " . $conn->error;
+        logError($error);
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
+
     if (!$stmt->bind_param("i", $review_id)) {
-        $error = "Binding fail : " . $stmt->error;
+        $error = "Bind failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
+
     if (!$stmt->execute()) {
-        $error = "Execution Fail: " . $stmt->error;
+        $error = "Execute failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, null, $error);
     }
 
-    return $error;
+    $affectedRows = $stmt->affected_rows;
+    $data = ($affectedRows > 0)
+        ? "Review deleted successfully."
+        : "No review found with the given ID.";
 
+    $stmt->close();
+    closeDatabaseConnection($conn);
 
-
-
+    return makeResponse(true, $data);
 }
-function insertReviewIdIntoSubmission($review_id, $submission_id)
+
+/**
+ * Get paginated reviews for a submission (includes reviewer info)
+ */
+function getReviewBySubmissionId($submission_id, $startPoint)
 {
-    $error = null;
     $conn = openDatabaseConnection();
-    if (!$stmt = $conn->prepare("UPDATE submission SET review = 1 , review_id = ? where id = ?")) {
-        $error = "Statment prepare error : " . $stmt->error;
+    if ($conn === null) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, [], $error);
     }
-    if (!$stmt->bind_param("ii", $review_id, $submission_id)) {
-        $error = "Binding error: " . $stmt->error;
+
+    $sql = "
+        SELECT r.*, u.username, u.email
+        FROM review r
+        JOIN user u ON r.user_id = u.id
+        WHERE r.submission_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT 20 OFFSET ?";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        logError($error);
+        closeDatabaseConnection($conn);
+        return makeResponse(false, [], $error);
     }
+
+    if (!$stmt->bind_param("ii", $submission_id, $startPoint)) {
+        $error = "Bind failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, [], $error);
+    }
+
     if (!$stmt->execute()) {
-        $error = "Execution fail :" . $stmt->error;
+        $error = "Execute failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, [], $error);
     }
-    return $error;
-}
-function getReviewBySybmissionId($submission_id,$startPoint)
-{
-    $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT * FROM reviews WHERE submission_id = ? LIMIT 20 OFFSET ?");
-    $stmt->bind_param("ii", $submission_id,$startPoint);
-    $stmt->execute();
+
     $result = $stmt->get_result();
     $data = $result->fetch_all(\MYSQLI_ASSOC);
-    return $data;
-}
-function getTotalReviewBySubmissionId($submission_id){
-    $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM reviews WHERE submission_id = ?");
-    $stmt->bind_param("i", $submission_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    return $data["COUNT(*)"];
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(true, $data);
 }
 
+/**
+ * Get total review count for a submission
+ */
+function getTotalReviewBySubmissionId($submission_id)
+{
+    $conn = openDatabaseConnection();
+    if ($conn === null) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, 0, $error);
+    }
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM review WHERE submission_id = ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+        logError($error);
+        closeDatabaseConnection($conn);
+        return makeResponse(false, 0, $error);
+    }
+
+    if (!$stmt->bind_param("i", $submission_id)) {
+        $error = "Bind failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, 0, $error);
+    }
+
+    if (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+        logError($error);
+        $stmt->close();
+        closeDatabaseConnection($conn);
+        return makeResponse(false, 0, $error);
+    }
+
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $count = $row['total'] ?? 0;
+
+    $stmt->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(true, $count);
+}
 ?>

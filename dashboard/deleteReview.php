@@ -6,28 +6,35 @@ require_once '../conn/review.php';
 use function review\deleteReview;
 use function user\user_canDeleteReview;
 
-$getId = (int) $_POST['review_id'];
-echo $getId;
-echo $_SESSION['user_id'];
-$startPoint = (int) $_GET['startPoint'];
-$id = (int) $_GET['id'];
-
-if (isset($_SESSION['user_id']) && isset($_POST['review_id'])) {
-
-    $sessionId = (int) $_SESSION['user_id'];
-    $review_id = (int) $_POST['review_id'];
 
 
-    if (user_canDeleteReview($sessionId) && filter_var($review_id, FILTER_VALIDATE_INT) !== false) {
-        $message = deleteReview($review_id);
+$reviewId = isset($_POST['review_id']) ? (int) $_POST['review_id'] : 0;
+$startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
+// this is submission id
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-    } else {
-        $message = "no permision";
-    }
+
+
+if (!isset($_SESSION['user_id']) || $reviewId <= 0) {
+    $message = "Invalid request or session expired";
 } else {
-    $message = "if did not pass ";
+    $sessionId = (int) $_SESSION['user_id'];
+    
+    if (user_canDeleteReview($sessionId)) {
+        $result = deleteReview($reviewId);
+
+        if ($result['success'] ?? false) {
+            $message = "Review deleted successfully";
+        } else {
+            $message = $result['error'] ?? "Failed to delete review";
+        }
+    } else {
+        $message = "No permission";
+    }
 }
+
 echo $message;
 
 header(header: "Location: ../dashboard.php?page=reviewSingle&message=$message&startPoint=$startPoint&id=$id");
+exit();
 ?>

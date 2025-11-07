@@ -43,9 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Optional: filter by MIME type (you can customize this)
                 $allowedMimeTypes = [
-                    'image/jpeg', 'image/png', 'application/pdf',
-                    'video/mp4', 'video/mpeg',
-                    'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg' ,'audio/webm'
+                    'image/jpeg',
+                    'image/png',
+                    'application/pdf',
+                    'video/mp4',
+                    'video/mpeg',
+                    'audio/mpeg',
+                    'audio/mp3',
+                    'audio/wav',
+                    'audio/ogg',
+                    'audio/webm'
                 ];
 
                 if (!in_array($_FILES[$name]['type'], $allowedMimeTypes)) {
@@ -82,15 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Save the field only if it has a value
         if (isset($fieldData['value'])) {
             $resultData[] = $fieldData;
-            
+
         }
     }
 
-    // ✅ Display submitted data (for debugging)
-    // echo "<h2>✅ Final Submitted Data</h2>";
-    // echo "<pre>" . htmlspecialchars(json_encode($resultData, JSON_PRETTY_PRINT)) . "</pre>";
 
-    // ✅ Submit the data to your backend function
     $response = insertSubmissionFromJson($resultData);
 
     // echo "<h3>Submission Response</h3>";
@@ -99,9 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<p>📭 Please submit the form.</p>";
 }
 
-function sucessUploadTemplate($response){
-    if($response['status'] !== 'success') {
+function sucessUploadTemplate($response)
+{
+    if (!$response['status']) {
         echo "<h2>Sorry something went wrong<h2>";
+        echo $response['error'];
         return;
     }
 
@@ -112,12 +117,13 @@ function sucessUploadTemplate($response){
     <div class="sucessUploadTemplate" aria-live="assertive">
         <h2>We have received Your data successfully.</h2>
         <br>
-        <h3>Your query id: <span class="colorRed"><?=$response['id']?></span></h3>
+        
+        <h3>Your query id: <span class="colorRed"><?= $response['data']['id'] ?></span></h3>
         <br>
         <p>Please use your query Id to find your query on the submission search page</p>
         <br>
         <p>link To page : <a class="link" href="index.php?page=storySearch">Search Submissions</a></p>
-    </div>   
+    </div>
     <?php
     echo ob_get_clean();
 }
