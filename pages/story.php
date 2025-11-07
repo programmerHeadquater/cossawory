@@ -22,7 +22,7 @@
          ORDER BY submitted_at DESC
          LIMIT 5 OFFSET ?
      ) AS s
-     LEFT JOIN reviews r ON s.id = r.submission_id'
+     LEFT JOIN review r ON s.id = r.submission_id'
 
     );
     $stmt->bind_param('i', $startPoint);

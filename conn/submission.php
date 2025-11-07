@@ -6,196 +6,372 @@ require_once("conn.php");
 use function conn\closeDatabaseConnection;
 use function conn\openDatabaseConnection;
 
-function logError($message) {
+/**
+ * Logs an error to a file with timestamp
+ */
+function logError(string $message): void
+{
     $logFile = __DIR__ . '/error.log';
-    error_log("[" . date('Y-m-d H:i:s') . "] " . $message . "\n", 3, $logFile);
-   
+    $timestamp = date('Y-m-d H:i:s');
+    error_log("[$timestamp] $message\n", 3, $logFile);
 }
 
-function insertSubmissionFromJson(array $jsonData) {
-    
-    
+/**
+ * Helper: creates a consistent response array
+ */
+function makeResponse(bool $status, $data = null, ?string $error = null): array
+{
+    return [
+        'status' => $status,
+        'data' => $data,
+        'error' => $error
+    ];
+}
+
+/**
+ * Inserts a new submission from JSON data
+ */
+function insertSubmissionFromJson(array $jsonData): array
+{
     $conn = openDatabaseConnection();
-    $message = [];
+    $error = null;
+    $insertId = null;
 
     if (!$conn) {
-        logError("DB connection failed during insert");
-        return [
-            "status" => 'fail',
-            "message" => "No database connection"
-        ];
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
     }
 
-    // Extract expected fields
     $form_data = json_encode($jsonData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    
-    $review = $jsonData['review'] ?? false;
+    $review = (int)($jsonData['review'] ?? 0);
 
-    $sql = "INSERT INTO submission (form_data, review) VALUES (?, ?)";
-    $stmt = $conn->prepare($sql);
-
+    $stmt = $conn->prepare("INSERT INTO submission (form_data, review) VALUES (?, ?)");
     if (!$stmt) {
-        logError("Statement preparation failed: " . $conn->error);
-        return [
-            "status" => 'fail',
-            "message" => "Statement preparation failed"
-        ];
-    }
-
-    $stmt->bind_param("si", $form_data, $review);
-    if ($stmt->execute()) {
-        $insert_id = $conn->insert_id;
-        $message = [
-            "status" => 'success',
-            "message" => "Inserted",
-            "id" => $insert_id
-        ];
+        $error = "Statement preparation failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("si", $form_data, $review)) {
+        $error = "Binding parameters failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execution failed: " . $stmt->error;
     } else {
-        logError("Insert execution failed: " . $stmt->error);
-        $message = [
-            "status" => 'fail',
-            "message" => "Execution failed"
-        ];
+        $insertId = $conn->insert_id;
     }
 
-    $stmt->close();
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return $message;
+
+    return makeResponse(!$error, ['id' => $insertId], $error);
 }
 
-function deleteSubmission($id) {
+/**
+ * Deletes a submission by ID
+ */
+function deleteSubmission(int $id): array
+{
     $conn = openDatabaseConnection();
+    $error = null;
+    $success = false;
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt = $conn->prepare("DELETE FROM submission WHERE id = ?");
     if (!$stmt) {
-        logError("Delete prepare failed for ID $id");
-        return "no";
+        $error = "Delete prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $id)) {
+        $error = "Binding failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execution failed: " . $stmt->error;
+    } else {
+        $success = $stmt->affected_rows > 0;
     }
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $message = ($stmt->affected_rows > 0) ? "yes" : "no";
-    $stmt->close();
+
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return $message;
+
+    return makeResponse($success, $success ? "Deleted" : "Not found", $error);
 }
 
-function getSubmission($startPoint) {
+/**
+ * Gets submissions with pagination
+ */
+function getSubmission(int $startPoint): array
+{
     $conn = openDatabaseConnection();
+    $error = null;
+    $data = [];
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, [], $error);
+    }
+
     $stmt = $conn->prepare("SELECT * FROM submission LIMIT 20 OFFSET ?");
     if (!$stmt) {
-        logError("Get submissions failed on LIMIT/OFFSET");
-        return [];
+        $error = "Statement prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $startPoint)) {
+        $error = "Binding failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execution failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $data = $result->fetch_all(\MYSQLI_ASSOC);
     }
-    $stmt->bind_param("i", $startPoint);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_all(\MYSQLI_ASSOC);
-    $stmt->close();
+
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return $data;
+
+    return makeResponse(!$error, $data, $error);
 }
 
-function getSubmissionsTotalCount() {
+/**
+ * Returns total count of all submissions
+ */
+function getSubmissionsTotalCount(): array
+{
     $conn = openDatabaseConnection();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM submission");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
+    $error = null;
+    $count = 0;
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, 0, $error);
+    }
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM submission");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $count = (int)($row['total'] ?? 0);
+    }
+
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return (int)$row["COUNT(*)"];
+
+    return makeResponse(!$error, $count, $error);
 }
 
-function getSubmissionById(int $id) {
+/**
+ * Fetches a single submission by ID
+ */
+function getSubmissionById(int $id): array
+{
     $conn = openDatabaseConnection();
+    $error = null;
+    $data = null;
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt = $conn->prepare("SELECT * FROM submission WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $stmt->close();
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $id)) {
+        $error = "Bind failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execution failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+    }
+
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return $data;
+
+    return makeResponse(!$error, $data, $error);
 }
 
-function updateSubmissionReviewStatus($id) {
+/**
+ * Sets review status = 1 for a submission
+ */
+function updateSubmissionReviewStatus(int $id): array
+{
     $conn = openDatabaseConnection();
+    $error = null;
+    $updated = false;
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, null, $error);
+    }
+
     $stmt = $conn->prepare("UPDATE submission SET review = 1 WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-    closeDatabaseConnection($conn);
-    return true;
-}
-
-function getSubmissionsReviewedTotalCount() {
-    $conn = openDatabaseConnection();
-    $sql = "SELECT COUNT(*) as count FROM submission WHERE review = 1";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
-    closeDatabaseConnection($conn);
-    return $row['count'] ?? 0;
-}
-
-
-function getSubmissionReviewPending($startPoint)
-{
-    $conn = openDatabaseConnection();
-
-    $stmt = $conn->prepare(
-        "SELECT * FROM submission
-         WHERE review = 0
-         ORDER BY submitted_at DESC
-         LIMIT 20 OFFSET ?"
-    );
-    $stmt->bind_param("i", $startPoint);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $submissions = [];
-    while ($row = $result->fetch_assoc()) {
-        $submissions[] = $row;
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $id)) {
+        $error = "Bind failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $updated = $stmt->affected_rows > 0;
     }
 
-    $stmt->close();
-    closeDatabaseConnection($conn);
-    return $submissions;
-}
-function getSubmissionsReviewPendingTotalCount()
-{
-    $conn = openDatabaseConnection();
+    if ($error) logError($error);
 
-    $sql = "SELECT COUNT(*) as total FROM submission WHERE review = 0";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
-
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return (int)$row['total'];
+
+    return makeResponse($updated, $updated ? "Review status updated" : "No changes", $error);
 }
 
-function getSubmissionReviewed($startPoint)
+/**
+ * Count reviewed submissions
+ */
+function getSubmissionsReviewedTotalCount(): array
 {
     $conn = openDatabaseConnection();
+    $error = null;
+    $count = 0;
 
-    $stmt = $conn->prepare(
-        "SELECT * FROM submission
-         WHERE review = 1
-         ORDER BY submitted_at DESC
-         LIMIT 20 OFFSET ?"
-    );
-    $stmt->bind_param("i", $startPoint);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $submissions = [];
-    while ($row = $result->fetch_assoc()) {
-        $submissions[] = $row;
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, 0, $error);
     }
 
-    $stmt->close();
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM submission WHERE review = 1");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $count = (int)($row['total'] ?? 0);
+    }
+
+    if ($error) logError($error);
+
+    $stmt?->close();
     closeDatabaseConnection($conn);
-    return $submissions;
+
+    return makeResponse(!$error, $count, $error);
 }
 
+/**
+ * Get submissions pending review (paginated)
+ */
+function getSubmissionReviewPending(int $startPoint): array
+{
+    $conn = openDatabaseConnection();
+    $error = null;
+    $data = [];
 
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, [], $error);
+    }
 
+    $stmt = $conn->prepare("SELECT * FROM submission WHERE review = 0 ORDER BY submitted_at DESC LIMIT 20 OFFSET ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $startPoint)) {
+        $error = "Bind failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $data = $result->fetch_all(\MYSQLI_ASSOC);
+    }
 
+    if ($error) logError($error);
+
+    $stmt?->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(!$error, $data, $error);
+}
+
+/**
+ * Count submissions pending review
+ */
+function getSubmissionsReviewPendingTotalCount(): array
+{
+    $conn = openDatabaseConnection();
+    $error = null;
+    $count = 0;
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, 0, $error);
+    }
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM submission WHERE review = 0");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $count = (int)($row['total'] ?? 0);
+    }
+
+    if ($error) logError($error);
+
+    $stmt?->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(!$error, $count, $error);
+}
+
+/**
+ * Get reviewed submissions (paginated)
+ */
+function getSubmissionReviewed(int $startPoint): array
+{
+    $conn = openDatabaseConnection();
+    $error = null;
+    $data = [];
+
+    if (!$conn) {
+        $error = "Database connection failed.";
+        logError($error);
+        return makeResponse(false, [], $error);
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM submission WHERE review = 1 ORDER BY submitted_at DESC LIMIT 20 OFFSET ?");
+    if (!$stmt) {
+        $error = "Prepare failed: " . $conn->error;
+    } elseif (!$stmt->bind_param("i", $startPoint)) {
+        $error = "Bind failed: " . $stmt->error;
+    } elseif (!$stmt->execute()) {
+        $error = "Execute failed: " . $stmt->error;
+    } else {
+        $result = $stmt->get_result();
+        $data = $result->fetch_all(\MYSQLI_ASSOC);
+    }
+
+    if ($error) logError($error);
+
+    $stmt?->close();
+    closeDatabaseConnection($conn);
+
+    return makeResponse(!$error, $data, $error);
+}
+?>

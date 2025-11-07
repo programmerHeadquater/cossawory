@@ -20,9 +20,10 @@ if ($email === '' || $password === '') {
 }
 
 // Check login using the function
-$user = user_checkLogin($email, $password);
+$response = user_checkLogin($email, $password);
 
-if ($user) {
+if ($response['data'] && $response['status']) {
+    $user = $response['data'];
     session_regenerate_id(true);
 
     $_SESSION['user_id'] = $user['id'];
@@ -32,6 +33,7 @@ if ($user) {
     header('Location: /dashboard.php');
     exit();
 } else {
-    header('Location: /dashboard.php?error=' . urlencode('Invalid username or password.'));
+    $errorMsg = $response['error'] ?? 'Invalid username or password.';
+    header('Location: /dashboard.php?error=' . urlencode($errorMsg));
     exit();
 }

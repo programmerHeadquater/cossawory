@@ -10,7 +10,7 @@
 
     require_once 'conn/review.php';
     require_once 'conn/submission.php';
-    use function review\getReviewBySybmissionId;
+    use function review\getReviewBySubmissionId;
     use function submission\getSubmissionById;
     use function review\getTotalReviewBySubmissionId;
     use function review\insertReview;
@@ -26,16 +26,15 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
         $review = $_POST['review'];
-        insertReview($id, $review);
-
+        $user_id = $_SESSION['user_id'];
+        $data = insertReview($id,$user_id, $review);
+        
     }
 
     addReviewTemplate($id);
-    submissionTemplate(getSubmissionById($id));
-    
-
-    reviewTemplate(getReviewBySybmissionId($id, $startPoint), $id, $startPoint);
-    pagination($startPoint, getTotalReviewBySubmissionId($id), $id);
+    submissionTemplate(getSubmissionById($id)['data']??null);
+    reviewTemplate(getReviewBySubmissionId($id, $startPoint)['data']??null, $id, $startPoint);
+    pagination($startPoint, getTotalReviewBySubmissionId($id)['data']??null, $id);
 
 
 

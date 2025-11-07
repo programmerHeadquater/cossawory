@@ -23,7 +23,7 @@ if ($queryId !== null) {
         if ($submission == null) {
             $error = "Submission no found";
         } elseif ($submission['review'] == 1 || $submission['review'] == "1") {
-            $query = "SELECT *  FROM reviews
+            $query = "SELECT *  FROM review
             WHERE submission_id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("i", $queryId);

@@ -46,7 +46,7 @@ function pagination()
             <button><a href="dashboard.php?page=user&startPoint=<?= $prevStart ?>">Previous</a></button>
         <?php endif; ?>
 
-        <?php if ($nextStart < $total): ?>
+        <?php if ($nextStart < $total['data']): ?>
             <button><a href="dashboard.php?page=user&startPoint=<?= $nextStart ?>">Next</a></button>
         <?php endif; ?>
     </div>
@@ -56,8 +56,11 @@ function pagination()
 
 function userTemplate()
 {
-    $userList = user_getUsers(isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0);
-
+    $userListResponse = user_getUsers(isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0);
+    if(!$userListResponse['status'] && !$userListResponse['data']){
+        echo "No data found";
+        return null;
+    }
     ob_start();
     ?>
     <div class="userTemplate">
@@ -68,6 +71,7 @@ function userTemplate()
             <span>Action</span>
         </div>
         <?php
+        $userList = $userListResponse['data'];
         foreach ($userList as $key => $user) {
 
             ?>

@@ -9,15 +9,18 @@
     
 
 
-    $data = getSubmissionReviewed($startPoint);
+    $dataResponse = getSubmissionReviewed($startPoint);
 
 
 
+    if ($dataResponse['status'] && $dataResponse['data']) {
+    $data = $dataResponse['data'];
     foreach ($data as $submission) {
         echo submissionTemplate($submission, $startPoint);
     }
+}
     $total = getSubmissionsReviewedTotalCount();
-    echo pagination($startPoint, $total);
+    echo pagination($startPoint, $total['data']);
 
 
     function submissionTemplate($row, $startPoint)
