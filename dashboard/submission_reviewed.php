@@ -65,7 +65,7 @@
                 <span><a class="greenBtn" href="dashboard.php?page=reviewSingle&id=<?= $row['id'] ?>">Review Now</a></span>
 
 
-                <form action="dashboard/deleteSubmission.php" method="POST">
+                <form action="dashboard/deleteSubmission.php" method="POST"  onsubmit="return confirm('Are you sure you want to delete this submission?');">
                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
                     <input type="hidden" name="pageIn" value="submission_reviewed">
                     <button class="deleteBtn" type="submit">Delete</button>

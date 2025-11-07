@@ -44,7 +44,7 @@ function insertSubmissionFromJson(array $jsonData): array
     }
 
     $form_data = json_encode($jsonData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    $review = (int)($jsonData['review'] ?? 0);
+    $review = (int) ($jsonData['review'] ?? 0);
 
     $stmt = $conn->prepare("INSERT INTO submission (form_data, review) VALUES (?, ?)");
     if (!$stmt) {
@@ -57,7 +57,8 @@ function insertSubmissionFromJson(array $jsonData): array
         $insertId = $conn->insert_id;
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -74,14 +75,20 @@ function deleteSubmission(int $id): array
     $error = null;
     $success = false;
     $submission = getSubmissionById($id);
-    if($submission['status']){
-       $form_data = json_decode($submission['data']['form_data'], true);
-        foreach ($form_data as $index => $field){
-            if($field['type' == 'file'] ){
-                $path = $field['value']['path'] ;
-                if (file_exists($path)){
-                    unlink($path);
+
+    if ($submission['status']) {
+        $form_data = json_decode($submission['data']['form_data'], true);
+
+
+        foreach ($form_data as $index => $field) {
+            if ($field['type'] == 'file') {
+                $path = $field['value']['path'];
+                $realPath =__DIR__ . '/../' . $path;
+                
+                if (file_exists($realPath)) {
+                    unlink($realPath);
                 }
+
             }
         }
     }
@@ -102,7 +109,8 @@ function deleteSubmission(int $id): array
         $success = $stmt->affected_rows > 0;
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -137,7 +145,8 @@ function getSubmission(int $startPoint): array
         $data = $result->fetch_all(\MYSQLI_ASSOC);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -168,10 +177,11 @@ function getSubmissionsTotalCount(): array
     } else {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $count = (int)($row['total'] ?? 0);
+        $count = (int) ($row['total'] ?? 0);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -206,7 +216,8 @@ function getSubmissionById(int $id): array
         $data = $result->fetch_assoc();
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -240,7 +251,8 @@ function updateSubmissionReviewStatus(int $id): array
         $updated = $stmt->affected_rows > 0;
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -271,10 +283,11 @@ function getSubmissionsReviewedTotalCount(): array
     } else {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $count = (int)($row['total'] ?? 0);
+        $count = (int) ($row['total'] ?? 0);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -309,7 +322,8 @@ function getSubmissionReviewPending(int $startPoint): array
         $data = $result->fetch_all(\MYSQLI_ASSOC);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -340,10 +354,11 @@ function getSubmissionsReviewPendingTotalCount(): array
     } else {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $count = (int)($row['total'] ?? 0);
+        $count = (int) ($row['total'] ?? 0);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);
@@ -378,7 +393,8 @@ function getSubmissionReviewed(int $startPoint): array
         $data = $result->fetch_all(\MYSQLI_ASSOC);
     }
 
-    if ($error) logError($error);
+    if ($error)
+        logError($error);
 
     $stmt?->close();
     closeDatabaseConnection($conn);

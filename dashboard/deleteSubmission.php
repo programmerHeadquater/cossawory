@@ -21,7 +21,7 @@ if ($sessionId <= 0 || $id <= 0) {
         
         $result = deleteSubmission($id);
         
-        if ($result['success'] ?? false) {
+        if ($result['status'] ?? false) {
             $message = "Submission deleted successfully";
         } else {
             $message = $result['error'] ?? "Failed to delete submission";
