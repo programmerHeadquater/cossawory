@@ -1,8 +1,14 @@
 [
     {
-        "label": "title",
-        "type": "textarea",
+        "label": "Tittle",
+        "type": "text",
         "required": "yes",
-        "name": "title"
+        "name": "tittle"
+    },
+    {
+        "label": "Description",
+        "type": "text",
+        "required": "yes",
+        "name": "description"
     }
 ]

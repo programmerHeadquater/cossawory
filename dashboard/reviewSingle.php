@@ -28,9 +28,7 @@
         $review = $_POST['review'];
         $user_id = $_SESSION['user_id'];
         $data = insertReview($id,$user_id, $review);
-        echo '<pre>';
-        var_dump($data);
-        echo '</pre>';
+        
     }
 
     addReviewTemplate($id);
