@@ -75,7 +75,6 @@ function deleteSubmission(int $id): array
     $error = null;
     $success = false;
     $submission = getSubmissionById($id);
-    print_r($submission);
     if ($submission['status']) {
         $form_data = json_decode($submission['data']['form_data'], true);
         foreach ($form_data as $index => $field) {

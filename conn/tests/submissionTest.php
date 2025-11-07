@@ -49,7 +49,7 @@ final class SubmissionTest extends TestCase
     protected function tearDown(): void
     {
         // Clean database after each test
-        // clearDatabase();
+        clearDatabase();
     }
 
 
