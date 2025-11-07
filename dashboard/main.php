@@ -10,6 +10,11 @@
             <a class="<?=$pageIn == 'submission_reviewed'? 'active' : '';?>" href="dashboard.php?page=main&pageIn=submission_reviewed">Reviewed</a>
         </div> 
     <?php
+         $error = isset($_GET['error']) ?  $_GET['error'] : null;
+          if($error) {
+            echo "<p class='error'>". $error ."</p>";
+
+    }
         include_once 'dashboard/'.$pageIn.'.php';
     ?>
     

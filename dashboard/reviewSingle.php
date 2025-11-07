@@ -1,5 +1,3 @@
-
-
 <div class="page">
 
 
@@ -10,31 +8,43 @@
 
     require_once 'conn/review.php';
     require_once 'conn/submission.php';
+    require_once 'conn/User.php';
     use function review\getReviewBySubmissionId;
     use function submission\getSubmissionById;
     use function review\getTotalReviewBySubmissionId;
     use function review\insertReview;
+    use function user\user_canWriteReview;
 
 
 
 
     $id = (int) $_GET['id'];
     $startPoint = isset($_GET['startPoint']) ? (int) $_GET['startPoint'] : 0;
+    $error = isset($_GET['error']) ?  $_GET['error'] : null;
 
-    //updating if the querry has data in the form 
-    
+   
+    if($error) {
+            echo "<p class='error'>". $error ."</p>";
+
+    }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review']) && $_POST['review'] !== "") {
 
         $review = $_POST['review'];
         $user_id = $_SESSION['user_id'];
-        $data = insertReview($id,$user_id, $review);
         
+        if (user_canWriteReview($id)['status']) {
+            $data = insertReview($id, $user_id, $review);
+        }else{
+            echo "<p class='error'>You have no permission to add review</p>";
+        }
+
+
     }
 
     addReviewTemplate($id);
-    submissionTemplate(getSubmissionById($id)['data']??null);
-    reviewTemplate(getReviewBySubmissionId($id, $startPoint)['data']??null, $id, $startPoint);
-    pagination($startPoint, getTotalReviewBySubmissionId($id)['data']??null, $id);
+    submissionTemplate(getSubmissionById($id)['data'] ?? null);
+    reviewTemplate(getReviewBySubmissionId($id, $startPoint)['data'] ?? null, $id, $startPoint);
+    pagination($startPoint, getTotalReviewBySubmissionId($id)['data'] ?? null, $id);
 
 
 
@@ -46,9 +56,9 @@
     <?php
     function submissionTemplate($submission)
     {
-        
-                   
-                
+
+
+
         ob_start();
         ?>
 
@@ -58,29 +68,29 @@
             <?php
             $form_data = json_decode($submission['form_data'], true);
             foreach ($form_data as $index => $field): ?>
-               
-                    <p class="label"><?= $field['label'] ?> </p>
 
-                    <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
-                        <p><?= $field['value'] ?></p>
-                    <?php endif ?>
-                    <?php if ($field['type'] == 'file' || $field['type'] == 'audio' ): ?>
+                <p class="label"><?= $field['label'] ?> </p>
 
-                        <?php if (is_array($field['value'])): ?>
-                            
-                            <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
-                                <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="User send image">
-                            <?php endif;
-                            if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
+                <?php if ($field['type'] == 'text' || $field['type'] == 'textarea'): ?>
+                    <p><?= $field['value'] ?></p>
+                <?php endif ?>
+                <?php if ($field['type'] == 'file' || $field['type'] == 'audio'): ?>
+
+                    <?php if (is_array($field['value'])): ?>
+
+                        <?php if ($field['value']['type'] == 'image/png' || $field['value']['type'] == 'image/jpeg'): ?>
+                            <img class="uploadImg" src="<?= $field['value']['path'] ?>" alt="User send image">
+                        <?php endif;
+                        if ($field['value']['type'] == 'audio/mpeg' || $field['value']['type'] == 'audio/mp3' || $field['value']['type'] == 'audio/wav' || $field['value']['type'] == 'audio/ogg' || $field['value']['type'] == 'audio/webm'): ?>
                             <audio controls>
-                                <source src="<?=$field['value']['path']?>" type="audio/mpeg">
+                                <source src="<?= $field['value']['path'] ?>" type="audio/mpeg">
                                 Your browser does not support the audio element.
                             </audio>
                             <?php
-                            endif;
                         endif;
                     endif;
-            endforeach;?>
+                endif;
+            endforeach; ?>
         </div>
 
 
@@ -151,7 +161,7 @@
             </form>
         </div>
 
-        
+
         <?php
         echo ob_get_clean();
     }

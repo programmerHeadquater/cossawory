@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
     $result = user_canDeleteUser($_SESSION['user_id']);
 
-    if (!isset($_SESSION['user_id']) || !($result['status'] ?? false) || !($result['data'] ?? false)) {
+    if (!isset($_SESSION['user_id']) || !($result['status'] ?? false) || ($result['data'] ?? false)) {
     echo json_encode(['success' => false, 'message' => 'You do not have permission to delete users']);
     exit;
 }

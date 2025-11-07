@@ -30,6 +30,6 @@ if ($sessionId <= 0 || $id <= 0) {
         $message = $response['error'] ?? "No permission";
     }
 }
-header(header: "Location: ../dashboard.php?page=main&message=$message&startPoint=$startPoint&pageIn=$pageIn");
+header(header: "Location: ../dashboard.php?page=main&error=$message&startPoint=$startPoint&pageIn=$pageIn");
 exit();
 ?>

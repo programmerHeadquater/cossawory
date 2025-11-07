@@ -212,7 +212,9 @@ function user_hasPermission($userId, $permissionName)
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $hasPermission = isset($row[$permissionName]) && (bool) $row[$permissionName] ;
-        
+        if($hasPermission == ''){
+        return makeResponse(false, null, 'No permission');
+        }
         return makeResponse(true, $hasPermission); // success = query worked, data = permission
     } else {
         return makeResponse(false, null, 'Failed to fetch permission');

@@ -25,12 +25,7 @@ function seedDatabase(): bool
     // $conn->query("ALTER TABLE user AUTO_INCREMENT = 1");
     // $conn->query("SET FOREIGN_KEY_CHECKS = 1");
 
-    // --- 1. Seed users ---
-    // $users = [
-    //     ['admin', 'admin@example.com', 'hashed_admin_pass', 1, 1, 1, 1, 1],
-    //     ['reviewer', 'reviewer@example.com', 'hashed_reviewer_pass', 1, 0, 0, 0, 0],
-    //     ['guest', 'guest@example.com', 'hashed_guest_pass', 0, 0, 0, 0, 0],
-    // ];
+   
     $users = [
     ['admin', 'admin@example.com', password_hash('admin123', PASSWORD_DEFAULT), 1, 1, 1, 1, 1],
     ['reviewer', 'reviewer@example.com', password_hash('reviewer123', PASSWORD_DEFAULT), 1, 0, 0, 0, 0],
@@ -55,7 +50,6 @@ function seedDatabase(): bool
         ['[{"label":"title","type":"textarea","required":"yes","name":"title","value":"asdf"}]', 1],
         ['[{"label":"title","type":"textarea","required":"yes","name":"title","value":"asdf"}]', 0],
 
-        // [{"label":"title","type":"textarea","required":"yes","name":"title","value":"test"}]
     ];
     $stmt = $conn->prepare("INSERT INTO submission (form_data, review) VALUES (?, ?)");
     foreach ($submissions as $sub) {

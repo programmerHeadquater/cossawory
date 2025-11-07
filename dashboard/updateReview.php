@@ -20,17 +20,17 @@ if (isset($_SESSION['user_id']) && isset($_POST['review_id']) && isset($_POST['r
     $review = (string) $_POST['review'];
 
 
-    if (user_canDeleteReview($sessionId) && filter_var($review_id, FILTER_VALIDATE_INT) !== false) {
+    if (user_canDeleteReview($sessionId)['status']?? false && filter_var($review_id, FILTER_VALIDATE_INT) !== false) {
         $message = updateReview($review_id,$review);
 
     } else {
-        $message = "no permision";
+        $message = "No permision To update";
     }
 } else {
     $message = "if did not pass ";
 }
 echo $message;
 
-header(header: "Location: ../dashboard.php?page=reviewSingle&message=$message&startPoint=$startPoint&id=$id");
+header(header: "Location: ../dashboard.php?page=reviewSingle&error=$message&startPoint=$startPoint&id=$id");
 
 ?>

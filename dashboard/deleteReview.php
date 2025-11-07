@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_id']) || $reviewId <= 0) {
 } else {
     $sessionId = (int) $_SESSION['user_id'];
     
-    if (user_canDeleteReview($sessionId)) {
+    if (user_canDeleteReview($sessionId)['status']?? false) {
         $result = deleteReview($reviewId);
 
         if ($result['success'] ?? false) {
@@ -35,6 +35,6 @@ if (!isset($_SESSION['user_id']) || $reviewId <= 0) {
 
 echo $message;
 
-header(header: "Location: ../dashboard.php?page=reviewSingle&message=$message&startPoint=$startPoint&id=$id");
+header(header: "Location: ../dashboard.php?page=reviewSingle&error=$message&startPoint=$startPoint&id=$id");
 exit();
 ?>

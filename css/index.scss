@@ -212,8 +212,7 @@ hr {
     transition: all 1s ease;
 
     &.navShow {
-        display: block; // or flex/grid depending on layout
-        // optionally also set width, height, etc.
+        display: block; 
     }
 
     ul {
